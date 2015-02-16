@@ -2,7 +2,7 @@
 
 Just the iPhone UI. No server.
 
-![Acani Chats Screenshot][1] &nbsp;&nbsp;&nbsp;&nbsp; ![Acani Chat Screenshot][2]
+![Acani Chats Screenshot][1] ![Acani Chat Screenshot][2]
 
 ## License
 

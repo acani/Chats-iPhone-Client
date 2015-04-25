@@ -3,7 +3,7 @@ import UIKit
 class ChatsViewController: UITableViewController {
     var chats: [Chat] { return account.chats }
 
-    convenience override init() {
+    convenience init() {
         self.init(style: .Plain)
         title = "Chats"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "composeAction")
@@ -50,7 +50,7 @@ class ChatsViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(ChatCell), forIndexPath: indexPath) as ChatCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(ChatCell), forIndexPath: indexPath) as! ChatCell
         cell.configureWithChat(account.chats[indexPath.row])
         return cell
     }

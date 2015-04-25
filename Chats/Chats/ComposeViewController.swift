@@ -5,7 +5,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
     var searchResultsTableView = UITableView(frame: CGRectZero, style: .Plain)
     var toTextView = UITextView(frame: CGRectZero)
 
-    convenience override init() {
+    convenience init() {
         self.init(nibName: nil, bundle: nil)
         automaticallyAdjustsScrollViewInsets = false
         title = "New Message"
@@ -46,7 +46,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UserCell), forIndexPath: indexPath) as UserCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UserCell), forIndexPath: indexPath) as! UserCell
         let user = searchResults[indexPath.row]
         cell.pictureImageView.image = UIImage(named: user.pictureName())
         cell.nameLabel.text = user.name
@@ -56,7 +56,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
 
     // MARK: - UITextViewDelegate
 
-    func textViewDidChange(textView: UITextField) {
+    func textViewDidChange(textView: UITextView) {
         println(textView.text)
     }
 

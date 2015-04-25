@@ -63,14 +63,14 @@ class MessageBubbleCell: UITableViewCell {
                 layoutConstant = -10
             }
 
-            let layoutConstraint: NSLayoutConstraint = bubbleImageView.constraints()[1] as NSLayoutConstraint // `messageLabel` CenterX
+            let layoutConstraint: NSLayoutConstraint = bubbleImageView.constraints()[1] as! NSLayoutConstraint // `messageLabel` CenterX
             layoutConstraint.constant = -layoutConstraint.constant
 
             let constraints: NSArray = contentView.constraints()
             let indexOfConstraint = constraints.indexOfObjectPassingTest { (var constraint, idx, stop) in
-                return (constraint.firstItem as UIView).tag == bubbleTag && (constraint.firstAttribute == NSLayoutAttribute.Left || constraint.firstAttribute == NSLayoutAttribute.Right)
+                return (constraint.firstItem as! UIView).tag == bubbleTag && (constraint.firstAttribute == NSLayoutAttribute.Left || constraint.firstAttribute == NSLayoutAttribute.Right)
             }
-            contentView.removeConstraint(constraints[indexOfConstraint] as NSLayoutConstraint)
+            contentView.removeConstraint(constraints[indexOfConstraint] as! NSLayoutConstraint)
             contentView.addConstraint(NSLayoutConstraint(item: bubbleImageView, attribute: layoutAttribute, relatedBy: .Equal, toItem: contentView, attribute: layoutAttribute, multiplier: 1, constant: layoutConstant))
         }
     }

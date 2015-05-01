@@ -1,6 +1,6 @@
 import UIKit
 
-class ChatsViewController: UITableViewController {
+class ChatsTableViewController: UITableViewController {
     var chats: [Chat] { return account.chats }
 
     convenience init() {
@@ -40,9 +40,9 @@ class ChatsViewController: UITableViewController {
 
         navigationItem.leftBarButtonItem = editButtonItem() // TODO: KVO
         tableView.backgroundColor = UIColor.whiteColor()
-        tableView.rowHeight = chatCellHeight
-        tableView.separatorInset.left = chatCellInsetLeft
-        tableView.registerClass(ChatCell.self, forCellReuseIdentifier: NSStringFromClass(ChatCell))
+        tableView.rowHeight = chatTableViewCellHeight
+        tableView.separatorInset.left = chatTableViewCellInsetLeft
+        tableView.registerClass(ChatTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(ChatTableViewCell))
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -50,7 +50,7 @@ class ChatsViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(ChatCell), forIndexPath: indexPath) as! ChatCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(ChatTableViewCell), forIndexPath: indexPath) as! ChatTableViewCell
         cell.configureWithChat(account.chats[indexPath.row])
         return cell
     }

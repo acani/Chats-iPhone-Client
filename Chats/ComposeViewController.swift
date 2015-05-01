@@ -31,7 +31,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
         searchResultsTableView.hidden = true
         searchResultsTableView.keyboardDismissMode = .OnDrag
         searchResultsTableView.scrollsToTop = false
-        searchResultsTableView.registerClass(UserCell.self, forCellReuseIdentifier: NSStringFromClass(UserCell))
+        searchResultsTableView.registerClass(UserTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(UserTableViewCell))
         view.addSubview(searchResultsTableView)
 
         toTextView.setTranslatesAutoresizingMaskIntoConstraints(false)
@@ -46,7 +46,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UserCell), forIndexPath: indexPath) as! UserCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UserTableViewCell), forIndexPath: indexPath) as! UserTableViewCell
         let user = searchResults[indexPath.row]
         cell.pictureImageView.image = UIImage(named: user.pictureName())
         cell.nameLabel.text = user.name

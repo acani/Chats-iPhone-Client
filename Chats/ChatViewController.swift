@@ -97,7 +97,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.keyboardDismissMode = .Interactive
         tableView.estimatedRowHeight = 44
         tableView.separatorStyle = .None
-        tableView.registerClass(MessageSentDateCell.self, forCellReuseIdentifier: NSStringFromClass(MessageSentDateCell))
+        tableView.registerClass(MessageSentDateTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(MessageSentDateTableViewCell))
         view.addSubview(tableView)
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
@@ -161,17 +161,17 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(MessageSentDateCell), forIndexPath: indexPath) as! MessageSentDateCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(MessageSentDateTableViewCell), forIndexPath: indexPath) as! MessageSentDateTableViewCell
             let message = chat.loadedMessages[indexPath.section][0]
             dateFormatter.dateStyle = .ShortStyle
             dateFormatter.timeStyle = .ShortStyle
             cell.sentDateLabel.text = dateFormatter.stringFromDate(message.sentDate)
             return cell
         } else {
-            let cellIdentifier = NSStringFromClass(MessageBubbleCell)
-            var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as! MessageBubbleCell!
+            let cellIdentifier = NSStringFromClass(MessageBubbleTableViewCell)
+            var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as! MessageBubbleTableViewCell!
             if cell == nil {
-                cell = MessageBubbleCell(style: .Default, reuseIdentifier: cellIdentifier)
+                cell = MessageBubbleTableViewCell(style: .Default, reuseIdentifier: cellIdentifier)
 
                 // Add gesture recognizers #CopyMessage
                 let action: Selector = "messageShowMenuAction:"

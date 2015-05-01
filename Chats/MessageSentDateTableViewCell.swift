@@ -1,6 +1,6 @@
 import UIKit
 
-class MessageSentDateCell: UITableViewCell {
+class MessageSentDateTableViewCell: UITableViewCell {
     let sentDateLabel: UILabel
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

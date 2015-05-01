@@ -1,9 +1,9 @@
 import UIKit
 
-let chatCellHeight: CGFloat = 72
-let chatCellInsetLeft = chatCellHeight + 8
+let chatTableViewCellHeight: CGFloat = 72
+let chatTableViewCellInsetLeft = chatTableViewCellHeight + 8
 
-class ChatCell: UITableViewCell {
+class ChatTableViewCell: UITableViewCell {
     let userPictureImageView: UIImageView
     let userNameLabel: UILabel
     let lastMessageTextLabel: UILabel
@@ -12,7 +12,7 @@ class ChatCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         let pictureSize: CGFloat = 64
-        userPictureImageView = UIImageView(frame: CGRect(x: 8, y: (chatCellHeight-pictureSize)/2, width: pictureSize, height: pictureSize))
+        userPictureImageView = UIImageView(frame: CGRect(x: 8, y: (chatTableViewCellHeight-pictureSize)/2, width: pictureSize, height: pictureSize))
         userPictureImageView.backgroundColor = UIColor(red: 199/255.0, green: 199/255.0, blue: 204/255.0, alpha: 1)
         userPictureImageView.layer.cornerRadius = pictureSize/2
         userPictureImageView.layer.masksToBounds = true
@@ -46,7 +46,7 @@ class ChatCell: UITableViewCell {
         userPictureImageView.addSubview(userNameInitialsLabel)
 
         userNameLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
-        contentView.addConstraint(NSLayoutConstraint(item: userNameLabel, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1, constant: chatCellInsetLeft))
+        contentView.addConstraint(NSLayoutConstraint(item: userNameLabel, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1, constant: chatTableViewCellInsetLeft))
         contentView.addConstraint(NSLayoutConstraint(item: userNameLabel, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 6))
 
         lastMessageTextLabel.setTranslatesAutoresizingMaskIntoConstraints(false)

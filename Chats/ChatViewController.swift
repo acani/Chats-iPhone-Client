@@ -58,6 +58,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     init(chat: Chat) {
         self.chat = chat
         super.init(nibName: nil, bundle: nil)
+        hidesBottomBarWhenPushed = true
         title = chat.user.name
     }
 

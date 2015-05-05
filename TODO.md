@@ -2,7 +2,7 @@
 
 * Add app icon
 
-## ChatsViewController
+## ChatsTableViewController
 
 * Is there a better way than lengthOfBytesUsingEncoding to check if string is ASCII?
 * Add search bar

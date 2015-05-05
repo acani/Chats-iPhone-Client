@@ -4,7 +4,7 @@
 
 Compliments of Apple
 
-* [`MessageBubble@2x.png`][1] is a derivation of [`bubble@2x.png`][2].
+* [`MessageBubble@2x.png`][1] is a derivative of [`bubble@2x.png`][2].
 * [`MessageIncoming.aiff`][3] is a copy of [`SIMToolkitSMS.aiff`][4].
 * [`MessageOutgoing.aiff`][5] is a copy of [`message-sent.aiff`][6].
 
@@ -36,13 +36,12 @@ Command to find files: `find /Applications/Xcode.app/ -name *.png`
 
 Blank Avatar. [User][7] designed by [Lynn Christensen][8] from the [Noun Project][9]
 
+## Tab Bar Icons
 
-## Related
-
-* [JSQMessagesViewController][10]
-* [UIBubbleTableView][11]
-* [TextSecure for iOS][12]
-* [Chat - Messaging SDK for iOS][13]
+1. https://thenounproject.com/term/users/12931/
+2. https://thenounproject.com/term/message/1332/
+3. https://thenounproject.com/term/profile/12930/
+4. https://thenounproject.com/term/settings/89645/
 
 
 [1]: https://github.com/acani/Chats/raw/master/Chats/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
@@ -54,7 +53,3 @@ Blank Avatar. [User][7] designed by [Lynn Christensen][8] from the [Noun Project
 [7]: http://www.thenounproject.com/term/user/4520/
 [8]: http://www.thenounproject.com/lynnthemac
 [9]: http://www.thenounproject.com
-[10]: https://github.com/jessesquires/JSQMessagesViewController
-[11]: http://alexbarinov.github.io/UIBubbleTableView/
-[12]: https://github.com/WhisperSystems/TextSecure-iOS
-[13]: http://www.binpress.com/app/chat-messaging-sdk-for-ios/1644

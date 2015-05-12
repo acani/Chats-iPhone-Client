@@ -1,6 +1,7 @@
+import MobileCoreServices
 import UIKit
 
-class ProfileTableViewController: UITableViewController, UIActionSheetDelegate {
+class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     convenience init() {
         self.init(nibName: nil, bundle: nil)
         title = "Profile"
@@ -112,9 +113,9 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate {
     // MARK: UIActionSheetDelegate
 
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        println(buttonIndex)
         if buttonIndex != actionSheet.cancelButtonIndex {
             let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
             let sourceType: UIImagePickerControllerSourceType = buttonIndex == 1 ? .Camera : .PhotoLibrary
             if UIImagePickerController.isSourceTypeAvailable(sourceType) {
                 imagePickerController.sourceType = sourceType
@@ -124,6 +125,45 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate {
                 let alertView = UIAlertView(title: "\(sourceString) Unavailable", message: nil, delegate: nil, cancelButtonTitle: "OK")
                 alertView.show()
             }
+        }
+    }
+
+    // MARK: UIImagePickerControllerDelegate
+
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        let mediaType = info[UIImagePickerControllerMediaType] as! CFString!
+        if UTTypeConformsTo(mediaType, kUTTypeImage) != 0 {
+            var image = info[UIImagePickerControllerEditedImage] as! UIImage!
+            if (image == nil) {
+                image = info[UIImagePickerControllerOriginalImage] as! UIImage!
+            }
+
+            // Resize image to 2048px max width
+            image = image.resizedImage(2048)
+
+            // Upload image to server
+            UIImageJPEGRepresentation(image, 0.9)
+        }
+    }
+}
+
+extension UIImage {
+    func resizedImage(max: CGFloat) -> UIImage {
+        let width = size.width
+        let height = size.height
+
+        let scale = width > height ? max/width : max/height
+        if scale >= 1 {
+            return self
+        } else {
+            let newWidth = width * scale
+            let newHeight = height * scale
+
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: newWidth, height: newHeight), false, 0)
+            drawInRect(CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+            let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return resizedImage
         }
     }
 }

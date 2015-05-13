@@ -6,8 +6,7 @@
 
 * Is there a better way than lengthOfBytesUsingEncoding to check if string is ASCII?
 * Add search bar
-* Edit, done, sentDateLabel.x #bug
-* Use KVO to set edit button enabled
+* Use KVO to set edit button visible
 
 ## ChatViewController
 

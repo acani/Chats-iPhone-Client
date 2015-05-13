@@ -4,9 +4,9 @@
 
 Compliments of Apple
 
-* [`MessageBubble@2x.png`][1] is a derivative of [`bubble@2x.png`][2].
-* [`MessageIncoming.aiff`][3] is a copy of [`SIMToolkitSMS.aiff`][4].
-* [`MessageOutgoing.aiff`][5] is a copy of [`message-sent.aiff`][6].
+* [`MessageBubble@2x.png`][1] is a derivative of Apple's iOS Messages app message bubble.
+* [`MessageIncoming.aiff`][2] is a copy of [`Received Message.aiff `][11].
+* [`MessageOutgoing.aiff`][3] is a copy of [`Sent Message.aiff`][12].
 
 Command to find files: `find /Applications/Xcode.app/ -name *.png`
 
@@ -34,22 +34,25 @@ Command to find files: `find /Applications/Xcode.app/ -name *.png`
 20. http://uifaces.com/cynthiasavard
 21. http://uifaces.com/stushona
 
-Blank Avatar. [User][7] designed by [Lynn Christensen][8] from the [Noun Project][9]
+Blank Avatar. [User][4] designed by [Lynn Christensen][5] from the [Noun Project][6]
 
 ## Tab Bar Icons
 
-1. https://thenounproject.com/term/users/12931/
-2. https://thenounproject.com/term/message/1332/
-3. https://thenounproject.com/term/profile/12930/
-4. https://thenounproject.com/term/settings/89645/
+1. [Users][7]
+2. [Chats][8]
+3. [Profile][9]
+4. [Settings][10]
 
 
-[1]: https://github.com/acani/Chats/raw/master/Chats/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
-[2]: file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/PrivateFrameworks/ChatKit.framework/bubble@2x.png
-[3]: https://github.com/acani/Chats/raw/master/Chats/Chats/Resources/MessageIncoming.aiff
-[4]: file:///Applications/Xcode.app//Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/CoreServices/SpringBoard.app/SIMToolkitSMS.aiff
-[5]: https://github.com/acani/Chats/raw/master/Chats/Chats/Resources/MessageOutgoing.aiff
-[6]: https://github.com/oovoodev/iOS-SDK-Sample/blob/master/ooVooSample/JSMessagesViewController/Resources/Sounds/message-sent.aiff
-[7]: http://www.thenounproject.com/term/user/4520/
-[8]: http://www.thenounproject.com/lynnthemac
-[9]: http://www.thenounproject.com
+[1]: https://github.com/acani/Chats/blob/master/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
+[2]: https://github.com/acani/Chats/blob/master/Chats/MessageIncoming.aiff
+[3]: https://github.com/acani/Chats/blob/master/Chats/MessageOutgoing.aiff
+[4]: http://www.thenounproject.com/term/user/4520/
+[5]: http://www.thenounproject.com/lynnthemac
+[6]: http://www.thenounproject.com
+[7]: https://thenounproject.com/term/users/12931/
+[8]: https://thenounproject.com/term/message/1332/
+[9]: https://thenounproject.com/term/profile/12930/
+[10]: https://thenounproject.com/term/settings/89645/
+[11]: file:///Applications/Messages.app/Contents/Resources/Received Message.aiff
+[12]: file:///Applications/Messages.app/Contents/Resources/Sent Message.aiff

@@ -17,9 +17,9 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
 
         view.backgroundColor = UIColor.whiteColor()
 
-        toTextView.backgroundColor = UIColor(white: 248/255.0, alpha: 1)
+        toTextView.backgroundColor = UIColor(white: 248/255, alpha: 1)
         let attributedString = NSMutableAttributedString(string: "To: ")
-        attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor(red: 142/255.0, green: 142/255.0, blue: 147/255.0, alpha: 1), range: NSMakeRange(0, 3))
+        attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1), range: NSMakeRange(0, 3))
         toTextView.attributedText = attributedString
         toTextView.font = UIFont.systemFontOfSize(15)
         toTextView.contentInset = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 0)
@@ -48,7 +48,11 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UserTableViewCell), forIndexPath: indexPath) as! UserTableViewCell
         let user = searchResults[indexPath.row]
-        cell.pictureImageView.image = UIImage(named: user.pictureName())
+        if let pictureName = user.pictureName() {
+            cell.pictureImageView.image = UIImage(named: pictureName)
+        } else {
+            cell.pictureImageView.image = nil
+        }
         cell.nameLabel.text = user.name
         cell.usernameLabel.text = "$" + user.username
         return cell

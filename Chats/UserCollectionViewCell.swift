@@ -7,8 +7,8 @@ class UserCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(white: 248/255.0, alpha: 1)
-        layer.borderColor = UIColor(white: 178/255.0, alpha: 1).CGColor
+        backgroundColor = UIColor(white: 248/255, alpha: 1)
+        layer.borderColor = UIColor(white: 178/255, alpha: 1).CGColor
         layer.borderWidth = 0.5
 
         backgroundView = UIImageView(frame: frame)

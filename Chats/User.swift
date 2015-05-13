@@ -34,7 +34,7 @@ class User {
         self.lastName = lastName
     }
 
-    func pictureName() -> String {
-        return "User\(ID).jpg"
+    func pictureName() -> String? {
+        return ID > 21 ? nil : "User\(ID).jpg"
     }
 }

@@ -25,7 +25,7 @@ class UserTableViewCell: UITableViewCell {
         usernameLabel.autoresizingMask = .FlexibleWidth
 //        usernameLabel.backgroundColor = UIColor.orangeColor()
         usernameLabel.font = UIFont.systemFontOfSize(15)
-        usernameLabel.textColor = UIColor(white: 143/255.0, alpha: 1)
+        usernameLabel.textColor = UIColor(white: 143/255, alpha: 1)
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 

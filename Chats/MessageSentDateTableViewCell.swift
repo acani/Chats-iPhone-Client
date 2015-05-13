@@ -8,7 +8,7 @@ class MessageSentDateTableViewCell: UITableViewCell {
         sentDateLabel.backgroundColor = UIColor.clearColor()
         sentDateLabel.font = UIFont.systemFontOfSize(11)
         sentDateLabel.textAlignment = .Center
-        sentDateLabel.textColor = UIColor(red: 142/255.0, green: 142/255.0, blue: 147/255.0, alpha: 1)
+        sentDateLabel.textColor = UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1)
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .None

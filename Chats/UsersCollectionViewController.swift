@@ -28,7 +28,11 @@ class UsersCollectionViewController: UICollectionViewController {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(NSStringFromClass(UserCollectionViewCell), forIndexPath: indexPath) as! UserCollectionViewCell
         let user = account.users[indexPath.item]
         cell.nameLabel.text = user.name
-        (cell.backgroundView as! UIImageView).image = UIImage(named: user.pictureName())
+        if let pictureName = user.pictureName() {
+            (cell.backgroundView as! UIImageView).image = UIImage(named: pictureName)
+        } else {
+            (cell.backgroundView as! UIImageView).image = nil
+        }
         return cell
     }
 

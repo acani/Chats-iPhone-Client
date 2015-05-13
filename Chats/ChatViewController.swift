@@ -26,7 +26,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             textView.layer.borderColor = UIColor(red: 200/255, green: 200/255, blue: 205/255, alpha:1).CGColor
             textView.layer.borderWidth = 0.5
             textView.layer.cornerRadius = 5
-//        textView.placeholder = "Message"
+//            textView.placeholder = "Message"
             textView.scrollsToTop = false
             textView.textContainerInset = UIEdgeInsetsMake(4, 3, 3, 3)
             toolBar.addSubview(textView)

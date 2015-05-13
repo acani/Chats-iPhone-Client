@@ -14,7 +14,6 @@ class UsersCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.whiteColor()
-//        collectionView?.alwaysBounceHorizontal = true
         collectionView!.registerClass(UserCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UserCollectionViewCell))
     }
 
@@ -40,8 +39,6 @@ class UsersCollectionViewController: UICollectionViewController {
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let user = account.users[indexPath.item]
-        let chat = Chat(user: user, lastMessageText: "", lastMessageSentDate: NSDate()) // TODO: Pass nil for text & date
-        let chatViewController = ChatViewController(chat: chat)
-        navigationController?.pushViewController(chatViewController, animated: true)
+        navigationController?.pushViewController(ProfileTableViewController(user: user), animated: true)
     }
 }

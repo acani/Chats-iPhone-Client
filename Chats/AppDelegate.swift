@@ -37,7 +37,7 @@ func createTabBarController() -> UITabBarController {
     let chatsNavigationController = UINavigationController(rootViewController: chatsTableViewController)
 
     // Create `profileTableViewController`
-    let profileTableViewController = ProfileTableViewController()
+    let profileTableViewController = ProfileTableViewController(user: account.user)
     profileTableViewController.tabBarItem.image = UIImage(named: "Profile")
     let profileNavigationController = UINavigationController(rootViewController: profileTableViewController)
 
@@ -52,8 +52,8 @@ func createTabBarController() -> UITabBarController {
 }
 
 func continueAsGuest() {
-    account.accessToken = "guest_access_token"
     account.user = User(ID: 24, username: "guest", firstName: "Guest", lastName: "User")
+    account.accessToken = "guest_access_token"
     let minute: NSTimeInterval = 60, hour = minute * 60, day = hour * 24
     account.chats = [
         Chat(user: User(ID: 1, username: "mattdipasquale", firstName: "Matt", lastName: "Di Pasquale"), lastMessageText: "Thatnks for checking out Chats! :-)", lastMessageSentDate: NSDate()),

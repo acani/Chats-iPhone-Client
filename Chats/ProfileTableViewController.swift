@@ -2,12 +2,23 @@ import MobileCoreServices
 import UIKit
 
 class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    let user: User
     var saveChanges = false
 
-    convenience init() {
-        self.init(nibName: nil, bundle: nil)
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
         title = "Profile"
-        navigationItem.rightBarButtonItem = editButtonItem()
+
+        if user === account.user {
+            navigationItem.rightBarButtonItem = editButtonItem()
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "chatAction")
+        }
+    }
+
+    required init!(coder aDecoder: NSCoder!) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: UIViewController
@@ -41,7 +52,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
             pictureButton.layer.borderColor = UIColor(white: 200/255, alpha: 1).CGColor
             pictureButton.layer.borderWidth = 1
             pictureButton.layer.cornerRadius = 60/2
-            if let pictureName = account.user.pictureName() {
+            if let pictureName = user.pictureName() {
                 pictureButton.setBackgroundImage(UIImage(named: pictureName), forState: .Normal)
             } else {
                 pictureButton.setTitle("add photo", forState: .Normal)
@@ -52,7 +63,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
             pictureButton.titleLabel?.textAlignment = .Center
             tableView.addSubview(pictureButton)
 
-            if account.user.pictureName() != nil {
+            if user.pictureName() != nil {
                 addEditPictureButton()
             }
         } else {
@@ -66,7 +77,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
             if saveChanges {
                 let firstNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!
                 if firstNameTextField.hasText() {
-                    account.user.firstName = firstNameTextField.text
+                    user.firstName = firstNameTextField.text
                 } else {
                     let alertView = UIAlertView(title: "First Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
                     alertView.show()
@@ -76,7 +87,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
 
                 let lastNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))!
                 if lastNameTextField.hasText() {
-                    account.user.lastName = lastNameTextField.text
+                    user.lastName = lastNameTextField.text
                 } else {
                     let alertView = UIAlertView(title: "Last Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
                     alertView.show()
@@ -100,7 +111,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
 
     func addPictureAndName() {
         let userPictureImageView = UserPictureImageView(frame: CGRect(x: 15, y: 12, width: 60, height: 60))
-        userPictureImageView.configureWithUser(account.user)
+        userPictureImageView.configureWithUser(user)
         userPictureImageView.tag = 3
         tableView.addSubview(userPictureImageView)
 
@@ -112,15 +123,20 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         let nameLabel = UILabel(frame: CGRect(x: 91, y: 31, width: tableHeaderView.frame.width-91, height: 21))
         nameLabel.autoresizingMask = .FlexibleWidth
         nameLabel.font = UIFont.boldSystemFontOfSize(17)
-        nameLabel.text = account.user.name
+        nameLabel.text = user.name
         tableHeaderView.addSubview(nameLabel)
     }
 
     // MARK: Actions
 
+    func chatAction() {
+        let chat = Chat(user: user, lastMessageText: "", lastMessageSentDate: NSDate()) // TODO: Pass nil for text & date
+        navigationController?.pushViewController(ChatViewController(chat: chat), animated: true)
+    }
+
     func editPictureAction() {
         let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take Photo", "Choose Photo")
-        if account.user.pictureName() != nil {
+        if user.pictureName() != nil {
             // actionSheet.addButtonWithTitle("Edit Photo")
             actionSheet.addButtonWithTitle("Delete Photo")
             actionSheet.destructiveButtonIndex = 3
@@ -148,10 +164,10 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         var placeholder: String!
         if indexPath.row == 0 {
             placeholder = "First Name"
-            textField.text = account.user.firstName
+            textField.text = user.firstName
         } else {
             placeholder = "Last Name"
-            textField.text = account.user.lastName
+            textField.text = user.lastName
         }
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName: UIColor(white: 127/255, alpha: 1)])
         return cell

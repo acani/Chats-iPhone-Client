@@ -1,4 +1,4 @@
-import Foundation
+import Foundation.NSDate
 
 class Message {
     let incoming: Bool

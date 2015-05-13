@@ -1,4 +1,4 @@
-import Foundation
+import Foundation.NSDate
 
 var dateFormatter = NSDateFormatter()
 

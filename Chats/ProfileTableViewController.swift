@@ -2,6 +2,8 @@ import MobileCoreServices
 import UIKit
 
 class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    var saveChanges = false
+
     convenience init() {
         self.init(nibName: nil, bundle: nil)
         title = "Profile"
@@ -24,6 +26,8 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         super.setEditing(editing, animated: animated)
 
         if editing {
+            saveChanges = true
+
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelEditingAction")
             tableView.setEditing(false, animated: false)
             tableView.tableHeaderView = nil
@@ -52,17 +56,35 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
                 addEditPictureButton()
             }
         } else {
-            account.user.firstName = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))?.text
-            account.user.lastName = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))?.text
-
             navigationItem.leftBarButtonItem = nil
 
             tableView.viewWithTag(4)!.removeFromSuperview()
             tableView.viewWithTag(5)?.removeFromSuperview()
 
             addPictureAndName()
-        }
 
+            if saveChanges {
+                let firstNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!
+                if firstNameTextField.hasText() {
+                    account.user.firstName = firstNameTextField.text
+                } else {
+                    let alertView = UIAlertView(title: "First Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
+                    alertView.show()
+                    setEditing(true, animated: false)
+                    return
+                }
+
+                let lastNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))!
+                if lastNameTextField.hasText() {
+                    account.user.lastName = lastNameTextField.text
+                } else {
+                    let alertView = UIAlertView(title: "Last Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
+                    alertView.show()
+                    setEditing(true, animated: false)
+                    return
+                }
+            }
+        }
         tableView.reloadData()
     }
 
@@ -107,6 +129,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
     }
 
     func cancelEditingAction() {
+        saveChanges = false
         setEditing(false, animated: true)
     }
 
@@ -124,10 +147,10 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
 
         var placeholder: String!
         if indexPath.row == 0 {
-            placeholder = "First"
+            placeholder = "First Name"
             textField.text = account.user.firstName
         } else {
-            placeholder = "Last"
+            placeholder = "Last Name"
             textField.text = account.user.lastName
         }
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName: UIColor(white: 127/255, alpha: 1)])

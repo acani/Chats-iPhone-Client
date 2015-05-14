@@ -3,8 +3,9 @@ import ObjectiveC.NSObject
 let account = Account()
 
 class Account: NSObject {
-    dynamic var accessToken: String!
+    var phone: String!
     var user: User!
+    dynamic var accessToken: String!
     var users = [User]()
     var chats = [Chat]()
 

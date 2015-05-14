@@ -52,6 +52,7 @@ func createTabBarController() -> UITabBarController {
 }
 
 func continueAsGuest() {
+    account.phone = "2102390602"
     account.user = User(ID: 24, username: "guest", firstName: "Guest", lastName: "User")
     account.accessToken = "guest_access_token"
     let minute: NSTimeInterval = 60, hour = minute * 60, day = hour * 24

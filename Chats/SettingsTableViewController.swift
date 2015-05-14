@@ -1,6 +1,12 @@
 import UIKit
 
 class SettingsTableViewController: UITableViewController, UIActionSheetDelegate {
+    enum Section : Int {
+        case Phone
+        case LogOut
+        case DeleteAccount
+    }
+
     convenience init() {
         self.init(style: .Grouped)
         title = "Settings"
@@ -14,7 +20,7 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
     // MARK: - UITableViewDataSource
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -22,12 +28,31 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
+        // Set style & identifier based on section
+        let section = Section(rawValue: indexPath.section)!
+        var style: UITableViewCellStyle = .Default
+        var identifier = "Default"
+        if section == .Phone {
+            style = .Value1
+            identifier = "Value1"
+        }
 
+        // Dequeue or create cell with style & identifier
+        var cell = tableView.dequeueReusableCellWithIdentifier(identifier) as! UITableViewCell!
+        if cell == nil {
+            cell = UITableViewCell(style: style, reuseIdentifier: identifier)
+            cell.textLabel?.font = UIFont.systemFontOfSize(18)
+        }
+
+        // Customize cell
         cell.textLabel?.textAlignment = .Center
-
-        switch indexPath.section {
-        case 0:
+        switch section {
+        case .Phone:
+            cell.accessoryType = .DisclosureIndicator
+            cell.detailTextLabel?.text = account.phone
+            cell.textLabel?.text = "Phone Number"
+            cell.textLabel?.textAlignment = .Left
+        case .LogOut:
             cell.textLabel?.text = "Log Out"
             cell.textLabel?.textColor = UIColor(red: 0/255, green: 88/255, blue: 249/255, alpha: 1)
         default:
@@ -43,8 +68,10 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
 
-        switch indexPath.section {
-        case 0:
+        switch Section(rawValue: indexPath.section)! {
+        case .Phone:
+            navigationController?.pushViewController(EditPhoneTableViewController(), animated: true)
+        case .LogOut:
             account.logOut()
         default:
             let actionSheet = UIActionSheet(title: "Deleting your account will permanently delete your phone number, picture, and first & last name.\n\nAre you sure you want to delete your account?", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete Accout")

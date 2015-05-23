@@ -25,7 +25,7 @@ class EditPhoneTableViewController: UITableViewController {
         let textField = cell.textField
         textField.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
         textField.clearButtonMode = .WhileEditing
-        textField.keyboardType = UIKeyboardType.NumberPad
+        textField.keyboardType = .NumberPad
         textField.placeholder = "Phone Number"
         textField.text = account.phone
         textField.becomeFirstResponder()

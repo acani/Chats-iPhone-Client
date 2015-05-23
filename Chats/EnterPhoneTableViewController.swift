@@ -9,7 +9,7 @@ class EnterPhoneTableViewController: UITableViewController {
         title = "Enter Phone Number"
     }
 
-    // MARK - UIViewController
+    // MARK: - UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +28,7 @@ class EnterPhoneTableViewController: UITableViewController {
         tableFooterView.addSubview(continueAsGuestButton)
     }
 
-    // MARK: UITableViewDataSource
+    // MARK: - UITableViewDataSource
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
@@ -39,13 +39,13 @@ class EnterPhoneTableViewController: UITableViewController {
         let textField = cell.textField
         textField.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
         textField.clearButtonMode = .WhileEditing
-        textField.keyboardType = UIKeyboardType.PhonePad
+        textField.keyboardType = .NumberPad
         textField.placeholder = "Phone Number"
         textField.becomeFirstResponder()
         return cell
     }
 
-    // MARK: Actions
+    // MARK: - Actions
 
     func continueAsGuestAction() {
         continueAsGuest()
@@ -57,7 +57,30 @@ class EnterPhoneTableViewController: UITableViewController {
     }
 
     func verifyAction() {
-        println("Verify")
-//        myAccount.createCodeWithPhone(textField.text)
+        let activityOverlayView = ActivityOverlayView.sharedView()
+        activityOverlayView.showWithTitle("Connecting")
+
+        // Create cod with phone number
+        let phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
+        var request = formRequest("POST", "/codes", ["phone": phone])
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            let statusCode = (response as! NSHTTPURLResponse).statusCode
+
+            dispatch_async(dispatch_get_main_queue(), {
+                activityOverlayView.dismissAnimated(true)
+
+                switch statusCode {
+                case 201, 200: // sign-up, log-in
+                    let enterCodeViewController = EnterCodeViewController(nibName: nil, bundle: nil)
+                    enterCodeViewController.title = phone
+                    enterCodeViewController.signingUp = statusCode == 201 ? true : false
+                    self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+                default:
+                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                    UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
+                }
+            })
+        })
+        dataTask.resume()
     }
 }

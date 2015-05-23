@@ -1,11 +1,11 @@
 import Foundation.NSString
 
 class User {
-    let ID: Int
+    let ID: UInt
     var username: String
     var firstName: String
     var lastName: String
-    var name: String? {
+    var name: String {
         return firstName + " " + lastName
     }
     var initials: String? {
@@ -19,7 +19,7 @@ class User {
         return initials
     }
 
-    init(ID: Int, username: String, firstName: String, lastName: String) {
+    init(ID: UInt, username: String, firstName: String, lastName: String) {
         self.ID = ID
         self.username = username
         self.firstName = firstName

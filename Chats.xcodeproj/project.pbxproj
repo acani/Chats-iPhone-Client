@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D21F73B11B0A6A3C001106F9 /* CodeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21F73B01B0A6A3C001106F9 /* CodeInputView.swift */; };
+		D21F73B41B0A6D27001106F9 /* ActivityOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21F73B31B0A6D27001106F9 /* ActivityOverlayView.swift */; };
 		D221068E1B02E5E300302D90 /* UserPictureImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D221068D1B02E5E300302D90 /* UserPictureImageView.swift */; };
 		D22106901B0414A200302D90 /* EditPhoneTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D221068F1B0414A200302D90 /* EditPhoneTableViewController.swift */; };
+		D22106931B067E6600302D90 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22106921B067E6600302D90 /* Networking.swift */; };
+		D22106951B07B0B700302D90 /* EnterCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22106941B07B0B700302D90 /* EnterCodeViewController.swift */; };
 		D236741C1AF3C4D80073552A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */; };
 		D23EFE56197F053100C575C5 /* MessageSentDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */; };
 		D2B11CEA1AF43212004AE42B /* EnterPhoneTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */; };
@@ -48,8 +52,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D21F73B01B0A6A3C001106F9 /* CodeInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeInputView.swift; sourceTree = "<group>"; };
+		D21F73B31B0A6D27001106F9 /* ActivityOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityOverlayView.swift; sourceTree = "<group>"; };
 		D221068D1B02E5E300302D90 /* UserPictureImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPictureImageView.swift; sourceTree = "<group>"; };
 		D221068F1B0414A200302D90 /* EditPhoneTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPhoneTableViewController.swift; sourceTree = "<group>"; };
+		D22106921B067E6600302D90 /* Networking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		D22106941B07B0B700302D90 /* EnterCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterCodeViewController.swift; sourceTree = "<group>"; };
 		D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSentDateTableViewCell.swift; sourceTree = "<group>"; };
 		D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		D29AEE8F1960C79700925449 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -103,10 +111,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D21F73AF1B0A6A3C001106F9 /* CodeInputView */ = {
+			isa = PBXGroup;
+			children = (
+				D21F73B01B0A6A3C001106F9 /* CodeInputView.swift */,
+			);
+			path = CodeInputView;
+			sourceTree = "<group>";
+		};
+		D21F73B21B0A6D27001106F9 /* ActivityOverlayView */ = {
+			isa = PBXGroup;
+			children = (
+				D21F73B31B0A6D27001106F9 /* ActivityOverlayView.swift */,
+			);
+			path = ActivityOverlayView;
+			sourceTree = "<group>";
+		};
+		D22106911B067E6600302D90 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				D22106921B067E6600302D90 /* Networking.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		D2B11CE51AF43205004AE42B /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
 				D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */,
+				D22106941B07B0B700302D90 /* EnterCodeViewController.swift */,
 				D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */,
 			);
 			name = Welcome;
@@ -115,6 +148,9 @@
 		D2B11CEC1AF43281004AE42B /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				D21F73B21B0A6D27001106F9 /* ActivityOverlayView */,
+				D21F73AF1B0A6A3C001106F9 /* CodeInputView */,
+				D22106911B067E6600302D90 /* Networking */,
 				D2B11CED1AF43281004AE42B /* UIButtonBackgroundColor */,
 			);
 			path = Libraries;
@@ -373,12 +409,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2DEC3A0195B33C20097CB9D /* AppDelegate.swift in Sources */,
+				D22106951B07B0B700302D90 /* EnterCodeViewController.swift in Sources */,
 				D2DEC3BD195B34AA0097CB9D /* Chat.swift in Sources */,
 				D2B11CFA1AF47D8A004AE42B /* ProfileTableViewController.swift in Sources */,
 				D2DEC3C8195B354F0097CB9D /* ChatViewController.swift in Sources */,
 				D2B11CEB1AF43212004AE42B /* TextFieldTableViewCell.swift in Sources */,
 				D2DEC3BF195B34B10097CB9D /* Message.swift in Sources */,
 				D2DEC3B9195B34700097CB9D /* Account.swift in Sources */,
+				D22106931B067E6600302D90 /* Networking.swift in Sources */,
 				D2C2F3F71A1BA72100A52FE8 /* ComposeViewController.swift in Sources */,
 				D23EFE56197F053100C575C5 /* MessageSentDateTableViewCell.swift in Sources */,
 				D2B11CF11AF432B9004AE42B /* UIButtonBackgroundColor.swift in Sources */,
@@ -391,8 +429,10 @@
 				D2B11CEA1AF43212004AE42B /* EnterPhoneTableViewController.swift in Sources */,
 				D221068E1B02E5E300302D90 /* UserPictureImageView.swift in Sources */,
 				D2DEC3BB195B34A20097CB9D /* User.swift in Sources */,
+				D21F73B11B0A6A3C001106F9 /* CodeInputView.swift in Sources */,
 				D2C2F3F31A1BA64100A52FE8 /* PlaceholderTextView.swift in Sources */,
 				D2DEC3CA195B35560097CB9D /* MessageBubbleTableViewCell.swift in Sources */,
+				D21F73B41B0A6D27001106F9 /* ActivityOverlayView.swift in Sources */,
 				D2B11CFD1AF47DFB004AE42B /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

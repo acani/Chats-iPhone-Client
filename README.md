@@ -1,4 +1,4 @@
-# Chats
+# Chats-iPhone
 
 Just the iPhone UI. No back-end servers.
 

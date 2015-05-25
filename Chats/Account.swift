@@ -2,8 +2,8 @@ import UIKit
 
 let account = Account()
 
-let baseURL = NSURL(string: "http://localhost:5100")
-//let baseURL = NSURL(string: "https://acanichats.herokuapp.com")
+let baseURL = NSURL(string: "https://acani-chats.herokuapp.com")
+//let baseURL = NSURL(string: "http://localhost:5100")
 
 class Account: NSObject {
     var phone: String!

@@ -4,6 +4,8 @@ Open-Source Native iOS Messages App
 
 ![Screenshots][1]
 
+Be sure to `git clone --recursive`.
+
 To demo with remote server, build & run.
 
 To demo with local server, comment/uncomment `baseURL` at the top of `Account.swift`.

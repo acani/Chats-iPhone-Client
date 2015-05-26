@@ -1,16 +1,14 @@
-# Chats-iPhone
-
-Open-Source Native iOS Messages App
-
 ![Screenshots][1]
 
-Be sure to `git clone --recursive`.
+#### Instructions
+
+Use `git clone --recursive` to initialize and update submodules.
 
 To demo with remote server, build & run.
 
 To demo with local server, comment/uncomment `baseURL` at the top of `Account.swift`.
 
-## Related Projects
+#### Related Projects
 
 * [JSQMessagesViewController][2]
 * [UIBubbleTableView][3]

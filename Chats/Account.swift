@@ -9,7 +9,7 @@ class Account: NSObject {
     var phone: String!
     dynamic var accessToken: String!
     var user: User!
-    var users = [User]()
+    dynamic var users = [User]()
     var chats = [Chat]()
 
     func logOut() -> NSURLSessionDataTask {

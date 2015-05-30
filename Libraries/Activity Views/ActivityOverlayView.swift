@@ -31,7 +31,6 @@ class ActivityOverlayView: UIView {
         self.addSubview(activityIndicatorView)
 
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 128-20-16, width: 128, height: 20))
-        titleLabel.backgroundColor = UIColor.clearColor()
         titleLabel.font = UIFont.boldSystemFontOfSize(16)
         titleLabel.tag = 2
         titleLabel.textAlignment = .Center

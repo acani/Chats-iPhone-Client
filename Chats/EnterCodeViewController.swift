@@ -50,7 +50,6 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
                         self.navigationController?.pushViewController(profileTableViewController, animated: true)
                     default:
                         UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
-                        break
                     }
                 })
             })
@@ -73,7 +72,6 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
                         account.accessToken = accessToken
                     default:
                         UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
-                        break
                     }
                 })
             })

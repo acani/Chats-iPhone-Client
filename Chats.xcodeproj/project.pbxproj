@@ -39,6 +39,7 @@
 		D2DEC3CA195B35560097CB9D /* MessageBubbleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3C9195B35560097CB9D /* MessageBubbleTableViewCell.swift */; };
 		D2DEC3CE195B39290097CB9D /* MessageIncoming.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3CC195B39290097CB9D /* MessageIncoming.aiff */; };
 		D2DEC3CF195B39290097CB9D /* MessageOutgoing.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3CD195B39290097CB9D /* MessageOutgoing.aiff */; };
+		D2FFC1421B165C140085049A /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FFC1411B165C140085049A /* ActivityView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		D2DEC3C9195B35560097CB9D /* MessageBubbleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleTableViewCell.swift; sourceTree = "<group>"; };
 		D2DEC3CC195B39290097CB9D /* MessageIncoming.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageIncoming.aiff; sourceTree = "<group>"; };
 		D2DEC3CD195B39290097CB9D /* MessageOutgoing.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageOutgoing.aiff; sourceTree = "<group>"; };
+		D2FFC1411B165C140085049A /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,12 +121,13 @@
 			path = CodeInputView;
 			sourceTree = "<group>";
 		};
-		D21F73B21B0A6D27001106F9 /* ActivityOverlayView */ = {
+		D21F73B21B0A6D27001106F9 /* Activity Views */ = {
 			isa = PBXGroup;
 			children = (
 				D21F73B31B0A6D27001106F9 /* ActivityOverlayView.swift */,
+				D2FFC1411B165C140085049A /* ActivityView.swift */,
 			);
-			path = ActivityOverlayView;
+			path = "Activity Views";
 			sourceTree = "<group>";
 		};
 		D22106911B067E6600302D90 /* Networking */ = {
@@ -148,7 +151,7 @@
 		D2B11CEC1AF43281004AE42B /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				D21F73B21B0A6D27001106F9 /* ActivityOverlayView */,
+				D21F73B21B0A6D27001106F9 /* Activity Views */,
 				D21F73AF1B0A6A3C001106F9 /* CodeInputView */,
 				D22106911B067E6600302D90 /* Networking */,
 				D2B11CED1AF43281004AE42B /* UIButtonBackgroundColor */,
@@ -422,6 +425,7 @@
 				D2B11CF11AF432B9004AE42B /* UIButtonBackgroundColor.swift in Sources */,
 				D2DEC3C6195B35440097CB9D /* ChatTableViewCell.swift in Sources */,
 				D2DEC3C4195B35390097CB9D /* ChatsTableViewController.swift in Sources */,
+				D2FFC1421B165C140085049A /* ActivityView.swift in Sources */,
 				D2B11CF51AF47197004AE42B /* UsersCollectionViewController.swift in Sources */,
 				D2C2F3F51A1BA67E00A52FE8 /* UserTableViewCell.swift in Sources */,
 				D22106901B0414A200302D90 /* EditPhoneTableViewController.swift in Sources */,

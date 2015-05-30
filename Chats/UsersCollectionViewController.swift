@@ -11,10 +11,58 @@ class UsersCollectionViewController: UICollectionViewController {
         title = "Users"
     }
 
+    deinit {
+        account.removeObserver(self, forKeyPath: "users")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView?.backgroundColor = UIColor.whiteColor()
+        collectionView!.alwaysBounceVertical = true
+        collectionView!.backgroundColor = UIColor.whiteColor()
         collectionView!.registerClass(UserCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UserCollectionViewCell))
+        account.addObserver(self, forKeyPath: "users", options: NSKeyValueObservingOptions(0), context: nil)
+        getUsers()
+    }
+
+    func getUsers() -> NSURLSessionDataTask {
+        let activityView = ActivityView()
+        activityView.show()
+
+        let request = NSMutableURLRequest(URL: URLWithPath("/users"))
+        request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            let statusCode = (response as! NSHTTPURLResponse).statusCode
+            let collection: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
+
+            var users = [User]()
+            if statusCode == 200 {
+                for item in collection as! NSArray {
+                    let ID = item["id"] as! NSNumber
+                    let name = item["name"] as! Dictionary<String, String>
+                    let user = User(ID: ID.unsignedLongValue, username: "", firstName: name["first"]!, lastName: name["last"]!)
+                    users.append(user)
+                }
+            }
+
+            dispatch_async(dispatch_get_main_queue(), {
+                activityView.dismissAnimated(true)
+
+                switch statusCode {
+                case 200:
+                    account.users = users
+                default:
+                    UIAlertView(dictionary: (collection as! Dictionary), error: error, delegate: self).show()
+                }
+            })
+        })
+        dataTask.resume()
+        return dataTask
+    }
+
+    // MARK: - NSKeyValueObserving
+
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+        collectionView!.reloadData()
     }
 
     // MARK: UICollectionViewDataSource

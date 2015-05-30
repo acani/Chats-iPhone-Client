@@ -7,9 +7,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         account.addObserver(self, forKeyPath: "accessToken", options: NSKeyValueObservingOptions(0), context: nil) // always
         if let accessToken = account.accessToken {
-            let userIDString = accessToken.substringToIndex(advance(accessToken.endIndex, -33))
-            let userID = UInt(userIDString.toInt()!)
-            account.user = User(ID: userID, username: "", firstName: "", lastName: "")
+            account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
         }
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()

@@ -66,9 +66,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
                     switch statusCode {
                     case 201:
                         let accessToken = dictionary!["access_token"] as String!
-                        let userIDString = accessToken.substringToIndex(advance(accessToken.endIndex, -33))
-                        let userID = UInt(userIDString.toInt()!)
-                        account.user = User(ID: userID, username: "", firstName: "", lastName: "")
+                        account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
                         account.accessToken = accessToken
                     default:
                         UIAlertView(dictionary: dictionary, error: error, delegate: self).show()

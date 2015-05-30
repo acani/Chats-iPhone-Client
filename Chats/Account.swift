@@ -73,6 +73,12 @@ class Account: NSObject {
         return dataTask
     }
 
+    func setUserWithAccessToken(accessToken: String, firstName: String, lastName: String) {
+        let userIDString = accessToken.substringToIndex(advance(accessToken.endIndex, -33))
+        let userID = UInt(userIDString.toInt()!)
+        user = User(ID: userID, username: "", firstName: firstName, lastName: lastName)
+    }
+
     private func reset() {
         phone = nil
         accessToken = nil

@@ -119,9 +119,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
                         switch statusCode {
                         case 201:
                             let accessToken = dictionary!["access_token"] as String!
-                            let userIDString = accessToken.substringToIndex(advance(accessToken.endIndex, -33))
-                            let userID = UInt(userIDString.toInt()!)
-                            account.user = User(ID: userID, username: "", firstName: firstNameTextField.text, lastName: lastNameTextField.text)
+                            account.setUserWithAccessToken(accessToken, firstName: firstNameTextField.text, lastName: lastNameTextField.text)
                             account.accessToken = accessToken
                         default:
                             UIAlertView(dictionary: dictionary, error: error, delegate: self).show()

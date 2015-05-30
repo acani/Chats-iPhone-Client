@@ -6,10 +6,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         account.addObserver(self, forKeyPath: "accessToken", options: NSKeyValueObservingOptions(0), context: nil) // always
-
+        if let accessToken = account.accessToken {
+            let userIDString = accessToken.substringToIndex(advance(accessToken.endIndex, -33))
+            let userID = UInt(userIDString.toInt()!)
+            account.user = User(ID: userID, username: "", firstName: "", lastName: "")
+        }
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()
-        window!.rootViewController = UINavigationController(rootViewController: EnterPhoneTableViewController())
+        updateWindowRootViewController()
         window!.makeKeyAndVisible()
         return true
     }
@@ -17,10 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: NSKeyValueObserving
 
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-        if account.accessToken != nil {
-            window!.rootViewController = createTabBarController()
-        } else {
+        updateWindowRootViewController()
+    }
+
+    func updateWindowRootViewController() {
+        if account.accessToken == nil {
             window!.rootViewController = UINavigationController(rootViewController: EnterPhoneTableViewController())
+        } else {
+            window!.rootViewController = createTabBarController()
         }
     }
 }

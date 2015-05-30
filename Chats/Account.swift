@@ -5,9 +5,18 @@ let account = Account()
 let baseURL = NSURL(string: "https://acani-chats.herokuapp.com")
 //let baseURL = NSURL(string: "http://localhost:5100")
 
+let AccountAccessTokenKey = "AccountAccessTokenKey"
+
 class Account: NSObject {
     var phone: String!
-    dynamic var accessToken: String!
+    dynamic var accessToken: String! {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(AccountAccessTokenKey)
+        }
+        set {
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: AccountAccessTokenKey)
+        }
+    }
     var user: User!
     dynamic var users = [User]()
     var chats = [Chat]()

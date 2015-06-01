@@ -21,7 +21,10 @@ class UsersCollectionViewController: UICollectionViewController {
         collectionView!.backgroundColor = UIColor.whiteColor()
         collectionView!.registerClass(UserCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UserCollectionViewCell))
         account.addObserver(self, forKeyPath: "users", options: NSKeyValueObservingOptions(0), context: nil)
-        getUsers()
+
+        if account.accessToken != "guest_access_token" {
+            getUsers()
+        }
     }
 
     func getUsers() -> NSURLSessionDataTask {

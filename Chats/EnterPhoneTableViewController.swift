@@ -48,7 +48,7 @@ class EnterPhoneTableViewController: UITableViewController {
     // MARK: - Actions
 
     func continueAsGuestAction() {
-        continueAsGuest()
+        (UIApplication.sharedApplication().delegate as! AppDelegate).continueAsGuest()
     }
 
     func textFieldDidChange(textField: UITextField) {

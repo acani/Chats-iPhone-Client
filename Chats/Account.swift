@@ -100,4 +100,8 @@ class Account: NSObject {
         users = []
         chats = []
     }
+
+    func logOutGuest() {
+        reset()
+    }
 }

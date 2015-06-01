@@ -72,7 +72,11 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
         case .Phone:
             navigationController?.pushViewController(EditPhoneTableViewController(), animated: true)
         case .LogOut:
-            account.logOut()
+            if account.accessToken == "guest_access_token" {
+                account.logOutGuest()
+            } else {
+                account.logOut()
+            }
         default:
             let actionSheet = UIActionSheet(title: "Deleting your account will permanently delete your phone number, picture, and first & last name.\n\nAre you sure you want to delete your account?", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete Accout")
             actionSheet.showInView(tableView.window)
@@ -83,7 +87,11 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
 
     func actionSheet(actionSheet: UIActionSheet, didDismissWithButtonIndex buttonIndex: Int) {
         if buttonIndex != actionSheet.cancelButtonIndex {
-            account.deleteAccount()
+            if account.accessToken == "guest_access_token" {
+                account.logOutGuest()
+            } else {
+                account.deleteAccount()
+            }
         }
     }
 }

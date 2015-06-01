@@ -31,33 +31,39 @@ class UsersCollectionViewController: UICollectionViewController {
         let request = NSMutableURLRequest(URL: URLWithPath("/users"))
         request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            let statusCode = (response as! NSHTTPURLResponse).statusCode
-            let collection: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
+                let collection: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
 
-            var users = [User]()
-            if statusCode == 200 {
-                for item in collection as! NSArray {
-                    let ID = item["id"] as! NSNumber
-                    let name = item["name"] as! Dictionary<String, String>
-                    let user = User(ID: ID.unsignedLongValue, username: "", firstName: name["first"]!, lastName: name["last"]!)
-                    users.append(user)
+                var users = [User]()
+                if statusCode == 200 {
+                    for item in collection as! NSArray {
+                        let ID = item["id"] as! NSNumber
+                        let name = item["name"] as! Dictionary<String, String>
+                        let user = User(ID: ID.unsignedLongValue, username: "", firstName: name["first"]!, lastName: name["last"]!)
+                        users.append(user)
+                    }
                 }
+
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityView.dismissAnimated(true)
+                    if statusCode == 200 {
+                        account.users = users
+                    } else {
+                        UIAlertView(dictionary: (collection as! Dictionary), error: error, delegate: nil).show()
+                    }
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityView.dismissAnimated(true)
+                    UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+                })
             }
-
-            dispatch_async(dispatch_get_main_queue(), {
-                activityView.dismissAnimated(true)
-
-                switch statusCode {
-                case 200:
-                    account.users = users
-                default:
-                    UIAlertView(dictionary: (collection as! Dictionary), error: error, delegate: self).show()
-                }
-            })
         })
         dataTask.resume()
         return dataTask
     }
+
 
     // MARK: - NSKeyValueObserving
 

@@ -29,19 +29,25 @@ class Account: NSObject {
         request.HTTPMethod = "DELETE"
         request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            let statusCode = (response as! NSHTTPURLResponse).statusCode
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
 
-            dispatch_async(dispatch_get_main_queue(), {
-                activityOverlayView.dismissAnimated(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityOverlayView.dismissAnimated(true)
 
-                switch statusCode {
-                case 200:
-                    self.reset()
-                default:
-                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
-                    UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
-                }
-            })
+                    if statusCode == 200 {
+                        self.reset()
+                    } else {
+                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                        UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
+                    }
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityOverlayView.dismissAnimated(true)
+                    UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+                })
+            }
         })
         dataTask.resume()
         return dataTask
@@ -55,19 +61,27 @@ class Account: NSObject {
         request.HTTPMethod = "DELETE"
         request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            let statusCode = (response as! NSHTTPURLResponse).statusCode
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
 
-            dispatch_async(dispatch_get_main_queue(), {
-                activityOverlayView.dismissAnimated(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityOverlayView.dismissAnimated(true)
 
-                switch statusCode {
-                case 200:
-                    self.reset()
-                default:
-                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
-                    UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
-                }
-            })
+                    switch statusCode {
+                    case 200:
+                        self.reset()
+                    default:
+                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                        UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
+                    }
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityOverlayView.dismissAnimated(true)
+                    UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+
+                })
+            }
         })
         dataTask.resume()
         return dataTask

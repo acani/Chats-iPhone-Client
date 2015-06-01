@@ -110,21 +110,29 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
 
                 var request = formRequest("POST", "/users", ["phone": phone, "key": key, "first_name": firstNameTextField.text, "last_name": lastNameTextField.text])
                 let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                    let statusCode = (response as! NSHTTPURLResponse).statusCode
-                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                    if response != nil {
+                        let statusCode = (response as! NSHTTPURLResponse).statusCode
+                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
 
-                    dispatch_async(dispatch_get_main_queue(), {
-                        activityOverlayView.dismissAnimated(true)
+                        dispatch_async(dispatch_get_main_queue(), {
+                            activityOverlayView.dismissAnimated(true)
 
-                        switch statusCode {
-                        case 201:
-                            let accessToken = dictionary!["access_token"] as String!
-                            account.setUserWithAccessToken(accessToken, firstName: firstNameTextField.text, lastName: lastNameTextField.text)
-                            account.accessToken = accessToken
-                        default:
-                            UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
-                        }
-                    })
+                            switch statusCode {
+                            case 201:
+                                let accessToken = dictionary!["access_token"] as String!
+                                account.setUserWithAccessToken(accessToken, firstName: firstNameTextField.text, lastName: lastNameTextField.text)
+                                account.accessToken = accessToken
+                            default:
+                                UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
+                            }
+                        })
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            activityOverlayView.dismissAnimated(true)
+                            UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+
+                        })
+                    }
                 })
                 dataTask.resume()
                 return

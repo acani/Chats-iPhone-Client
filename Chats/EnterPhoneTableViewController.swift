@@ -64,22 +64,30 @@ class EnterPhoneTableViewController: UITableViewController {
         let phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
         var request = formRequest("POST", "/codes", ["phone": phone])
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            let statusCode = (response as! NSHTTPURLResponse).statusCode
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
 
-            dispatch_async(dispatch_get_main_queue(), {
-                activityOverlayView.dismissAnimated(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityOverlayView.dismissAnimated(true)
 
-                switch statusCode {
-                case 201, 200: // sign-up, log-in
-                    let enterCodeViewController = EnterCodeViewController(nibName: nil, bundle: nil)
-                    enterCodeViewController.title = phone
-                    enterCodeViewController.signingUp = statusCode == 201 ? true : false
-                    self.navigationController?.pushViewController(enterCodeViewController, animated: true)
-                default:
-                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
-                    UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
-                }
-            })
+                    switch statusCode {
+                    case 201, 200: // sign-up, log-in
+                        let enterCodeViewController = EnterCodeViewController(nibName: nil, bundle: nil)
+                        enterCodeViewController.title = phone
+                        enterCodeViewController.signingUp = statusCode == 201 ? true : false
+                        self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+                    default:
+                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                        UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
+                    }
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    activityOverlayView.dismissAnimated(true)
+                    UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+
+                })
+            }
         })
         dataTask.resume()
     }

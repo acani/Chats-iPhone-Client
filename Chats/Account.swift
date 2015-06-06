@@ -19,6 +19,7 @@ class Account: NSObject {
     }
     var user: User!
     dynamic var users = [User]()
+    var email: String?
     var chats = [Chat]()
 
     func logOut() -> NSURLSessionDataTask {

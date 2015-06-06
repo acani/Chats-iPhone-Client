@@ -6,7 +6,7 @@ func URLWithPath(path: String) -> NSURL {
 
 // Convert ["name1": "value1", "name2": "value2"] to "name1=value1&name2=value2".
 // NOTE: Like curl, let end-users URL encode names & values.
-func HTTPBodyFromParameters(parameters: Dictionary<String, String!>) -> String {
+func HTTPBodyFromParameters(parameters: Dictionary<String, String>) -> String {
     var body = ""
     var first = true
     for (name, value) in parameters {
@@ -20,7 +20,7 @@ func HTTPBodyFromParameters(parameters: Dictionary<String, String!>) -> String {
     return body
 }
 
-func formRequest(HTTPMethod: String, path: String, parameters: Dictionary<String, String!>) -> NSMutableURLRequest {
+func formRequest(HTTPMethod: String, path: String, parameters: Dictionary<String, String>) -> NSMutableURLRequest {
     let request = NSMutableURLRequest(URL: URLWithPath(path))
     request.HTTPMethod = HTTPMethod
     request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")

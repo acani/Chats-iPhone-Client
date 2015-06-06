@@ -2,18 +2,8 @@ import MobileCoreServices
 import UIKit
 
 class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    var phone: String?
-    var key: String?
     var saveChanges = false
-    var user: User?
-
-    init(phone: String, key: String) {
-        self.phone = phone
-        self.key = key
-        super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
-        title = "Profile"
-        navigationItem.rightBarButtonItem = editButtonItem()
-    }
+    let user: User
 
     init(user: User) {
         self.user = user
@@ -40,9 +30,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         tableView.separatorInset.left = 12 + 60 + 12 + 22
         tableView.tableFooterView = UIView(frame: CGRectZero) // hides trailing separators
 
-        if let user = user {
-            addPictureAndName()
-        }
+        addPictureAndName()
     }
 
     override func setEditing(editing: Bool, animated: Bool) {
@@ -51,9 +39,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         if editing {
             saveChanges = true
 
-            if key == nil {
-                navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelEditingAction")
-            }
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelEditingAction")
             tableView.setEditing(false, animated: false)
             tableView.tableHeaderView = nil
             tableView.viewWithTag(3)?.removeFromSuperview()
@@ -66,7 +52,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
             pictureButton.layer.borderColor = UIColor(white: 200/255, alpha: 1).CGColor
             pictureButton.layer.borderWidth = 1
             pictureButton.layer.cornerRadius = 60/2
-            if let pictureName = user?.pictureName() {
+            if let pictureName = user.pictureName() {
                 pictureButton.setBackgroundImage(UIImage(named: pictureName), forState: .Normal)
             } else {
                 pictureButton.setTitle("add photo", forState: .Normal)
@@ -77,7 +63,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
             pictureButton.titleLabel?.textAlignment = .Center
             tableView.addSubview(pictureButton)
 
-            if user?.pictureName() != nil {
+            if user.pictureName() != nil {
                 addEditPictureButton()
             }
         } else {
@@ -86,7 +72,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
 
             if saveChanges {
                 if firstNameTextField.hasText() {
-                    user?.firstName = firstNameTextField.text
+                    user.firstName = firstNameTextField.text
                 } else {
                     let alertView = UIAlertView(title: "First Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
                     alertView.show()
@@ -95,7 +81,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
                 }
 
                 if lastNameTextField.hasText() {
-                    user?.lastName = lastNameTextField.text
+                    user.lastName = lastNameTextField.text
                 } else {
                     let alertView = UIAlertView(title: "Last Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
                     alertView.show()
@@ -104,46 +90,12 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
                 }
             }
 
-            if key != nil {
-                let activityOverlayView = ActivityOverlayView.sharedView()
-                activityOverlayView.showWithTitle("Signing Up")
+            navigationItem.leftBarButtonItem = nil
 
-                var request = formRequest("POST", "/users", ["phone": phone, "key": key, "first_name": firstNameTextField.text, "last_name": lastNameTextField.text])
-                let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                    if response != nil {
-                        let statusCode = (response as! NSHTTPURLResponse).statusCode
-                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+            tableView.viewWithTag(4)!.removeFromSuperview()
+            tableView.viewWithTag(5)?.removeFromSuperview()
 
-                        dispatch_async(dispatch_get_main_queue(), {
-                            activityOverlayView.dismissAnimated(true)
-
-                            switch statusCode {
-                            case 201:
-                                let accessToken = dictionary!["access_token"] as String!
-                                account.setUserWithAccessToken(accessToken, firstName: firstNameTextField.text, lastName: lastNameTextField.text)
-                                account.accessToken = accessToken
-                            default:
-                                UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
-                            }
-                        })
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            activityOverlayView.dismissAnimated(true)
-                            UIAlertView(dictionary: nil, error: error, delegate: nil).show()
-
-                        })
-                    }
-                })
-                dataTask.resume()
-                return
-            } else {
-                navigationItem.leftBarButtonItem = nil
-
-                tableView.viewWithTag(4)!.removeFromSuperview()
-                tableView.viewWithTag(5)?.removeFromSuperview()
-
-                addPictureAndName()
-            }
+            addPictureAndName()
         }
         tableView.reloadData()
     }
@@ -160,7 +112,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
 
     func addPictureAndName() {
         let userPictureImageView = UserPictureImageView(frame: CGRect(x: 15, y: 12, width: 60, height: 60))
-        userPictureImageView.configureWithUser(user!)
+        userPictureImageView.configureWithUser(user)
         userPictureImageView.tag = 3
         tableView.addSubview(userPictureImageView)
 
@@ -172,20 +124,20 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         let nameLabel = UILabel(frame: CGRect(x: 91, y: 31, width: tableHeaderView.frame.width-91, height: 21))
         nameLabel.autoresizingMask = .FlexibleWidth
         nameLabel.font = UIFont.boldSystemFontOfSize(17)
-        nameLabel.text = user!.name
+        nameLabel.text = user.name
         tableHeaderView.addSubview(nameLabel)
     }
 
     // MARK: Actions
 
     func chatAction() {
-        let chat = Chat(user: user!, lastMessageText: "", lastMessageSentDate: NSDate()) // TODO: Pass nil for text & date
+        let chat = Chat(user: user, lastMessageText: "", lastMessageSentDate: NSDate()) // TODO: Pass nil for text & date
         navigationController?.pushViewController(ChatViewController(chat: chat), animated: true)
     }
 
     func editPictureAction() {
         let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take Photo", "Choose Photo")
-        if user?.pictureName() != nil {
+        if user.pictureName() != nil {
             // actionSheet.addButtonWithTitle("Edit Photo")
             actionSheet.addButtonWithTitle("Delete Photo")
             actionSheet.destructiveButtonIndex = 3
@@ -213,10 +165,10 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         var placeholder: String!
         if indexPath.row == 0 {
             placeholder = "First Name"
-            textField.text = user?.firstName
+            textField.text = user.firstName
         } else {
             placeholder = "Last Name"
-            textField.text = user?.lastName
+            textField.text = user.lastName
         }
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName: UIColor(white: 127/255, alpha: 1)])
         return cell

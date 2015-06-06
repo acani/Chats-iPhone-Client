@@ -35,7 +35,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
 
         // Create cod with phone number
         if signingUp {
-            var request = formRequest("POST", "/keys", ["phone": title, "code": code])
+            var request = formRequest("POST", "/keys", ["phone": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
@@ -45,9 +45,8 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
                         activityOverlayView.dismissAnimated(true)
 
                         if statusCode == 201 {
-                            let profileTableViewController = ProfileTableViewController(phone: self.title!, key: dictionary!["key"]!)
-                            profileTableViewController.setEditing(true, animated: false)
-                            self.navigationController?.pushViewController(profileTableViewController, animated: true)
+                            let newProfileTableViewController = NewProfileTableViewController(phone: self.title!, key: dictionary!["key"]!)
+                            self.navigationController?.setViewControllers([newProfileTableViewController], animated: true)
                         } else {
                             UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
                         }
@@ -62,7 +61,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
             })
             dataTask.resume()
         } else {
-            var request = formRequest("POST", "/sessions", ["phone": title, "code": code])
+            var request = formRequest("POST", "/sessions", ["phone": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode

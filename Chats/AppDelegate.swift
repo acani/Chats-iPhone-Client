@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()
         updateWindowRootViewController()
+//        window!.rootViewController = UINavigationController(rootViewController: NewProfileTableViewController(phone: "2032553432", key: "abc123")) // test
         window!.makeKeyAndVisible()
         return true
     }

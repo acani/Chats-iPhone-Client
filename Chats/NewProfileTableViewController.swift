@@ -1,7 +1,7 @@
 import MobileCoreServices
 import UIKit
 
-class NewProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class NewProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     let phone: String
     let key: String
 
@@ -168,6 +168,15 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     func doneAction() {
+        if pictureImage == nil {
+            let alertView = UIAlertView(title: "", message: "You didn't set a profile picture. Do you want to set one now?", delegate: self, cancelButtonTitle: "Skip", otherButtonTitles: "Set Picture")
+            alertView.show()
+        } else {
+            createProfile()
+        }
+    }
+
+    func createProfile() {
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Signing Up")
 
@@ -190,7 +199,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
                         let accessToken = dictionary!["access_token"] as String!
                         account.setUserWithAccessToken(accessToken, firstName: self.firstName, lastName: self.lastName)
                         account.phone = self.phone
-                        account.email = parameters["email"]
+                        account.email = self.email
                         account.accessToken = accessToken
                     } else {
                         UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
@@ -204,7 +213,16 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             }
         })
         dataTask.resume()
-        return
+    }
+
+    // MARK: - UIAlertViewDelegate
+
+    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
+        if buttonIndex == alertView.cancelButtonIndex {
+            createProfile()
+        } else {
+            editPictureAction()
+        }
     }
 
     // MARK: - UITextFieldDelegate
@@ -249,7 +267,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         }
     }
 
-    // MARK: UIImagePickerControllerDelegate
+    // MARK: - UIImagePickerControllerDelegate
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         let mediaType = info[UIImagePickerControllerMediaType] as! CFString!

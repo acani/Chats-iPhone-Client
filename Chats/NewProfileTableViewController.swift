@@ -8,7 +8,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     var pictureImage: UIImage?
     var firstName = ""
     var lastName = ""
-    var email: String?
+    var email = ""
 
     private static var tableViewSeparatorInsetLeftDefault: CGFloat = 15
 
@@ -80,6 +80,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         textField.autocorrectionType = .No
         textField.clearButtonMode = .WhileEditing
         textField.delegate = self
+        textField.enablesReturnKeyAutomatically = true
         textField.spellCheckingType = .No
 
         var placeholder: String!
@@ -88,7 +89,6 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             cellSeparatorInsetLeft = 12 + 60 + 12 + 22
             cell.textFieldLeftLayoutConstraint.constant = cellSeparatorInsetLeft + 1
             textField.autocapitalizationType = .Words
-            textField.enablesReturnKeyAutomatically = true
             textField.keyboardType = UIKeyboardType.Default
             textField.returnKeyType = .Next
             if indexPath.row == 0 {
@@ -105,7 +105,6 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             cell.textFieldLeftLayoutConstraint.constant = cellSeparatorInsetLeft + 1
             placeholder = "Email"
             textField.autocapitalizationType = .None
-            textField.enablesReturnKeyAutomatically = false
             textField.keyboardType = UIKeyboardType.EmailAddress
             textField.returnKeyType = .Done
             textField.tag = 12
@@ -153,20 +152,6 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         actionSheet.showInView(tableView.window)
     }
 
-    func textFieldDidChange(textField: UITextField) {
-        switch textField.tag {
-        case 10:
-            firstName = textField.text
-        case 11:
-            lastName = textField.text
-        case 12:
-            email = textField.text
-        default:
-            break
-        }
-        navigationItem.rightBarButtonItem?.enabled = !firstName.isEmpty && !lastName.isEmpty
-    }
-
     func doneAction() {
         if pictureImage == nil {
             let alertView = UIAlertView(title: "", message: "You didn't set a profile picture. Do you want to set one now?", delegate: self, cancelButtonTitle: "Skip", otherButtonTitles: "Set Picture")
@@ -180,12 +165,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Signing Up")
 
-        var parameters = ["phone": phone, "key": key, "first_name": firstName, "last_name": lastName]
-        if let email = email {
-            if !email.isEmpty {
-                parameters["email"] = email
-            }
-        }
+        var parameters = ["phone": phone, "key": key, "first_name": firstName.stringByAddingFormURLEncoding(), "last_name": lastName.stringByAddingFormURLEncoding(), "email": email.stringByAddingFormURLEncoding()]
         var request = formRequest("POST", "/users", parameters)
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if response != nil {
@@ -226,6 +206,20 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     // MARK: - UITextFieldDelegate
+
+    func textFieldDidChange(textField: UITextField) {
+        switch textField.tag {
+        case 10:
+            firstName = textField.text
+        case 11:
+            lastName = textField.text
+        case 12:
+            email = textField.text
+        default:
+            break
+        }
+        navigationItem.rightBarButtonItem?.enabled = !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty
+    }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         if textField.tag == 10 {

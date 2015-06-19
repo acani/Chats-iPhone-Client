@@ -33,7 +33,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle(signingUp ? "Verifying" : "Loging In")
 
-        // Create cod with phone number
+        // Create code with phone number
         if signingUp {
             var request = formRequest("POST", "/keys", ["phone": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in

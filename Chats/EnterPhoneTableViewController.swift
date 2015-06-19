@@ -3,9 +3,7 @@ import UIKit
 class EnterPhoneTableViewController: UITableViewController {
     convenience init() {
         self.init(style: .Grouped)
-        let verifyBarButtonItem = UIBarButtonItem(title: "Verify", style: .Done, target: self, action: "verifyAction")
-        verifyBarButtonItem.enabled = false
-        navigationItem.rightBarButtonItem = verifyBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Verify", style: .Done, target: self, action: "verifyAction")
         title = "Enter Phone Number"
     }
 
@@ -37,7 +35,6 @@ class EnterPhoneTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(TextFieldTableViewCell), forIndexPath: indexPath) as! TextFieldTableViewCell
         let textField = cell.textField
-        textField.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
         textField.clearButtonMode = .WhileEditing
         textField.keyboardType = .NumberPad
         textField.placeholder = "Phone Number"
@@ -47,21 +44,22 @@ class EnterPhoneTableViewController: UITableViewController {
 
     // MARK: - Actions
 
-    func continueAsGuestAction() {
-        (UIApplication.sharedApplication().delegate as! AppDelegate).continueAsGuest()
-    }
-
-    func textFieldDidChange(textField: UITextField) {
-        let textLength = count(textField.text)
-        navigationItem.rightBarButtonItem?.enabled = (textLength == 10)
-    }
-
     func verifyAction() {
+        // Validate phone
+        var phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if phone.hasPrefix("1") {
+            phone.removeAtIndex(phone.startIndex)
+        }
+        if let phoneInvalidMessage = phoneInvalidMessage(phone) {
+            let alertView = UIAlertView(title: "", message: phoneInvalidMessage, delegate: nil, cancelButtonTitle: "OK")
+            alertView.show()
+            return
+        }
+
+        // Create code with phone number
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Connecting")
 
-        // Create cod with phone number
-        let phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
         var request = formRequest("POST", "/codes", ["phone": phone])
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if response != nil {
@@ -90,5 +88,33 @@ class EnterPhoneTableViewController: UITableViewController {
             }
         })
         dataTask.resume()
+    }
+
+    func continueAsGuestAction() {
+        (UIApplication.sharedApplication().delegate as! AppDelegate).continueAsGuest()
+    }
+
+    // MARK: - Helpers
+
+    func phoneInvalidMessage(var phone: String) -> String? {
+        if phone.isEmpty {
+            return "Please enter a phone number."
+        }
+
+        let invalidMessage = "Please enter a valid phone number."
+
+        // Phone must only contains digits
+        let digitSet = NSCharacterSet.decimalDigitCharacterSet()
+        let phoneSet = NSCharacterSet(charactersInString: phone)
+        if !digitSet.isSupersetOfSet(phoneSet) {
+            return invalidMessage
+        }
+
+        // Phone must be 10 digits
+        if count(phone) != 10 {
+            return invalidMessage
+        }
+
+        return nil
     }
 }

@@ -31,7 +31,7 @@ class UsersCollectionViewController: UICollectionViewController {
         let activityView = ActivityView()
         activityView.show()
 
-        let request = NSMutableURLRequest(URL: URLWithPath("/users"))
+        let request = NSMutableURLRequest(URL: api.URLWithPath("/users"))
         request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if response != nil {

@@ -35,7 +35,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
 
         // Create code with phone number
         if signingUp {
-            var request = formRequest("POST", "/keys", ["phone": title!, "code": code])
+            var request = api.formRequest("POST", "/keys", ["phone": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
@@ -61,7 +61,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
             })
             dataTask.resume()
         } else {
-            var request = formRequest("POST", "/sessions", ["phone": title!, "code": code])
+            var request = api.formRequest("POST", "/sessions", ["phone": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode

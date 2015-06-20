@@ -165,8 +165,8 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Signing Up")
 
-        var parameters = ["phone": phone, "key": key, "first_name": firstName.stringByAddingFormURLEncoding(), "last_name": lastName.stringByAddingFormURLEncoding(), "email": email.stringByAddingFormURLEncoding()]
-        var request = formRequest("POST", "/users", parameters)
+        var fields = ["phone": phone, "key": key, "first_name": firstName.stringByAddingFormURLEncoding(), "last_name": lastName.stringByAddingFormURLEncoding(), "email": email.stringByAddingFormURLEncoding()]
+        var request = api.formRequest("POST", "/users", fields)
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode

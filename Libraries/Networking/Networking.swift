@@ -1,58 +1,76 @@
 import UIKit
 
-func URLWithPath(path: String) -> NSURL {
-    return NSURL(string: path, relativeToURL: baseURL)!
-}
+class API {
+    let baseURL: NSURL?
 
-// Convert ["name1": "value1", "name2": "value2"] to "name1=value1&name2=value2".
-// NOTE: Like curl, let end-users URL encode names & values.
-func HTTPBodyFromParameters(parameters: Dictionary<String, String>) -> String {
-    var data = [String]()
-    for (name, value) in parameters {
-        data.append("\(name)=\(value)")
+    init(baseURL: NSURL?) {
+        self.baseURL = baseURL
     }
-    return join("&", data)
+
+    func URLWithPath(path: String) -> NSURL {
+        return NSURL(string: path, relativeToURL: baseURL)!
+    }
+
+    func formRequest(HTTPMethod: String, _ path: String, _ fields: Dictionary<String, String>) -> NSMutableURLRequest {
+        return Web.formRequest(HTTPMethod, URL: URLWithPath(path), fields)
+    }
+
+    func multipartRequest(path: String, _ data: NSData, _ fields: Dictionary<String, String>) -> NSMutableURLRequest {
+        return Web.multipartRequest(URLWithPath(path), data, fields)
+    }
 }
 
-func formRequest(HTTPMethod: String, path: String, parameters: Dictionary<String, String>) -> NSMutableURLRequest {
-    let request = NSMutableURLRequest(URL: URLWithPath(path))
-    request.HTTPMethod = HTTPMethod
-    request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-    request.HTTPBody = HTTPBodyFromParameters(parameters).dataUsingEncoding(NSUTF8StringEncoding)
-    return request
-}
+class Web {
+    class func formRequest(HTTPMethod: String, URL: NSURL, _ fields: Dictionary<String, String>) -> NSMutableURLRequest {
+        let request = NSMutableURLRequest(URL: URL)
+        request.HTTPMethod = HTTPMethod
+        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = formHTTPBodyFromFields(fields)
+        return request
+    }
 
-func multipartRequest(path: String, data: NSData, parameters: Dictionary<String, String>) -> NSMutableURLRequest {
-    let request = NSMutableURLRequest(URL: URLWithPath(path))
-    request.HTTPMethod = "POST"
+    class func multipartRequest(URL: NSURL, _ data: NSData, _ fields: Dictionary<String, String>) -> NSMutableURLRequest {
+        let request = NSMutableURLRequest(URL: URL)
+        request.HTTPMethod = "POST"
 
-    let boundary = "-----AcaniFormBoundary" + randomStringWithLength(16)
-    request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        let boundary = "-----AcaniFormBoundary" + randomStringWithLength(16)
+        request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
-    var bodyString = ""
-    for (name, value) in parameters {
+        var bodyString = ""
+        for (name, value) in fields {
+            bodyString += "--" + boundary + "\r\n"
+            bodyString += "Content-Disposition: form-data; name=\"\(name)\"" + "\r\n" + "\r\n"
+            bodyString += value + "\r\n"
+        }
         bodyString += "--" + boundary + "\r\n"
-        bodyString += "Content-Disposition: form-data; name=\"\(name)\"" + "\r\n" + "\r\n"
-        bodyString += value + "\r\n"
+        var name = "file"
+        bodyString += "Content-Disposition: form-data; name=\"\(name)\"" + "; filename=\"p.jpg\"" + "\r\n"
+        bodyString += "Content-Type: image/jpeg" + "\r\n" + "\r\n"
+        var body = NSMutableData(data: bodyString.dataUsingEncoding(NSUTF8StringEncoding)!)
+        body.appendData(data)
+        bodyString = "\r\n" + "--" + boundary + "--" + "\r\n"
+        body.appendData(bodyString.dataUsingEncoding(NSUTF8StringEncoding)!)
+        request.HTTPBody = body
+
+        return request
     }
-    bodyString += "--" + boundary + "\r\n"
-    var name = "file"
-    bodyString += "Content-Disposition: form-data; name=\"\(name)\"" + "; filename=\"p.jpg\"" + "\r\n"
-    bodyString += "Content-Type: image/jpeg" + "\r\n" + "\r\n"
-    var body = NSMutableData(data: bodyString.dataUsingEncoding(NSUTF8StringEncoding)!)
-    body.appendData(data)
-    bodyString = "\r\n" + "--" + boundary + "--" + "\r\n"
-    body.appendData(bodyString.dataUsingEncoding(NSUTF8StringEncoding)!)
-    request.HTTPBody = body
 
-    return request
-}
+    // Convert ["name1": "value1", "name2": "value2"] to "name1=value1&name2=value2".
+    // NOTE: Like curl, let front-end developers URL encode names & values.
+    private class func formHTTPBodyFromFields(fields: Dictionary<String, String>) -> NSData? {
+        var bodyString = [String]()
+        for (name, value) in fields {
+            bodyString.append("\(name)=\(value)")
+        }
+        return join("&", bodyString).dataUsingEncoding(NSUTF8StringEncoding)
+    }
 
-func randomStringWithLength(length: Int) -> String {
-    let alphabet = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    return String((0..<length).map { _ -> Character in
-        return alphabet[advance(alphabet.startIndex, Int(arc4random_uniform(64)))]
-    })
+    private class func randomStringWithLength(length: Int) -> String {
+        let alphabet = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        return String((0..<length).map { _ -> Character in
+            return alphabet[advance(alphabet.startIndex, Int(arc4random_uniform(64)))]
+        })
+    }
 }
 
 extension String {

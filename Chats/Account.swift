@@ -1,12 +1,5 @@
 import UIKit
 
-let account = Account()
-
-let baseURL = NSURL(string: "https://acani-chats.herokuapp.com")
-//let baseURL = NSURL(string: "http://localhost:5100")
-
-let AccountAccessTokenKey = "AccountAccessTokenKey"
-
 class Account: NSObject {
     var phone: String!
     dynamic var accessToken: String! {
@@ -26,7 +19,7 @@ class Account: NSObject {
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Deleting")
 
-        let request = NSMutableURLRequest(URL: URLWithPath("/sessions"))
+        let request = NSMutableURLRequest(URL: api.URLWithPath("/sessions"))
         request.HTTPMethod = "DELETE"
         request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
@@ -58,7 +51,7 @@ class Account: NSObject {
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Deleting")
 
-        let request = NSMutableURLRequest(URL: URLWithPath("/me"))
+        let request = NSMutableURLRequest(URL: api.URLWithPath("/me"))
         request.HTTPMethod = "DELETE"
         request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
@@ -106,3 +99,5 @@ class Account: NSObject {
         reset()
     }
 }
+
+private let AccountAccessTokenKey = "AccountAccessTokenKey"

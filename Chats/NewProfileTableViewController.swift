@@ -16,7 +16,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         self.phone = phone
         self.key = key
         super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
-        title = "New Profile"
+        title = "Profile"
         let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
         doneBarButtonItem.enabled = false
         navigationItem.rightBarButtonItem = doneBarButtonItem

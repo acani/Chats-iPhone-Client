@@ -97,24 +97,15 @@ class EnterPhoneTableViewController: UITableViewController {
     // MARK: - Helpers
 
     func phoneInvalidMessage(var phone: String) -> String? {
-        if phone.isEmpty {
-            return "Please enter a phone number."
+        let invalidMessage = "Phone number must be 10 digits."
+        if count(phone) != 10 {
+            return invalidMessage
         }
-
-        let invalidMessage = "Please enter a valid phone number."
-
-        // Phone must only contains digits
         let digitSet = NSCharacterSet.decimalDigitCharacterSet()
         let phoneSet = NSCharacterSet(charactersInString: phone)
         if !digitSet.isSupersetOfSet(phoneSet) {
             return invalidMessage
         }
-
-        // Phone must be 10 digits
-        if count(phone) != 10 {
-            return invalidMessage
-        }
-
         return nil
     }
 }

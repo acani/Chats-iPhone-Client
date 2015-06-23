@@ -85,7 +85,7 @@ extension String {
 
 extension UIAlertView {
     convenience init(dictionary: Dictionary<String, String>?, error: NSError!, delegate: AnyObject?) {
-        let title = dictionary?["title"] ?? "Error"
+        let title = dictionary?["title"] ?? ""
         let message = dictionary?["message"] ?? (error != nil ? error.localizedDescription : "Could not connect to server.")
         self.init(title: title, message: message, delegate: delegate, cancelButtonTitle: "OK")
     }

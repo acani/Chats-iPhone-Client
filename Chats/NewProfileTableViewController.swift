@@ -9,6 +9,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     var firstName = ""
     var lastName = ""
     var email = ""
+    var confirmedEmail = ""
 
     private static var tableViewSeparatorInsetLeftDefault: CGFloat = 15
 
@@ -153,11 +154,63 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     func doneAction() {
-        if pictureImage == nil {
-            let alertView = UIAlertView(title: "", message: "You didn't set a profile picture. Do you want to set one now?", delegate: self, cancelButtonTitle: "Skip", otherButtonTitles: "Set Picture")
+        if let alertView = nameInvalidAlertView() {
+            alertView.show()
+        } else if let alertView = emailInvalidAlertView() {
+            alertView.show()
+        } else if let alertView = confirmEmailAlertView() {
+            alertView.show()
+        } else {
+            checkPictureThenCreateUser()
+        }
+    }
+
+    func nameInvalidAlertView() -> UIAlertView? {
+        var nameType: String?
+        if !((1...50) ~= count(firstName)) {
+            nameType = "First"
+        } else if !((1...50) ~= count(lastName)) {
+            nameType = "Last"
+        }
+
+        if let messagePrefix = nameType {
+            return UIAlertView(title: "", message: "\(messagePrefix) name must be between 1 & 50 characters", delegate: nil, cancelButtonTitle: "OK")
+        } else {
+            return nil
+        }
+    }
+
+    func emailInvalidAlertView() -> UIAlertView? {
+        if !((3...254) ~= count(email) && find(email, "@") != nil) {
+            return UIAlertView(title: "", message: "Email must be between 3 & 254 characters and have an at sign.", delegate: nil, cancelButtonTitle: "OK")
+        } else {
+            return nil
+        }
+    }
+
+    func confirmEmailAlertView() -> UIAlertView? {
+        if confirmedEmail != email {
+            let alertView = UIAlertView(title: "Is your email correct?", message: email, delegate: self, cancelButtonTitle: "No", otherButtonTitles: "Yes")
+            alertView.tag = 3
+            return alertView
+        } else {
+            return nil
+        }
+    }
+
+    func checkPictureThenCreateUser() {
+        if let alertView = noPictureAlertView() {
             alertView.show()
         } else {
             createProfile()
+        }
+    }
+
+    func noPictureAlertView() -> UIAlertView? {
+        if pictureImage == nil {
+            return UIAlertView(title: "", message: "You didn't set a profile picture. Do you want to set one now?", delegate: self, cancelButtonTitle: "Skip", otherButtonTitles: "Set Picture")
+        } else {
+            return nil
         }
     }
 
@@ -198,10 +251,17 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     // MARK: - UIAlertViewDelegate
 
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        if buttonIndex == alertView.cancelButtonIndex {
-            createProfile()
-        } else {
-            editPictureAction()
+        if alertView.tag == 3 { // email
+            if buttonIndex != alertView.cancelButtonIndex {
+                confirmedEmail = email
+                checkPictureThenCreateUser()
+            }
+        } else {               // picture
+            if buttonIndex == alertView.cancelButtonIndex {
+                createProfile()
+            } else {
+                editPictureAction()
+            }
         }
     }
 

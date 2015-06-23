@@ -46,12 +46,10 @@ class EnterPhoneTableViewController: UITableViewController {
 
     func verifyAction() {
         // Validate phone
-        var phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if phone.hasPrefix("1") {
-            phone.removeAtIndex(phone.startIndex)
-        }
-        if let phoneInvalidMessage = phoneInvalidMessage(phone) {
-            let alertView = UIAlertView(title: "", message: phoneInvalidMessage, delegate: nil, cancelButtonTitle: "OK")
+        var phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if phone.hasPrefix("1") { phone.removeAtIndex(phone.startIndex) }
+        if let alertView = phoneInvalidAlertView(phone) {
             alertView.show()
             return
         }
@@ -96,16 +94,13 @@ class EnterPhoneTableViewController: UITableViewController {
 
     // MARK: - Helpers
 
-    func phoneInvalidMessage(var phone: String) -> String? {
-        let invalidMessage = "Phone number must be 10 digits."
-        if count(phone) != 10 {
-            return invalidMessage
-        }
+    func phoneInvalidAlertView(phone: String) -> UIAlertView? {
         let digitSet = NSCharacterSet.decimalDigitCharacterSet()
         let phoneSet = NSCharacterSet(charactersInString: phone)
-        if !digitSet.isSupersetOfSet(phoneSet) {
-            return invalidMessage
+        if !(count(phone) == 10 && digitSet.isSupersetOfSet(phoneSet)) {
+            return UIAlertView(title: "", message: "Phone number must be 10 digits.", delegate: nil, cancelButtonTitle: "OK")
+        } else {
+            return nil
         }
-        return nil
     }
 }

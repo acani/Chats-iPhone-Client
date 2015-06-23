@@ -18,9 +18,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         self.key = key
         super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
         title = "Profile"
-        let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
-        doneBarButtonItem.enabled = false
-        navigationItem.rightBarButtonItem = doneBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
     }
 
     required init!(coder aDecoder: NSCoder!) {
@@ -174,7 +172,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         }
 
         if let messagePrefix = nameType {
-            return UIAlertView(title: "", message: "\(messagePrefix) name must be between 1 & 50 characters", delegate: nil, cancelButtonTitle: "OK")
+            return UIAlertView(title: "", message: "\(messagePrefix) name must be between 1 & 50 characters.", delegate: nil, cancelButtonTitle: "OK")
         } else {
             return nil
         }
@@ -252,7 +250,9 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
 
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
         if alertView.tag == 3 { // email
-            if buttonIndex != alertView.cancelButtonIndex {
+            if buttonIndex == alertView.cancelButtonIndex {
+                confirmedEmail = ""
+            } else {
                 confirmedEmail = email
                 checkPictureThenCreateUser()
             }
@@ -278,7 +278,6 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         default:
             break
         }
-        navigationItem.rightBarButtonItem?.enabled = !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty
     }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {

@@ -152,6 +152,10 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     func doneAction() {
+        firstName = firstName.strippedString()
+        lastName = lastName.strippedString()
+        email = email.strippedString()
+
         if let alertView = nameInvalidAlertView() {
             alertView.show()
         } else if let alertView = emailInvalidAlertView() {
@@ -353,5 +357,11 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
 
             picker.dismissViewControllerAnimated(true, completion: nil)
         }
+    }
+}
+
+extension String {
+    func strippedString() -> String {
+        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
 }

@@ -63,9 +63,6 @@
 		D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSentDateTableViewCell.swift; sourceTree = "<group>"; };
 		D2683FBB1B1BF5D800C16F08 /* NewProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewProfileTableViewController.swift; sourceTree = "<group>"; };
 		D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		D29AEE8F1960C79700925449 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		D29AEE911960E14A00925449 /* CREDITS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CREDITS.md; sourceTree = "<group>"; };
-		D29AEE921960F02600925449 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterPhoneTableViewController.swift; sourceTree = "<group>"; };
 		D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		D2B11CEF1AF43281004AE42B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -213,11 +210,8 @@
 			children = (
 				D2DEC39C195B33C20097CB9D /* Chats */,
 				D2DEC3AA195B33C20097CB9D /* ChatsTests */,
-				D2DEC39B195B33C20097CB9D /* Products */,
-				D29AEE911960E14A00925449 /* CREDITS.md */,
-				D29AEE8F1960C79700925449 /* README.md */,
-				D29AEE921960F02600925449 /* TODO.md */,
 				D2B11CEC1AF43281004AE42B /* Libraries */,
+				D2DEC39B195B33C20097CB9D /* Products */,
 			);
 			sourceTree = "<group>";
 		};

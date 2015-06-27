@@ -41,6 +41,12 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
         toTextView.addConstraint(NSLayoutConstraint(item: toTextView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 44))
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        let alertView = UIAlertView(title: "", message: "This page doesn't work yet.", delegate: nil, cancelButtonTitle: "OK")
+        alertView.show()
+    }
+
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
     }

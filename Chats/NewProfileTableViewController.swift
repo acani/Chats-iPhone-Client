@@ -25,7 +25,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: UIViewController
+    // MARK: - UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,13 +45,13 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         pictureButton.titleLabel?.textAlignment = .Center
         tableView.addSubview(pictureButton)
 
-        println(tableView.separatorInset.left)
         tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(TextFieldTableViewCell))
         NewProfileTableViewController.tableViewSeparatorInsetLeftDefault = tableView.separatorInset.left
         tableView.separatorStyle = .None
         tableView.tableFooterView = UIView(frame: CGRectZero) // hides trailing separators
     }
 
+    // REFACTOR: Could this be made the pictureButton.titleLabel?
     func addEditPictureButton() {
         let editPictureButton = UIButton.buttonWithType(.System) as! UIButton
         editPictureButton.frame = CGRect(x: 28, y: 12+60-0.5, width: 34, height: 21)
@@ -62,7 +62,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         tableView.addSubview(editPictureButton)
     }
 
-    // MARK: UITableViewDataSource
+    // MARK: - UITableViewDataSource
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2
@@ -123,7 +123,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         return cell
     }
 
-    // MARK: UITableViewDelegate
+    // MARK: - UITableViewDelegate
 
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 0 ? UITableViewAutomaticDimension : 24
@@ -139,7 +139,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         }
     }
 
-    // MARK: Actions
+    // MARK: - Actions
 
     func editPictureAction() {
         let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take Photo", "Choose Photo")
@@ -221,23 +221,43 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         activityOverlayView.showWithTitle("Signing Up")
 
         var fields = ["phone": phone, "key": key, "first_name": firstName.stringByAddingFormURLEncoding(), "last_name": lastName.stringByAddingFormURLEncoding(), "email": email.stringByAddingFormURLEncoding()]
-        var request = api.formRequest("POST", "/users", fields)
+        if pictureImage != nil {
+            fields["picture_id"] = NSUUID().UUIDString.stringByReplacingOccurrencesOfString("-", withString: "").lowercaseString
+        }
+        let request = api.formRequest("POST", "/users", fields)
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
-                let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, AnyObject>?
 
                 dispatch_async(dispatch_get_main_queue(), {
                     activityOverlayView.dismissAnimated(true)
 
                     if statusCode == 201 {
-                        let accessToken = dictionary!["access_token"] as String!
+                        let accessToken = dictionary!["access_token"] as! String!
                         account.setUserWithAccessToken(accessToken, firstName: self.firstName, lastName: self.lastName)
                         account.phone = self.phone
                         account.email = self.email
                         account.accessToken = accessToken
+
+                        if let fields = dictionary!["fields"] as? Dictionary<String, String> {
+                            let boundary = Web.multipartBoundary()
+                            let request = Web.multipartRequest("POST", NSURL(string: "https://acani-chats.s3.amazonaws.com")!, boundary)
+                            let data = Web.multipartData(boundary, fields, UIImageJPEGRepresentation(self.pictureImage, 0.9))
+                            let dataTask = NSURLSession.sharedSession().uploadTaskWithRequest(request, fromData: data, completionHandler: { (data, response, error) -> Void in
+                                if response != nil {
+                                    let statusCode = (response as! NSHTTPURLResponse).statusCode
+                                    let responseBody = NSString(data: data, encoding: NSUTF8StringEncoding)
+                                } else {
+                                    dispatch_async(dispatch_get_main_queue(), {
+                                        UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+                                    })
+                                }
+                            })
+                            dataTask.resume()
+                        }
                     } else {
-                        UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
+                        UIAlertView(dictionary: dictionary as! Dictionary<String, String>?, error: error, delegate: nil).show()
                     }
                 })
             } else {
@@ -328,35 +348,24 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         let mediaType = info[UIImagePickerControllerMediaType] as! CFString!
-        if UTTypeConformsTo(mediaType, kUTTypeImage) != 0 {
-            pictureImage = info[UIImagePickerControllerEditedImage] as! UIImage?
-            if pictureImage == nil {
-                pictureImage = info[UIImagePickerControllerOriginalImage] as! UIImage?
+        if var image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if image.size != CGSizeZero {
+                // Crop original image
+                if let rect = info[UIImagePickerControllerCropRect]?.CGRectValue() {
+                    image = UIImage(CGImage: CGImageCreateWithImageInRect(image.CGImage, rect))!
+                }
+
+                // Limit image dimensions
+                pictureImage = image.resizedImage(2048)
+
+                // Update pictureButton
+                let pictureButton = tableView.viewWithTag(9) as! UIButton
+                pictureButton.setBackgroundImage(pictureImage, forState: .Normal)
+                pictureButton.setTitle(nil, forState: .Normal)
+                addEditPictureButton()
             }
-
-            // Resize image to 2048px max width
-            pictureImage = pictureImage!.resizedImage(2048)
-            println(pictureImage!.size)
-
-            // TEST: Save image to documents directory.
-            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-            var uuid = NSUUID().UUIDString // E621E1F8-C36C-495A-93FC-0C247A3E6E5F
-            let range = Range<String.Index>(start: uuid.startIndex, end: advance(uuid.endIndex, -12))
-            uuid = uuid.stringByReplacingOccurrencesOfString("-", withString: "", options: .LiteralSearch, range: range).lowercaseString
-            let filePath = paths[0].stringByAppendingPathComponent("\(uuid).jpg")
-            let imageData = UIImageJPEGRepresentation(pictureImage, 0.9)
-//            imageData.writeToFile(filePath, atomically: true)
-            println(filePath)
-
-            // Upload image to server
-
-            let pictureButton = tableView.viewWithTag(9) as! UIButton
-            pictureButton.setBackgroundImage(pictureImage, forState: .Normal)
-            pictureButton.setTitle(nil, forState: .Normal)
-            addEditPictureButton()
-
-            picker.dismissViewControllerAnimated(true, completion: nil)
         }
+        picker.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 

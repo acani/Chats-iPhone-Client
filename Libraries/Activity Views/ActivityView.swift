@@ -18,32 +18,46 @@ class ActivityView: UIView {
         let width1 = activityIndicatorView.frame.width
         activityIndicatorView.center = CGPoint(x: width1/2, y: width1/2)
         activityIndicatorView.tag = 1
+        activityIndicatorView.userInteractionEnabled = false
 
-        let titleLabel = UILabel(frame: CGRect(x: width1+4, y: 0, width: 0, height: width1-1))
+        let titleLabel = UILabel(frame: CGRectZero)
         titleLabel.font = UIFont.systemFontOfSize(14)
         titleLabel.tag = 2
         titleLabel.text = title
         titleLabel.textAlignment = .Center
         titleLabel.textColor = UIColor(white: 102/255, alpha: 1)
-        let width2 = titleLabel.sizeThatFits(UIScreen.mainScreen().bounds.size).width
-        titleLabel.frame.size.width = width2
+        titleLabel.userInteractionEnabled = false
 
-        super.init(frame: CGRect(x: 0, y: 0, width: width1+4+width2, height: width1))
-        autoresizingMask = .FlexibleTopMargin | .FlexibleLeftMargin | .FlexibleBottomMargin | .FlexibleRightMargin
+        super.init(frame: CGRectZero)
+        self.userInteractionEnabled = false
 
         self.addSubview(activityIndicatorView)
         self.addSubview(titleLabel)
+
+        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+        titleLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.addConstraints([
+            NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: titleLabel, attribute: .Trailing, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: activityIndicatorView, attribute: .Height, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Leading, multiplier: 1, constant: width1+4),
+            NSLayoutConstraint(item: titleLabel, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: titleLabel, attribute: .Height, relatedBy: .Equal, toItem: activityIndicatorView, attribute: .Height, multiplier: 1, constant: -1)
+        ])
     }
 
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func show() {
+    func showInViewController(viewController: UIViewController) {
         activityIndicatorView.startAnimating()
-        let topWindow = UIApplication.sharedApplication().windows.last as! UIWindow
-        center = topWindow.center
-        topWindow.addSubview(self)
+
+        let view = viewController.view
+        view.addSubview(self)
+        view.addConstraints([
+            NSLayoutConstraint(item: self, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: self, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1, constant: viewController.topLayoutGuide.length)
+        ])
     }
 
     func dismissAnimated(animated: Bool) {

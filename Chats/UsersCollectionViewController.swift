@@ -29,7 +29,7 @@ class UsersCollectionViewController: UICollectionViewController {
 
     func getUsers() -> NSURLSessionDataTask {
         let activityView = ActivityView()
-        activityView.show()
+        activityView.showInViewController(self)
 
         let request = NSMutableURLRequest(URL: api.URLWithPath("/users"))
         request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")

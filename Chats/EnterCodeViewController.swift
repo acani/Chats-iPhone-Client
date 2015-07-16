@@ -36,7 +36,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
         // Create code with phone number
         if signingUp {
             var request = api.formRequest("POST", "/keys", ["phone": title!, "code": code])
-            let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
                     let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
@@ -62,7 +62,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
             dataTask.resume()
         } else {
             var request = api.formRequest("POST", "/sessions", ["phone": title!, "code": code])
-            let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+            let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
                     let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?

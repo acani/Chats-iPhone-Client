@@ -22,7 +22,7 @@ class Account: NSObject {
         let request = NSMutableURLRequest(URL: api.URLWithPath("/sessions"))
         request.HTTPMethod = "DELETE"
         request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
 
@@ -54,7 +54,7 @@ class Account: NSObject {
         let request = NSMutableURLRequest(URL: api.URLWithPath("/me"))
         request.HTTPMethod = "DELETE"
         request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
 

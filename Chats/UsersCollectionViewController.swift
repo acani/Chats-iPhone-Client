@@ -33,7 +33,7 @@ class UsersCollectionViewController: UICollectionViewController {
 
         let request = NSMutableURLRequest(URL: api.URLWithPath("/users"))
         request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
                 let collection: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)

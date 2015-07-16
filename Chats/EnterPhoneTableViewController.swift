@@ -59,7 +59,7 @@ class EnterPhoneTableViewController: UITableViewController {
         activityOverlayView.showWithTitle("Connecting")
 
         var request = api.formRequest("POST", "/codes", ["phone": phone])
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
 

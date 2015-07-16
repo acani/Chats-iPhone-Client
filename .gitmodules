@@ -1,3 +1,6 @@
 [submodule "Libraries/UIButtonBackgroundColor"]
 	path = Libraries/UIButtonBackgroundColor
 	url = git@github.com:acani/UIButtonBackgroundColor.git
+[submodule "Libraries/Networking"]
+	path = Libraries/Networking
+	url = git@github.com:acani/Networking.git

@@ -62,8 +62,10 @@
 		D22106941B07B0B700302D90 /* EnterCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterCodeViewController.swift; sourceTree = "<group>"; };
 		D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSentDateTableViewCell.swift; sourceTree = "<group>"; };
 		D24037201B5879F300208A7C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D25CAB521B5D9D5600D390ED /* Screenshots.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Screenshots.gif; sourceTree = "<group>"; };
 		D2683FBB1B1BF5D800C16F08 /* NewProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewProfileTableViewController.swift; sourceTree = "<group>"; };
 		D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		D294BF791B5C1EA7003C89E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterPhoneTableViewController.swift; sourceTree = "<group>"; };
 		D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		D2B11CEF1AF43281004AE42B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -117,6 +119,8 @@
 			isa = PBXGroup;
 			children = (
 				D21F73B01B0A6A3C001106F9 /* CodeInputView.swift */,
+				D294BF791B5C1EA7003C89E6 /* README.md */,
+				D25CAB521B5D9D5600D390ED /* Screenshots.gif */,
 			);
 			path = CodeInputView;
 			sourceTree = "<group>";

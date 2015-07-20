@@ -4,3 +4,6 @@
 [submodule "Libraries/Networking"]
 	path = Libraries/Networking
 	url = git@github.com:acani/Networking.git
+[submodule "Libraries/CodeInputView"]
+	path = Libraries/CodeInputView
+	url = git@github.com:acani/CodeInputView.git

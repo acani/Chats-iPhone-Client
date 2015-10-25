@@ -25,7 +25,7 @@ class Chat {
 
         let last18hours = (-18*60*60 < date.timeIntervalSinceNow)
         let isToday = calendar.isDateInToday(date)
-        let isLast7Days = (calendar.compareDate(NSDate(timeIntervalSinceNow: -7*24*60*60), toDate: date, toUnitGranularity: .CalendarUnitDay) == NSComparisonResult.OrderedAscending)
+        let isLast7Days = (calendar.compareDate(NSDate(timeIntervalSinceNow: -7*24*60*60), toDate: date, toUnitGranularity: .Day) == NSComparisonResult.OrderedAscending)
 
         if last18hours || isToday {
             dateFormatter.dateStyle = .NoStyle

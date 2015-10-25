@@ -20,7 +20,7 @@ class UsersCollectionViewController: UICollectionViewController {
         collectionView!.alwaysBounceVertical = true
         collectionView!.backgroundColor = UIColor.whiteColor()
         collectionView!.registerClass(UserCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UserCollectionViewCell))
-        account.addObserver(self, forKeyPath: "users", options: NSKeyValueObservingOptions(0), context: nil)
+        account.addObserver(self, forKeyPath: "users", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
 
         if account.accessToken != "guest_access_token" {
             getUsers()
@@ -36,7 +36,7 @@ class UsersCollectionViewController: UICollectionViewController {
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
-                let collection: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
+                let collection: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))
 
                 var users = [User]()
                 if statusCode == 200 {
@@ -70,7 +70,7 @@ class UsersCollectionViewController: UICollectionViewController {
 
     // MARK: - NSKeyValueObserving
 
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         collectionView!.reloadData()
     }
 

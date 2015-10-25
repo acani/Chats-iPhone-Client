@@ -32,7 +32,7 @@ class Account: NSObject {
                     if statusCode == 200 {
                         self.reset()
                     } else {
-                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                        let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
                         UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
                     }
                 })
@@ -65,7 +65,7 @@ class Account: NSObject {
                     case 200:
                         self.reset()
                     default:
-                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                        let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
                         UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
                     }
                 })
@@ -82,8 +82,8 @@ class Account: NSObject {
     }
 
     func setUserWithAccessToken(accessToken: String, firstName: String, lastName: String) {
-        let userIDString = accessToken.substringToIndex(advance(accessToken.endIndex, -33))
-        let userID = UInt(userIDString.toInt()!)
+        let userIDString = accessToken.substringToIndex(accessToken.endIndex.advancedBy(-33))
+        let userID = UInt(Int(userIDString)!)
         user = User(ID: userID, username: "", firstName: firstName, lastName: lastName)
     }
 

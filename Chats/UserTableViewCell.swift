@@ -7,7 +7,7 @@ class UserTableViewCell: UITableViewCell {
     let nameLabel: UILabel
     let usernameLabel: UILabel
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -34,8 +34,8 @@ class ActivityView: UIView {
         self.addSubview(activityIndicatorView)
         self.addSubview(titleLabel)
 
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
-        titleLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([
             NSLayoutConstraint(item: self, attribute: .Trailing, relatedBy: .Equal, toItem: titleLabel, attribute: .Trailing, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .Equal, toItem: activityIndicatorView, attribute: .Height, multiplier: 1, constant: 0),
@@ -45,7 +45,7 @@ class ActivityView: UIView {
         ])
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -35,11 +35,11 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
 
         // Create code with email
         if signingUp {
-            var request = api.formRequest("POST", "/keys", ["email": title!, "code": code])
+            let request = api.formRequest("POST", "/keys", ["email": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
-                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                    let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
 
                     dispatch_async(dispatch_get_main_queue(), {
                         activityOverlayView.dismissAnimated(true)
@@ -61,11 +61,11 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
             })
             dataTask.resume()
         } else {
-            var request = api.formRequest("POST", "/sessions", ["email": title!, "code": code])
+            let request = api.formRequest("POST", "/sessions", ["email": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
-                    let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                    let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
 
                     dispatch_async(dispatch_get_main_queue(), {
                         activityOverlayView.dismissAnimated(true)

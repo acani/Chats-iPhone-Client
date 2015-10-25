@@ -10,7 +10,7 @@ class ActivityOverlayView: UIView {
     }
 
     class func sharedView() -> ActivityOverlayView {
-        let topWindow = UIApplication.sharedApplication().windows.last as! UIWindow
+        let topWindow = UIApplication.sharedApplication().windows.last!
         var activityOverlayView = topWindow.viewWithTag(147) as! ActivityOverlayView!
         if activityOverlayView == nil {
             activityOverlayView = ActivityOverlayView()
@@ -21,7 +21,7 @@ class ActivityOverlayView: UIView {
 
     private init() {
         super.init(frame: CGRect(x: 0, y: 0, width: 128, height: 128))
-        autoresizingMask = .FlexibleTopMargin | .FlexibleLeftMargin | .FlexibleBottomMargin | .FlexibleRightMargin
+        autoresizingMask = [.FlexibleTopMargin, .FlexibleLeftMargin, .FlexibleBottomMargin, .FlexibleRightMargin]
         backgroundColor = UIColor(white: 0, alpha: 0.75)
         layer.cornerRadius = 10
 
@@ -38,7 +38,7 @@ class ActivityOverlayView: UIView {
         self.addSubview(titleLabel)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -47,7 +47,7 @@ class ActivityOverlayView: UIView {
         sharedApplication.beginIgnoringInteractionEvents()
         activityIndicatorView.startAnimating()
         titleLabel.text = title
-        let topWindow = sharedApplication.windows.last as! UIWindow
+        let topWindow = sharedApplication.windows.last!
         center = topWindow.center
         topWindow.addSubview(self)
     }

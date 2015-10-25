@@ -38,7 +38,7 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
         }
 
         // Dequeue or create cell with style & identifier
-        var cell = tableView.dequeueReusableCellWithIdentifier(identifier) as! UITableViewCell!
+        var cell = tableView.dequeueReusableCellWithIdentifier(identifier) as UITableViewCell!
         if cell == nil {
             cell = UITableViewCell(style: style, reuseIdentifier: identifier)
             cell.textLabel?.font = UIFont.systemFontOfSize(18)
@@ -79,7 +79,7 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
             }
         default:
             let actionSheet = UIActionSheet(title: "Deleting your account will permanently delete your phone number, picture, and first & last name.\n\nAre you sure you want to delete your account?", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete Accout")
-            actionSheet.showInView(tableView.window)
+            actionSheet.showInView(tableView.window!)
         }
     }
 

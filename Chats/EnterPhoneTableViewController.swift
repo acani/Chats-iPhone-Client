@@ -17,9 +17,9 @@ class EnterPhoneTableViewController: UITableViewController {
         tableFooterView.autoresizingMask = .FlexibleWidth
         tableView.tableFooterView = tableFooterView
 
-        let continueAsGuestButton = UIButton.buttonWithType(.System) as! UIButton
+        let continueAsGuestButton = UIButton(type: .System)
         continueAsGuestButton.addTarget(self, action: "continueAsGuestAction", forControlEvents: .TouchUpInside)
-        continueAsGuestButton.autoresizingMask = .FlexibleLeftMargin | .FlexibleRightMargin | .FlexibleTopMargin
+        continueAsGuestButton.autoresizingMask = [.FlexibleLeftMargin, .FlexibleRightMargin, .FlexibleTopMargin]
         continueAsGuestButton.frame = CGRect(x: (view.frame.width-184)/2, y: 32, width: 184, height: 44)
         continueAsGuestButton.setTitle("Continue as Guest", forState: .Normal)
         continueAsGuestButton.titleLabel?.font = UIFont.systemFontOfSize(17)
@@ -73,7 +73,7 @@ class EnterPhoneTableViewController: UITableViewController {
                         enterCodeViewController.signingUp = statusCode == 201 ? true : false
                         self.navigationController?.pushViewController(enterCodeViewController, animated: true)
                     default:
-                        let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, String>?
+                        let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
                         UIAlertView(dictionary: dictionary, error: error, delegate: nil).show()
                     }
                 })
@@ -102,7 +102,7 @@ class EnterPhoneTableViewController: UITableViewController {
 
         let digitSet = NSCharacterSet.decimalDigitCharacterSet()
         let phoneSet = NSCharacterSet(charactersInString: email)
-        if !(count(email) == 10 && digitSet.isSupersetOfSet(phoneSet)) {
+        if !(email.characters.count == 10 && digitSet.isSupersetOfSet(phoneSet)) {
             return UIAlertView(title: "", message: "Phone number must be 10 digits.", delegate: nil, cancelButtonTitle: "OK")
         } else {
             return nil

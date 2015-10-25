@@ -35,12 +35,12 @@ class EditPhoneTableViewController: UITableViewController {
     // MARK: Actions
 
     func textFieldDidChange(textField: UITextField) {
-        let textLength = count(textField.text)
+        let textLength = textField.text!.characters.count
         navigationItem.rightBarButtonItem?.enabled = (textLength == 10 && textField.text != account.phone)
     }
 
     func verifyAction() {
-        println("Verify")
+        print("Verify")
         //        myAccount.createCodeWithPhone(textField.text)
     }
 }

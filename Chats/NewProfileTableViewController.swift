@@ -21,7 +21,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
     }
 
-    required init!(coder aDecoder: NSCoder!) {
+    required init!(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -30,7 +30,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let pictureButton = UIButton.buttonWithType(.System) as! UIButton
+        let pictureButton = UIButton(type: .System)
         pictureButton.addTarget(self, action: "editPictureAction", forControlEvents: .TouchUpInside)
         pictureButton.adjustsImageWhenHighlighted = false
         pictureButton.clipsToBounds = true
@@ -53,7 +53,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
 
     // REFACTOR: Could this be made the pictureButton.titleLabel?
     func addEditPictureButton() {
-        let editPictureButton = UIButton.buttonWithType(.System) as! UIButton
+        let editPictureButton = UIButton(type: .System)
         editPictureButton.frame = CGRect(x: 28, y: 12+60-0.5, width: 34, height: 21)
         editPictureButton.setTitle("edit", forState: .Normal)
         editPictureButton.tag = 3
@@ -114,7 +114,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         // Add cell separator
         if cell.viewWithTag(53) == nil {
             let separatorView = UIView(frame: CGRect(x: cellSeparatorInsetLeft, y: cell.frame.height-0.5, width: cell.frame.width-cellSeparatorInsetLeft, height: 0.5))
-            separatorView.autoresizingMask = .FlexibleWidth | .FlexibleTopMargin
+            separatorView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin]
             separatorView.backgroundColor = tableView.separatorColor
             separatorView.tag = 53
             cell.addSubview(separatorView)
@@ -148,7 +148,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             actionSheet.addButtonWithTitle("Delete Photo")
             actionSheet.destructiveButtonIndex = 3
         }
-        actionSheet.showInView(tableView.window)
+        actionSheet.showInView(tableView.window!)
     }
 
     func doneAction() {
@@ -169,9 +169,9 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
 
     func nameInvalidAlertView() -> UIAlertView? {
         var nameType: String?
-        if !((1...50) ~= count(firstName)) {
+        if !((1...50) ~= firstName.characters.count) {
             nameType = "First"
-        } else if !((1...50) ~= count(lastName)) {
+        } else if !((1...50) ~= lastName.characters.count) {
             nameType = "Last"
         }
 
@@ -183,7 +183,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     func emailInvalidAlertView() -> UIAlertView? {
-        if !((3...254) ~= count(phone) && find(phone, "@") != nil) {
+        if !((3...254) ~= phone.characters.count && phone.characters.indexOf("@") != nil) {
             return UIAlertView(title: "", message: "Email must be between 3 & 254 characters and have an at sign.", delegate: nil, cancelButtonTitle: "OK")
         } else {
             return nil
@@ -228,7 +228,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
-                let dictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! Dictionary<String, AnyObject>?
+                let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, AnyObject>?
 
                 dispatch_async(dispatch_get_main_queue(), {
                     activityOverlayView.dismissAnimated(true)
@@ -243,11 +243,11 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
                         if let fields = dictionary!["fields"] as? Dictionary<String, String> {
                             let boundary = Web.multipartBoundary()
                             let request = Web.multipartRequest("POST", NSURL(string: "https://acani-chats.s3.amazonaws.com")!, boundary)
-                            let data = Web.multipartData(boundary, fields, UIImageJPEGRepresentation(self.pictureImage, 0.9))
+                            let data = Web.multipartData(boundary, fields, UIImageJPEGRepresentation(self.pictureImage!, 0.9)!)
                             let dataTask = NSURLSession.sharedSession().uploadTaskWithRequest(request, fromData: data, completionHandler: { (data, response, error) in
                                 if response != nil {
                                     let statusCode = (response as! NSHTTPURLResponse).statusCode
-                                    let responseBody = NSString(data: data, encoding: NSUTF8StringEncoding)
+                                    let responseBody = NSString(data: data!, encoding: NSUTF8StringEncoding)
                                 } else {
                                     dispatch_async(dispatch_get_main_queue(), {
                                         UIAlertView(dictionary: nil, error: error, delegate: nil).show()
@@ -294,11 +294,11 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     func textFieldDidChange(textField: UITextField) {
         switch textField.tag {
         case 10:
-            firstName = textField.text
+            firstName = textField.text!
         case 11:
-            lastName = textField.text
+            lastName = textField.text!
         case 12:
-            phone = textField.text
+            phone = textField.text!
         default:
             break
         }
@@ -346,13 +346,13 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
 
     // MARK: - UIImagePickerControllerDelegate
 
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let mediaType = info[UIImagePickerControllerMediaType] as! CFString!
         if var image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             if image.size != CGSizeZero {
                 // Crop original image
-                if let rect = info[UIImagePickerControllerCropRect]?.CGRectValue() {
-                    image = UIImage(CGImage: CGImageCreateWithImageInRect(image.CGImage, rect))!
+                if let rect = info[UIImagePickerControllerCropRect]?.CGRectValue {
+                    image = UIImage(CGImage: CGImageCreateWithImageInRect(image.CGImage, rect)!)
                 }
 
                 // Limit image dimensions

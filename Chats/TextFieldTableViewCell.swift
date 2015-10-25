@@ -12,7 +12,7 @@ class TextFieldTableViewCell: UITableViewCell {
         contentView.addSubview(textField)
 
         // Add `textField` constraints
-        textField.setTranslatesAutoresizingMaskIntoConstraints(false)
+        textField.translatesAutoresizingMaskIntoConstraints = false
         textFieldLeftLayoutConstraint = NSLayoutConstraint(item: textField, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1, constant: separatorInset.left+1)
         contentView.addConstraint(textFieldLeftLayoutConstraint)
         contentView.addConstraint(NSLayoutConstraint(item: textField, attribute: .Right, relatedBy: .Equal, toItem: contentView, attribute: .Right, multiplier: 1, constant: -10))
@@ -20,7 +20,7 @@ class TextFieldTableViewCell: UITableViewCell {
         contentView.addConstraint(NSLayoutConstraint(item: textField, attribute: .Height, relatedBy: .Equal, toItem: contentView, attribute: .Height, multiplier: 1, constant: 0))
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

@@ -31,7 +31,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             textView.textContainerInset = UIEdgeInsetsMake(4, 3, 3, 3)
             toolBar.addSubview(textView)
 
-            sendButton = UIButton.buttonWithType(.System) as! UIButton
+            sendButton = UIButton(type: .System)
             sendButton.enabled = false
             sendButton.titleLabel?.font = UIFont.boldSystemFontOfSize(17)
             sendButton.setTitle("Send", forState: .Normal)
@@ -42,8 +42,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             toolBar.addSubview(sendButton)
 
             // Auto Layout allows `sendButton` to change width, e.g., for localization.
-            textView.setTranslatesAutoresizingMaskIntoConstraints(false)
-            sendButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+            textView.translatesAutoresizingMaskIntoConstraints = false
+            sendButton.translatesAutoresizingMaskIntoConstraints = false
             toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Left, relatedBy: .Equal, toItem: toolBar, attribute: .Left, multiplier: 1, constant: 8))
             toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Top, relatedBy: .Equal, toItem: toolBar, attribute: .Top, multiplier: 1, constant: 7.5))
             toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Right, relatedBy: .Equal, toItem: sendButton, attribute: .Left, multiplier: 1, constant: -2))
@@ -62,7 +62,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         title = chat.user.name
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -89,7 +89,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         view.backgroundColor = whiteColor // smooths push animation
 
         tableView = UITableView(frame: view.bounds, style: .Plain)
-        tableView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        tableView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         tableView.backgroundColor = whiteColor
         let edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: toolBarMinHeight, right: 0)
         tableView.contentInset = edgeInsets
@@ -220,7 +220,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         if duration > 0 {
-            let options = UIViewAnimationOptions(UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue << 16)) // http://stackoverflow.com/a/18873820/242933
+            let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue << 16)) // http://stackoverflow.com/a/18873820/242933
             UIView.animateWithDuration(duration, delay: 0, options: options, animations: animations, completion: nil)
         } else {
             animations()
@@ -266,7 +266,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         updateTextViewHeight()
         sendButton.enabled = false
 
-        let lastSection = tableView.numberOfSections()
+        let lastSection = tableView.numberOfSections
         tableView.beginUpdates()
         tableView.insertSections(NSIndexSet(index: lastSection), withRowAnimation: .Automatic)
         tableView.insertRowsAtIndexPaths([
@@ -304,13 +304,13 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     // 2. Copy text to pasteboard
     func messageCopyTextAction(menuController: UIMenuController) {
-        let selectedIndexPath = tableView.indexPathForSelectedRow()
+        let selectedIndexPath = tableView.indexPathForSelectedRow
         let selectedMessage = chat.loadedMessages[selectedIndexPath!.section][selectedIndexPath!.row-1]
         UIPasteboard.generalPasteboard().string = selectedMessage.text
     }
     // 3. Deselect row
     func menuControllerWillHide(notification: NSNotification) {
-        if let selectedIndexPath = tableView.indexPathForSelectedRow() {
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(selectedIndexPath, animated: false)
         }
         (notification.object as! UIMenuController).menuItems = nil
@@ -327,7 +327,7 @@ func createMessageSoundOutgoing() -> SystemSoundID {
 // Only show "Copy" when editing `textView` #CopyMessage
 class InputTextView: UITextView {
     override func canPerformAction(action: Selector, withSender sender: AnyObject!) -> Bool {
-        if (delegate as! ChatViewController).tableView.indexPathForSelectedRow() != nil {
+        if (delegate as! ChatViewController).tableView.indexPathForSelectedRow != nil {
             return action == "messageCopyTextAction:"
         } else {
             return super.canPerformAction(action, withSender: sender)

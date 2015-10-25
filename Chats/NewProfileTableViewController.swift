@@ -2,19 +2,19 @@ import MobileCoreServices
 import UIKit
 
 class NewProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
-    let phone: String
+    let email: String
     let key: String
 
     var pictureImage: UIImage?
     var firstName = ""
     var lastName = ""
-    var email = ""
+    var phone = ""
     var confirmedEmail = ""
 
     private static var tableViewSeparatorInsetLeftDefault: CGFloat = 15
 
-    init(phone: String, key: String) {
-        self.phone = phone
+    init(email: String, key: String) {
+        self.email = email
         self.key = key
         super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
         title = "Profile"
@@ -107,7 +107,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             textField.keyboardType = UIKeyboardType.EmailAddress
             textField.returnKeyType = .Done
             textField.tag = 12
-            textField.text = email
+            textField.text = phone
         }
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName: UIColor(white: 127/255, alpha: 1)])
 
@@ -154,7 +154,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     func doneAction() {
         firstName = firstName.strippedString()
         lastName = lastName.strippedString()
-        email = email.strippedString()
+        phone = phone.strippedString()
 
         if let alertView = nameInvalidAlertView() {
             alertView.show()
@@ -183,7 +183,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     func emailInvalidAlertView() -> UIAlertView? {
-        if !((3...254) ~= count(email) && find(email, "@") != nil) {
+        if !((3...254) ~= count(phone) && find(phone, "@") != nil) {
             return UIAlertView(title: "", message: "Email must be between 3 & 254 characters and have an at sign.", delegate: nil, cancelButtonTitle: "OK")
         } else {
             return nil
@@ -191,8 +191,8 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     func confirmEmailAlertView() -> UIAlertView? {
-        if confirmedEmail != email {
-            let alertView = UIAlertView(title: "Is your email correct?", message: email, delegate: self, cancelButtonTitle: "No", otherButtonTitles: "Yes")
+        if confirmedEmail != phone {
+            let alertView = UIAlertView(title: "Is your email correct?", message: phone, delegate: self, cancelButtonTitle: "No", otherButtonTitles: "Yes")
             alertView.tag = 3
             return alertView
         } else {
@@ -220,7 +220,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Signing Up")
 
-        var fields = ["phone": phone, "key": key, "first_name": firstName.stringByAddingFormURLEncoding(), "last_name": lastName.stringByAddingFormURLEncoding(), "email": email.stringByAddingFormURLEncoding()]
+        var fields = ["phone": email, "key": key, "first_name": firstName.stringByAddingFormURLEncoding(), "last_name": lastName.stringByAddingFormURLEncoding(), "email": phone.stringByAddingFormURLEncoding()]
         if pictureImage != nil {
             fields["picture_id"] = NSUUID().UUIDString.stringByReplacingOccurrencesOfString("-", withString: "").lowercaseString
         }
@@ -236,8 +236,8 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
                     if statusCode == 201 {
                         let accessToken = dictionary!["access_token"] as! String!
                         account.setUserWithAccessToken(accessToken, firstName: self.firstName, lastName: self.lastName)
-                        account.phone = self.phone
-                        account.email = self.email
+                        account.phone = self.email
+                        account.email = self.phone
                         account.accessToken = accessToken
 
                         if let fields = dictionary!["fields"] as? Dictionary<String, String> {
@@ -277,7 +277,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             if buttonIndex == alertView.cancelButtonIndex {
                 confirmedEmail = ""
             } else {
-                confirmedEmail = email
+                confirmedEmail = phone
                 checkPictureThenCreateUser()
             }
         } else {               // picture
@@ -298,7 +298,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         case 11:
             lastName = textField.text
         case 12:
-            email = textField.text
+            phone = textField.text
         default:
             break
         }

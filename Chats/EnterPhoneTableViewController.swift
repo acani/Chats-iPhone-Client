@@ -4,7 +4,7 @@ class EnterPhoneTableViewController: UITableViewController {
     convenience init() {
         self.init(style: .Grouped)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Verify", style: .Done, target: self, action: "verifyAction")
-        title = "Enter Phone Number"
+        title = "Enter Email"
     }
 
     // MARK: - UIViewController
@@ -37,7 +37,7 @@ class EnterPhoneTableViewController: UITableViewController {
         let textField = cell.textField
         textField.clearButtonMode = .WhileEditing
         textField.keyboardType = .NumberPad
-        textField.placeholder = "Phone Number"
+        textField.placeholder = "Email"
         textField.becomeFirstResponder()
         return cell
     }
@@ -49,7 +49,7 @@ class EnterPhoneTableViewController: UITableViewController {
         var phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         if phone.hasPrefix("1") { phone.removeAtIndex(phone.startIndex) }
-        if let alertView = phoneInvalidAlertView(phone) {
+        if let alertView = emailInvalidAlertView(phone) {
             alertView.show()
             return
         }
@@ -94,10 +94,15 @@ class EnterPhoneTableViewController: UITableViewController {
 
     // MARK: - Helpers
 
-    func phoneInvalidAlertView(phone: String) -> UIAlertView? {
+    func emailInvalidAlertView(email: String) -> UIAlertView? {
+//        return email.length >= 3 && email.length <= 254 && email.indexOf('@') > -1
+
+//        let emailLength = email.characters.count
+//        if emailLength
+
         let digitSet = NSCharacterSet.decimalDigitCharacterSet()
-        let phoneSet = NSCharacterSet(charactersInString: phone)
-        if !(count(phone) == 10 && digitSet.isSupersetOfSet(phoneSet)) {
+        let phoneSet = NSCharacterSet(charactersInString: email)
+        if !(count(email) == 10 && digitSet.isSupersetOfSet(phoneSet)) {
             return UIAlertView(title: "", message: "Phone number must be 10 digits.", delegate: nil, cancelButtonTitle: "OK")
         } else {
             return nil

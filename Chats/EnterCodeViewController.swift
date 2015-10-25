@@ -33,9 +33,9 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle(signingUp ? "Verifying" : "Loging In")
 
-        // Create code with phone number
+        // Create code with email
         if signingUp {
-            var request = api.formRequest("POST", "/keys", ["phone": title!, "code": code])
+            var request = api.formRequest("POST", "/keys", ["email": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode
@@ -45,7 +45,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
                         activityOverlayView.dismissAnimated(true)
 
                         if statusCode == 201 {
-                            let newProfileTableViewController = NewProfileTableViewController(phone: self.title!, key: dictionary!["key"]!)
+                            let newProfileTableViewController = NewProfileTableViewController(email: self.title!, key: dictionary!["key"]!)
                             self.navigationController?.setViewControllers([newProfileTableViewController], animated: true)
                         } else {
                             UIAlertView(dictionary: dictionary, error: error, delegate: self).show()
@@ -61,7 +61,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate, UIAlertV
             })
             dataTask.resume()
         } else {
-            var request = api.formRequest("POST", "/sessions", ["phone": title!, "code": code])
+            var request = api.formRequest("POST", "/sessions", ["email": title!, "code": code])
             let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
                 if response != nil {
                     let statusCode = (response as! NSHTTPURLResponse).statusCode

@@ -211,9 +211,11 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
                 image = info[UIImagePickerControllerOriginalImage] as! UIImage!
             }
 
+            let cropRect = (info[UIImagePickerControllerCropRect] as! NSValue).CGRectValue()
+            println(cropRect)
+
             // Resize image to 2048px max width
             image = image.resizedImage(2048)
-            println(image.size)
 
             // TEST: Save image to documents directory.
             let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)

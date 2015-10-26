@@ -1,6 +1,6 @@
 import UIKit
 
-class EnterPhoneTableViewController: UITableViewController {
+class EnterEmailTableViewController: UITableViewController {
     convenience init() {
         self.init(style: .Grouped)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Verify", style: .Done, target: self, action: "verifyAction")
@@ -45,20 +45,20 @@ class EnterPhoneTableViewController: UITableViewController {
     // MARK: - Actions
 
     func verifyAction() {
-        // Validate phone
-        var phone = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
+        // Validate email
+        let email = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if phone.hasPrefix("1") { phone.removeAtIndex(phone.startIndex) }
-        if let alertView = emailInvalidAlertView(phone) {
+        if isValidEmail(email) {
+            let alertView = UIAlertView(title: "", message: "Phone number must be 10 digits.", delegate: nil, cancelButtonTitle: "OK")
             alertView.show()
             return
         }
 
-        // Create code with phone number
+        // Create code with email
         let activityOverlayView = ActivityOverlayView.sharedView()
         activityOverlayView.showWithTitle("Connecting")
 
-        var request = api.formRequest("POST", "/codes", ["phone": phone])
+        let request = api.formRequest("POST", "/codes", ["email": email])
         let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             if response != nil {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
@@ -69,7 +69,7 @@ class EnterPhoneTableViewController: UITableViewController {
                     switch statusCode {
                     case 201, 200: // sign-up, log-in
                         let enterCodeViewController = EnterCodeViewController(nibName: nil, bundle: nil)
-                        enterCodeViewController.title = phone
+                        enterCodeViewController.title = email
                         enterCodeViewController.signingUp = statusCode == 201 ? true : false
                         self.navigationController?.pushViewController(enterCodeViewController, animated: true)
                     default:
@@ -94,18 +94,8 @@ class EnterPhoneTableViewController: UITableViewController {
 
     // MARK: - Helpers
 
-    func emailInvalidAlertView(email: String) -> UIAlertView? {
-//        return email.length >= 3 && email.length <= 254 && email.indexOf('@') > -1
-
-//        let emailLength = email.characters.count
-//        if emailLength
-
-        let digitSet = NSCharacterSet.decimalDigitCharacterSet()
-        let phoneSet = NSCharacterSet(charactersInString: email)
-        if !(email.characters.count == 10 && digitSet.isSupersetOfSet(phoneSet)) {
-            return UIAlertView(title: "", message: "Phone number must be 10 digits.", delegate: nil, cancelButtonTitle: "OK")
-        } else {
-            return nil
-        }
+    func isValidEmail(email: String) -> Bool {
+        let emailCharacters = email.characters
+        return 3...254 ~= emailCharacters.count && emailCharacters.contains("@")
     }
 }

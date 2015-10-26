@@ -1,6 +1,6 @@
 import UIKit
 
-class EditPhoneTableViewController: UITableViewController {
+class EditEmailTableViewController: UITableViewController {
     convenience init() {
         self.init(style: .Grouped)
         let verifyBarButtonItem = UIBarButtonItem(title: "Verify", style: .Done, target: self, action: "verifyAction")

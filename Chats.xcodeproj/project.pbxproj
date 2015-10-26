@@ -10,13 +10,13 @@
 		D21F73B11B0A6A3C001106F9 /* CodeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21F73B01B0A6A3C001106F9 /* CodeInputView.swift */; };
 		D21F73B41B0A6D27001106F9 /* ActivityOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21F73B31B0A6D27001106F9 /* ActivityOverlayView.swift */; };
 		D221068E1B02E5E300302D90 /* UserPictureImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D221068D1B02E5E300302D90 /* UserPictureImageView.swift */; };
-		D22106901B0414A200302D90 /* EditPhoneTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D221068F1B0414A200302D90 /* EditPhoneTableViewController.swift */; };
+		D22106901B0414A200302D90 /* EditEmailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D221068F1B0414A200302D90 /* EditEmailTableViewController.swift */; };
 		D22106931B067E6600302D90 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22106921B067E6600302D90 /* Networking.swift */; };
 		D22106951B07B0B700302D90 /* EnterCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22106941B07B0B700302D90 /* EnterCodeViewController.swift */; };
 		D236741C1AF3C4D80073552A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */; };
 		D23EFE56197F053100C575C5 /* MessageSentDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */; };
 		D2683FBC1B1BF5D800C16F08 /* NewProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2683FBB1B1BF5D800C16F08 /* NewProfileTableViewController.swift */; };
-		D2B11CEA1AF43212004AE42B /* EnterPhoneTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */; };
+		D2B11CEA1AF43212004AE42B /* EnterEmailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CE71AF43212004AE42B /* EnterEmailTableViewController.swift */; };
 		D2B11CEB1AF43212004AE42B /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */; };
 		D2B11CF11AF432B9004AE42B /* UIButtonBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CF01AF43281004AE42B /* UIButtonBackgroundColor.swift */; };
 		D2B11CF51AF47197004AE42B /* UsersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CF41AF47197004AE42B /* UsersCollectionViewController.swift */; };
@@ -57,7 +57,7 @@
 		D21F73B01B0A6A3C001106F9 /* CodeInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeInputView.swift; sourceTree = "<group>"; };
 		D21F73B31B0A6D27001106F9 /* ActivityOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityOverlayView.swift; sourceTree = "<group>"; };
 		D221068D1B02E5E300302D90 /* UserPictureImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPictureImageView.swift; sourceTree = "<group>"; };
-		D221068F1B0414A200302D90 /* EditPhoneTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPhoneTableViewController.swift; sourceTree = "<group>"; };
+		D221068F1B0414A200302D90 /* EditEmailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEmailTableViewController.swift; sourceTree = "<group>"; };
 		D22106921B067E6600302D90 /* Networking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		D22106941B07B0B700302D90 /* EnterCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterCodeViewController.swift; sourceTree = "<group>"; };
 		D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSentDateTableViewCell.swift; sourceTree = "<group>"; };
@@ -66,7 +66,7 @@
 		D2683FBB1B1BF5D800C16F08 /* NewProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewProfileTableViewController.swift; sourceTree = "<group>"; };
 		D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		D294BF791B5C1EA7003C89E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterPhoneTableViewController.swift; sourceTree = "<group>"; };
+		D2B11CE71AF43212004AE42B /* EnterEmailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterEmailTableViewController.swift; sourceTree = "<group>"; };
 		D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		D2B11CEF1AF43281004AE42B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D2B11CF01AF43281004AE42B /* UIButtonBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonBackgroundColor.swift; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 		D2B11CE51AF43205004AE42B /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
-				D2B11CE71AF43212004AE42B /* EnterPhoneTableViewController.swift */,
+				D2B11CE71AF43212004AE42B /* EnterEmailTableViewController.swift */,
 				D22106941B07B0B700302D90 /* EnterCodeViewController.swift */,
 				D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */,
 			);
@@ -196,7 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				D2B11CFC1AF47DFB004AE42B /* SettingsTableViewController.swift */,
-				D221068F1B0414A200302D90 /* EditPhoneTableViewController.swift */,
+				D221068F1B0414A200302D90 /* EditEmailTableViewController.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -433,9 +433,9 @@
 				D2FFC1421B165C140085049A /* ActivityView.swift in Sources */,
 				D2B11CF51AF47197004AE42B /* UsersCollectionViewController.swift in Sources */,
 				D2C2F3F51A1BA67E00A52FE8 /* UserTableViewCell.swift in Sources */,
-				D22106901B0414A200302D90 /* EditPhoneTableViewController.swift in Sources */,
+				D22106901B0414A200302D90 /* EditEmailTableViewController.swift in Sources */,
 				D2B11CF71AF47344004AE42B /* UserCollectionViewCell.swift in Sources */,
-				D2B11CEA1AF43212004AE42B /* EnterPhoneTableViewController.swift in Sources */,
+				D2B11CEA1AF43212004AE42B /* EnterEmailTableViewController.swift in Sources */,
 				D2683FBC1B1BF5D800C16F08 /* NewProfileTableViewController.swift in Sources */,
 				D221068E1B02E5E300302D90 /* UserPictureImageView.swift in Sources */,
 				D2DEC3BB195B34A20097CB9D /* User.swift in Sources */,

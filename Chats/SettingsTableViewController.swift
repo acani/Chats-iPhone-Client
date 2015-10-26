@@ -70,7 +70,7 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
 
         switch Section(rawValue: indexPath.section)! {
         case .Phone:
-            navigationController?.pushViewController(EditPhoneTableViewController(), animated: true)
+            navigationController?.pushViewController(EditEmailTableViewController(), animated: true)
         case .LogOut:
             if account.accessToken == "guest_access_token" {
                 account.logOutGuest()

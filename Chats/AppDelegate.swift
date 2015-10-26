@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func updateWindowRootViewController() {
         if account.accessToken == nil {
-            window!.rootViewController = UINavigationController(rootViewController: EnterPhoneTableViewController())
+            window!.rootViewController = UINavigationController(rootViewController: EnterEmailTableViewController())
         } else {
             window!.rootViewController = createTabBarController()
         }

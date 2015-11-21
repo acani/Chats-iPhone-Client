@@ -1,7 +1,7 @@
 import MobileCoreServices
 import UIKit
 
-class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var saveChanges = false
     let user: User
 
@@ -21,7 +21,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: UIViewController
+    // MARK: - UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,23 +71,23 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
             let lastNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))!
 
             if saveChanges {
-                if firstNameTextField.hasText() {
-                    user.firstName = firstNameTextField.text!
-                } else {
-                    let alertView = UIAlertView(title: "First Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
-                    alertView.show()
+                guard firstNameTextField.hasText() else {
+                    let alert = UIAlertController(title: "First Name Required", message: nil, preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+                    presentViewController(alert, animated: true, completion: nil)
                     setEditing(true, animated: false)
                     return
                 }
+                user.firstName = firstNameTextField.text!
 
-                if lastNameTextField.hasText() {
-                    user.lastName = lastNameTextField.text!
-                } else {
-                    let alertView = UIAlertView(title: "Last Name Required", message: nil, delegate: nil, cancelButtonTitle: "OK")
-                    alertView.show()
+                guard lastNameTextField.hasText() else {
+                    let alert = UIAlertController(title: "Last Name Required", message: nil, preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+                    presentViewController(alert, animated: true, completion: nil)
                     setEditing(true, animated: false)
                     return
                 }
+                user.lastName = lastNameTextField.text!
             }
 
             navigationItem.leftBarButtonItem = nil
@@ -128,7 +128,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         tableHeaderView.addSubview(nameLabel)
     }
 
-    // MARK: Actions
+    // MARK: - Actions
 
     func chatAction() {
         let chat = Chat(user: user, lastMessageText: "", lastMessageSentDate: NSDate()) // TODO: Pass nil for text & date
@@ -136,13 +136,38 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
     }
 
     func editPictureAction() {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take Photo", "Choose Photo")
-        if user.pictureName() != nil {
-            // actionSheet.addButtonWithTitle("Edit Photo")
-            actionSheet.addButtonWithTitle("Delete Photo")
-            actionSheet.destructiveButtonIndex = 3
+        func actionSheetHandler(sourceType: UIImagePickerControllerSourceType) {
+            if UIImagePickerController.isSourceTypeAvailable(sourceType) {
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.allowsEditing = true
+                imagePickerController.delegate = self
+                imagePickerController.sourceType = sourceType
+                presentViewController(imagePickerController, animated: true, completion: nil)
+            } else {
+                let sourceString = sourceType == .Camera ? "Camera" : "Photo Library"
+                let alert = UIAlertController(title: "\(sourceString) Unavailable", message: nil, preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+                presentViewController(alert, animated: true, completion: nil)
+            }
         }
-        actionSheet.showInView(tableView.window!)
+
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in
+            actionSheetHandler(.Camera)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Choose Photo", style: .Default, handler: { _ in
+            actionSheetHandler(.PhotoLibrary)
+        }))
+        if user.pictureName() != nil {
+            actionSheet.addAction(UIAlertAction(title: "Delete Photo", style: .Destructive, handler: { _ in
+                let pictureButton = self.tableView.viewWithTag(4) as! UIButton
+                pictureButton.setBackgroundImage(nil, forState: .Normal)
+                pictureButton.setTitle("add photo", forState: .Normal)
+                self.tableView.viewWithTag(5)?.removeFromSuperview()
+            }))
+        }
+        presentViewController(actionSheet, animated: true, completion: nil)
     }
 
     func cancelEditingAction() {
@@ -150,7 +175,7 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         setEditing(false, animated: true)
     }
 
-    // MARK: UITableViewDelegate
+    // MARK: UITableView
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return editing ? 2 : 0
@@ -172,33 +197,6 @@ class ProfileTableViewController: UITableViewController, UIActionSheetDelegate, 
         }
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName: UIColor(white: 127/255, alpha: 1)])
         return cell
-    }
-
-    // MARK: UIActionSheetDelegate
-
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        switch buttonIndex {
-        case 1, 2: // Camera, Photo
-            let sourceType: UIImagePickerControllerSourceType = buttonIndex == 1 ? .Camera : .PhotoLibrary
-            if UIImagePickerController.isSourceTypeAvailable(sourceType) {
-                let imagePickerController = UIImagePickerController()
-                imagePickerController.allowsEditing = true
-                imagePickerController.delegate = self
-                imagePickerController.sourceType = sourceType
-                presentViewController(imagePickerController, animated: true, completion: nil)
-            } else {
-                let sourceString = sourceType == .Camera ? "Camera" : "Photo Library"
-                let alertView = UIAlertView(title: "\(sourceString) Unavailable", message: nil, delegate: nil, cancelButtonTitle: "OK")
-                alertView.show()
-            }
-        case 3: // Delete
-            let pictureButton = tableView.viewWithTag(4) as! UIButton
-            pictureButton.setBackgroundImage(nil, forState: .Normal)
-            pictureButton.setTitle("add photo", forState: .Normal)
-            tableView.viewWithTag(5)?.removeFromSuperview()
-        default: // Cancel
-            break
-        }
     }
 
     // MARK: UIImagePickerControllerDelegate

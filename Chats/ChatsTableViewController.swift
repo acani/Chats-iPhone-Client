@@ -9,6 +9,8 @@ class ChatsTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "composeAction")
     }
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = editButtonItem() // TODO: KVO
@@ -17,6 +19,8 @@ class ChatsTableViewController: UITableViewController {
         tableView.separatorInset.left = chatTableViewCellInsetLeft
         tableView.registerClass(ChatTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(ChatTableViewCell))
     }
+
+    // MARK: - UITableView
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chats.count
@@ -43,6 +47,8 @@ class ChatsTableViewController: UITableViewController {
         let chatViewController = ChatViewController(chat: chat)
         navigationController?.pushViewController(chatViewController, animated: true)
     }
+
+    // MARK: - Actions
 
     func composeAction() {
         let navigationController = UINavigationController(rootViewController: ComposeViewController())

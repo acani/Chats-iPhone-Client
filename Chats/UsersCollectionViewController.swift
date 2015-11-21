@@ -15,6 +15,8 @@ class UsersCollectionViewController: UICollectionViewController {
         account.removeObserver(self, forKeyPath: "users")
     }
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView!.alwaysBounceVertical = true
@@ -28,8 +30,8 @@ class UsersCollectionViewController: UICollectionViewController {
     }
 
     func getUsers() -> NSURLSessionDataTask {
-        let activityView = ActivityView()
-        activityView.showInViewController(self)
+        let loadingView = LoadingView()
+        loadingView.showInViewController(self)
 
         let request = NSMutableURLRequest(URL: api.URLWithPath("/users"))
         request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")
@@ -49,17 +51,19 @@ class UsersCollectionViewController: UICollectionViewController {
                 }
 
                 dispatch_async(dispatch_get_main_queue(), {
-                    activityView.dismissAnimated(true)
+                    loadingView.dismissAnimated(true)
                     if statusCode == 200 {
                         account.users = users
                     } else {
-                        UIAlertView(dictionary: (collection as! Dictionary), error: error, delegate: nil).show()
+                        let alert = UIAlertController(dictionary: (collection as! Dictionary), error: error, handler: nil)
+                        self.presentViewController(alert, animated: true, completion: nil)
                     }
                 })
             } else {
                 dispatch_async(dispatch_get_main_queue(), {
-                    activityView.dismissAnimated(true)
-                    UIAlertView(dictionary: nil, error: error, delegate: nil).show()
+                    loadingView.dismissAnimated(true)
+                    let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
+                    self.presentViewController(alert, animated: true, completion: nil)
                 })
             }
         })
@@ -67,14 +71,13 @@ class UsersCollectionViewController: UICollectionViewController {
         return dataTask
     }
 
-
     // MARK: - NSKeyValueObserving
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         collectionView!.reloadData()
     }
 
-    // MARK: UICollectionViewDataSource
+    // MARK: - UICollectionView
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return account.users.count
@@ -91,8 +94,6 @@ class UsersCollectionViewController: UICollectionViewController {
         }
         return cell
     }
-
-    // MARK: UICollectionViewDelegate
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let user = account.users[indexPath.item]

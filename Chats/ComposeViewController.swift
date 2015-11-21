@@ -12,6 +12,8 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelAction")
     }
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,9 +45,12 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        let alertView = UIAlertView(title: "", message: "This page doesn't work yet.", delegate: nil, cancelButtonTitle: "OK")
-        alertView.show()
+        let alert = UIAlertController(title: "", message: "This page doesn't work yet.", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
+
+    // MARK: - UITableView
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
@@ -60,7 +65,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
             cell.pictureImageView.image = nil
         }
         cell.nameLabel.text = user.name
-        cell.usernameLabel.text = "$" + user.username
+        cell.usernameLabel.text = "@" + user.username
         return cell
     }
 

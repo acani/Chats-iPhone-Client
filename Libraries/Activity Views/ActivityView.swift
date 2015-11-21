@@ -1,6 +1,6 @@
 import UIKit
 
-class ActivityView: UIView {
+class LoadingView: UIView {
     private var activityIndicatorView: UIActivityIndicatorView {
         return self.viewWithTag(1) as! UIActivityIndicatorView
     }

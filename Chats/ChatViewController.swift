@@ -1,12 +1,17 @@
 import AudioToolbox
 import UIKit
 
-let messageFontSize: CGFloat = 17
-let toolBarMinHeight: CGFloat = 44
-let textViewMaxHeight: (portrait: CGFloat, landscape: CGFloat) = (portrait: 272, landscape: 90)
-let messageSoundOutgoing: SystemSoundID = createMessageSoundOutgoing()
-
 class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextViewDelegate {
+    static let chatMessageFontSize: CGFloat = 17
+    private static let toolBarMinHeight: CGFloat = 44
+    private static let textViewMaxHeight: (portrait: CGFloat, landscape: CGFloat) = (portrait: 272, landscape: 90)
+    private static let messageSoundOutgoing: SystemSoundID = {
+        var soundID: SystemSoundID = 0
+        let soundURL = CFBundleCopyResourceURL(CFBundleGetMainBundle(), "MessageOutgoing", "aiff", nil)
+        AudioServicesCreateSystemSoundID(soundURL, &soundID)
+        return soundID
+    }()
+
     let chat: Chat
     var tableView: UITableView!
     var toolBar: UIToolbar!
@@ -15,44 +20,44 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var rotating = false
 
     override var inputAccessoryView: UIView! {
-    get {
-        if toolBar == nil {
-            toolBar = UIToolbar(frame: CGRectMake(0, 0, 0, toolBarMinHeight-0.5))
+        get {
+            if toolBar == nil {
+                toolBar = UIToolbar(frame: CGRectMake(0, 0, 0, ChatViewController.toolBarMinHeight-0.5))
 
-            textView = InputTextView(frame: CGRectZero)
-            textView.backgroundColor = UIColor(white: 250/255, alpha: 1)
-            textView.delegate = self
-            textView.font = UIFont.systemFontOfSize(messageFontSize)
-            textView.layer.borderColor = UIColor(red: 200/255, green: 200/255, blue: 205/255, alpha:1).CGColor
-            textView.layer.borderWidth = 0.5
-            textView.layer.cornerRadius = 5
-//            textView.placeholder = "Message"
-            textView.scrollsToTop = false
-            textView.textContainerInset = UIEdgeInsetsMake(4, 3, 3, 3)
-            toolBar.addSubview(textView)
+                textView = InputTextView(frame: CGRectZero)
+                textView.backgroundColor = UIColor(white: 250/255, alpha: 1)
+                textView.delegate = self
+                textView.font = UIFont.systemFontOfSize(ChatViewController.chatMessageFontSize)
+                textView.layer.borderColor = UIColor(red: 200/255, green: 200/255, blue: 205/255, alpha:1).CGColor
+                textView.layer.borderWidth = 0.5
+                textView.layer.cornerRadius = 5
+                //            textView.placeholder = "Message"
+                textView.scrollsToTop = false
+                textView.textContainerInset = UIEdgeInsetsMake(4, 3, 3, 3)
+                toolBar.addSubview(textView)
 
-            sendButton = UIButton(type: .System)
-            sendButton.enabled = false
-            sendButton.titleLabel?.font = UIFont.boldSystemFontOfSize(17)
-            sendButton.setTitle("Send", forState: .Normal)
-            sendButton.setTitleColor(UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1), forState: .Disabled)
-            sendButton.setTitleColor(UIColor(red: 1/255, green: 122/255, blue: 255/255, alpha: 1), forState: .Normal)
-            sendButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-            sendButton.addTarget(self, action: "sendAction", forControlEvents: UIControlEvents.TouchUpInside)
-            toolBar.addSubview(sendButton)
+                sendButton = UIButton(type: .System)
+                sendButton.enabled = false
+                sendButton.titleLabel?.font = UIFont.boldSystemFontOfSize(17)
+                sendButton.setTitle("Send", forState: .Normal)
+                sendButton.setTitleColor(UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1), forState: .Disabled)
+                sendButton.setTitleColor(UIColor(red: 1/255, green: 122/255, blue: 255/255, alpha: 1), forState: .Normal)
+                sendButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+                sendButton.addTarget(self, action: "sendAction", forControlEvents: UIControlEvents.TouchUpInside)
+                toolBar.addSubview(sendButton)
 
-            // Auto Layout allows `sendButton` to change width, e.g., for localization.
-            textView.translatesAutoresizingMaskIntoConstraints = false
-            sendButton.translatesAutoresizingMaskIntoConstraints = false
-            toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Left, relatedBy: .Equal, toItem: toolBar, attribute: .Left, multiplier: 1, constant: 8))
-            toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Top, relatedBy: .Equal, toItem: toolBar, attribute: .Top, multiplier: 1, constant: 7.5))
-            toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Right, relatedBy: .Equal, toItem: sendButton, attribute: .Left, multiplier: 1, constant: -2))
-            toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Bottom, relatedBy: .Equal, toItem: toolBar, attribute: .Bottom, multiplier: 1, constant: -8))
-            toolBar.addConstraint(NSLayoutConstraint(item: sendButton, attribute: .Right, relatedBy: .Equal, toItem: toolBar, attribute: .Right, multiplier: 1, constant: 0))
-            toolBar.addConstraint(NSLayoutConstraint(item: sendButton, attribute: .Bottom, relatedBy: .Equal, toItem: toolBar, attribute: .Bottom, multiplier: 1, constant: -4.5))
+                // Auto Layout allows `sendButton` to change width, e.g., for localization.
+                textView.translatesAutoresizingMaskIntoConstraints = false
+                sendButton.translatesAutoresizingMaskIntoConstraints = false
+                toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Left, relatedBy: .Equal, toItem: toolBar, attribute: .Left, multiplier: 1, constant: 8))
+                toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Top, relatedBy: .Equal, toItem: toolBar, attribute: .Top, multiplier: 1, constant: 7.5))
+                toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Right, relatedBy: .Equal, toItem: sendButton, attribute: .Left, multiplier: 1, constant: -2))
+                toolBar.addConstraint(NSLayoutConstraint(item: textView, attribute: .Bottom, relatedBy: .Equal, toItem: toolBar, attribute: .Bottom, multiplier: 1, constant: -8))
+                toolBar.addConstraint(NSLayoutConstraint(item: sendButton, attribute: .Right, relatedBy: .Equal, toItem: toolBar, attribute: .Right, multiplier: 1, constant: 0))
+                toolBar.addConstraint(NSLayoutConstraint(item: sendButton, attribute: .Bottom, relatedBy: .Equal, toItem: toolBar, attribute: .Bottom, multiplier: 1, constant: -4.5))
+            }
+            return toolBar
         }
-        return toolBar
-    }
     }
 
     init(chat: Chat) {
@@ -66,9 +71,17 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
+    // MARK: - UIResponder
+
     override func canBecomeFirstResponder() -> Bool {
         return true
     }
+
+    // MARK: - UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +104,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView = UITableView(frame: view.bounds, style: .Plain)
         tableView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         tableView.backgroundColor = whiteColor
-        let edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: toolBarMinHeight, right: 0)
+        let edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: ChatViewController.toolBarMinHeight, right: 0)
         tableView.contentInset = edgeInsets
         tableView.dataSource = self
         tableView.delegate = self
@@ -107,10 +120,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         notificationCenter.addObserver(self, selector: "menuControllerWillHide:", name: UIMenuControllerWillHideMenuNotification, object: nil) // #CopyMessage
 
         // tableViewScrollToBottomAnimated(false) // doesn't work
-    }
-
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     override func viewDidAppear(animated: Bool)  {
@@ -140,8 +149,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.willAnimateRotationToInterfaceOrientation(toInterfaceOrientation, duration: duration)
 
         if UIInterfaceOrientationIsLandscape(toInterfaceOrientation) {
-            if toolBar.frame.height > textViewMaxHeight.landscape {
-                toolBar.frame.size.height = textViewMaxHeight.landscape+8*2-0.5
+            if toolBar.frame.height > ChatViewController.textViewMaxHeight.landscape {
+                toolBar.frame.size.height = ChatViewController.textViewMaxHeight.landscape+8*2-0.5
             }
         } else { // portrait
             updateTextViewHeight()
@@ -151,6 +160,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator!) {
 //        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 //    }
+
+    // MARK: - UITableView
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return chat.loadedMessages.count
@@ -192,10 +203,35 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return nil
     }
 
+    func tableViewScrollToBottomAnimated(animated: Bool) {
+        let numberOfRows = tableView.numberOfRowsInSection(0)
+        if numberOfRows > 0 {
+            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: numberOfRows-1, inSection: 0), atScrollPosition: .Bottom, animated: animated)
+        }
+    }
+
+    // MARK: - UITextViewDelegate
+
     func textViewDidChange(textView: UITextView) {
         updateTextViewHeight()
         sendButton.enabled = textView.hasText()
     }
+
+    func updateTextViewHeight() {
+        let oldHeight = textView.frame.height
+        let maxHeight = UIInterfaceOrientationIsPortrait(interfaceOrientation) ? ChatViewController.textViewMaxHeight.portrait : ChatViewController.textViewMaxHeight.landscape
+        var newHeight = min(textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.max)).height, maxHeight)
+        #if arch(x86_64) || arch(arm64)
+            newHeight = ceil(newHeight)
+        #else
+            newHeight = CGFloat(ceilf(newHeight.native))
+        #endif
+        if newHeight != oldHeight {
+            toolBar.frame.size.height = newHeight+8*2-0.5
+        }
+    }
+
+    // MARK: - UIKeyboard Notifications
 
     func keyboardWillShow(notification: NSNotification) {
         let userInfo = notification.userInfo as NSDictionary!
@@ -242,19 +278,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    func updateTextViewHeight() {
-        let oldHeight = textView.frame.height
-        let maxHeight = UIInterfaceOrientationIsPortrait(interfaceOrientation) ? textViewMaxHeight.portrait : textViewMaxHeight.landscape
-        var newHeight = min(textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.max)).height, maxHeight)
-        #if arch(x86_64) || arch(arm64)
-            newHeight = ceil(newHeight)
-        #else
-            newHeight = CGFloat(ceilf(newHeight.native))
-        #endif
-        if newHeight != oldHeight {
-            toolBar.frame.size.height = newHeight+8*2-0.5
-        }
-    }
+    // MARK: - Actions
 
     func sendAction() {
         // Autocomplete text before sending #hack
@@ -275,14 +299,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             ], withRowAnimation: .Automatic)
         tableView.endUpdates()
         tableViewScrollToBottomAnimated(true)
-        AudioServicesPlaySystemSound(messageSoundOutgoing)
-    }
-
-    func tableViewScrollToBottomAnimated(animated: Bool) {
-        let numberOfRows = tableView.numberOfRowsInSection(0)
-        if numberOfRows > 0 {
-            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: numberOfRows-1, inSection: 0), atScrollPosition: .Bottom, animated: animated)
-        }
+        AudioServicesPlaySystemSound(ChatViewController.messageSoundOutgoing)
     }
 
     // Handle actions #CopyMessage
@@ -315,13 +332,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         (notification.object as! UIMenuController).menuItems = nil
     }
-}
-
-func createMessageSoundOutgoing() -> SystemSoundID {
-    var soundID: SystemSoundID = 0
-    let soundURL = CFBundleCopyResourceURL(CFBundleGetMainBundle(), "MessageOutgoing", "aiff", nil)
-    AudioServicesCreateSystemSoundID(soundURL, &soundID)
-    return soundID
 }
 
 // Only show "Copy" when editing `textView` #CopyMessage

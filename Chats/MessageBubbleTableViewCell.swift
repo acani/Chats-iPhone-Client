@@ -5,15 +5,29 @@ let bubbleTag = 8
 
 class MessageBubbleTableViewCell: UITableViewCell {
     let bubbleImageView: UIImageView
+    static let bubbleImage: (incoming: UIImage, incomingHighlighed: UIImage, outgoing: UIImage, outgoingHighlighed: UIImage) = {
+        let maskOutgoing = UIImage(named: "MessageBubble")!
+        let maskIncoming = UIImage(CGImage: maskOutgoing.CGImage!, scale: 2, orientation: .UpMirrored)
+
+        let capInsetsIncoming = UIEdgeInsets(top: 17, left: 26.5, bottom: 17.5, right: 21)
+        let capInsetsOutgoing = UIEdgeInsets(top: 17, left: 21, bottom: 17.5, right: 26.5)
+
+        let incoming = maskIncoming.imageWithRed(229/255, green: 229/255, blue: 234/255, alpha: 1).resizableImageWithCapInsets(capInsetsIncoming)
+        let incomingHighlighted = maskIncoming.imageWithRed(206/255, green: 206/255, blue: 210/255, alpha: 1).resizableImageWithCapInsets(capInsetsIncoming)
+        let outgoing = maskOutgoing.imageWithRed(43/255, green: 119/255, blue: 250/255, alpha: 1).resizableImageWithCapInsets(capInsetsOutgoing)
+        let outgoingHighlighted = maskOutgoing.imageWithRed(32/255, green: 96/255, blue: 200/255, alpha: 1).resizableImageWithCapInsets(capInsetsOutgoing)
+
+        return (incoming, incomingHighlighted, outgoing, outgoingHighlighted)
+    }()
     let messageLabel: UILabel
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        bubbleImageView = UIImageView(image: bubbleImage.incoming, highlightedImage: bubbleImage.incomingHighlighed)
+        bubbleImageView = UIImageView(image: MessageBubbleTableViewCell.bubbleImage.incoming, highlightedImage: MessageBubbleTableViewCell.bubbleImage.incomingHighlighed)
         bubbleImageView.tag = bubbleTag
         bubbleImageView.userInteractionEnabled = true // #CopyMesage
 
         messageLabel = UILabel(frame: CGRectZero)
-        messageLabel.font = UIFont.systemFontOfSize(messageFontSize)
+        messageLabel.font = UIFont.systemFontOfSize(ChatViewController.chatMessageFontSize)
         messageLabel.numberOfLines = 0
         messageLabel.userInteractionEnabled = false   // #CopyMessage
 
@@ -49,15 +63,15 @@ class MessageBubbleTableViewCell: UITableViewCell {
 
             if message.incoming {
                 tag = incomingTag
-                bubbleImageView.image = bubbleImage.incoming
-                bubbleImageView.highlightedImage = bubbleImage.incomingHighlighed
+                bubbleImageView.image = MessageBubbleTableViewCell.bubbleImage.incoming
+                bubbleImageView.highlightedImage = MessageBubbleTableViewCell.bubbleImage.incomingHighlighed
                 messageLabel.textColor = UIColor.blackColor()
                 layoutAttribute = .Left
                 layoutConstant = 10
             } else { // outgoing
                 tag = outgoingTag
-                bubbleImageView.image = bubbleImage.outgoing
-                bubbleImageView.highlightedImage = bubbleImage.outgoingHighlighed
+                bubbleImageView.image = MessageBubbleTableViewCell.bubbleImage.outgoing
+                bubbleImageView.highlightedImage = MessageBubbleTableViewCell.bubbleImage.outgoingHighlighed
                 messageLabel.textColor = UIColor.whiteColor()
                 layoutAttribute = .Right
                 layoutConstant = -10
@@ -82,32 +96,17 @@ class MessageBubbleTableViewCell: UITableViewCell {
     }
 }
 
-let bubbleImage = bubbleImageMake()
-
-func bubbleImageMake() -> (incoming: UIImage, incomingHighlighed: UIImage, outgoing: UIImage, outgoingHighlighed: UIImage) {
-    let maskOutgoing = UIImage(named: "MessageBubble")!
-    let maskIncoming = UIImage(CGImage: maskOutgoing.CGImage!, scale: 2, orientation: .UpMirrored)
-
-    let capInsetsIncoming = UIEdgeInsets(top: 17, left: 26.5, bottom: 17.5, right: 21)
-    let capInsetsOutgoing = UIEdgeInsets(top: 17, left: 21, bottom: 17.5, right: 26.5)
-
-    let incoming = coloredImage(maskIncoming, red: 229/255, green: 229/255, blue: 234/255, alpha: 1).resizableImageWithCapInsets(capInsetsIncoming)
-    let incomingHighlighted = coloredImage(maskIncoming, red: 206/255, green: 206/255, blue: 210/255, alpha: 1).resizableImageWithCapInsets(capInsetsIncoming)
-    let outgoing = coloredImage(maskOutgoing, red: 43/255, green: 119/255, blue: 250/255, alpha: 1).resizableImageWithCapInsets(capInsetsOutgoing)
-    let outgoingHighlighted = coloredImage(maskOutgoing, red: 32/255, green: 96/255, blue: 200/255, alpha: 1).resizableImageWithCapInsets(capInsetsOutgoing)
-
-    return (incoming, incomingHighlighted, outgoing, outgoingHighlighted)
-}
-
-func coloredImage(image: UIImage, red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIImage! {
-    let rect = CGRect(origin: CGPointZero, size: image.size)
-    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
-    let context = UIGraphicsGetCurrentContext()
-    image.drawInRect(rect)
-    CGContextSetRGBFillColor(context, red, green, blue, alpha)
-    CGContextSetBlendMode(context, CGBlendMode.SourceAtop)
-    CGContextFillRect(context, rect)
-    let result = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return result
+extension UIImage {
+    func imageWithRed(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIImage {
+        let rect = CGRect(origin: CGPointZero, size: self.size)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        let context = UIGraphicsGetCurrentContext()
+        self.drawInRect(rect)
+        CGContextSetRGBFillColor(context, red, green, blue, alpha)
+        CGContextSetBlendMode(context, CGBlendMode.SourceAtop)
+        CGContextFillRect(context, rect)
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return result
+    }
 }

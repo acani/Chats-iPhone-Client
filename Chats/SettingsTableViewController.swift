@@ -1,8 +1,8 @@
 import UIKit
 
-class SettingsTableViewController: UITableViewController, UIActionSheetDelegate {
+class SettingsTableViewController: UITableViewController {
     enum Section : Int {
-        case Phone
+        case Email
         case LogOut
         case DeleteAccount
     }
@@ -12,12 +12,14 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
         title = "Settings"
     }
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableView
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 3
@@ -32,7 +34,7 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
         let section = Section(rawValue: indexPath.section)!
         var style: UITableViewCellStyle = .Default
         var identifier = "Default"
-        if section == .Phone {
+        if section == .Email {
             style = .Value1
             identifier = "Value1"
         }
@@ -47,10 +49,10 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
         // Customize cell
         cell.textLabel?.textAlignment = .Center
         switch section {
-        case .Phone:
+        case .Email:
             cell.accessoryType = .DisclosureIndicator
-            cell.detailTextLabel?.text = account.phone
-            cell.textLabel?.text = "Phone Number"
+            cell.detailTextLabel?.text = account.email
+            cell.textLabel?.text = "Email"
             cell.textLabel?.textAlignment = .Left
         case .LogOut:
             cell.textLabel?.text = "Log Out"
@@ -63,35 +65,29 @@ class SettingsTableViewController: UITableViewController, UIActionSheetDelegate 
         return cell
     }
 
-    // MARK: - UITableViewDelegate
-
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
 
         switch Section(rawValue: indexPath.section)! {
-        case .Phone:
+        case .Email:
             navigationController?.pushViewController(EditEmailTableViewController(), animated: true)
         case .LogOut:
             if account.accessToken == "guest_access_token" {
                 account.logOutGuest()
             } else {
-                account.logOut()
+                account.logOut(self)
             }
         default:
-            let actionSheet = UIActionSheet(title: "Deleting your account will permanently delete your phone number, picture, and first & last name.\n\nAre you sure you want to delete your account?", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete Accout")
-            actionSheet.showInView(tableView.window!)
-        }
-    }
-
-    // MARK: - UIActionSheetDelegate
-
-    func actionSheet(actionSheet: UIActionSheet, didDismissWithButtonIndex buttonIndex: Int) {
-        if buttonIndex != actionSheet.cancelButtonIndex {
-            if account.accessToken == "guest_access_token" {
-                account.logOutGuest()
-            } else {
-                account.deleteAccount()
-            }
+            let actionSheet = UIAlertController(title: "Deleting your account will permanently delete your first & last name, email, and chat history.\n\nAre you sure you want to delete your account?", message: nil, preferredStyle: .ActionSheet)
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            actionSheet.addAction(UIAlertAction(title: "Delete Account", style: .Destructive, handler: { _ in
+                if account.accessToken == "guest_access_token" {
+                    account.logOutGuest()
+                } else {
+                    account.deleteAccount(self)
+                }
+            }))
+            presentViewController(actionSheet, animated: true, completion: nil)
         }
     }
 }

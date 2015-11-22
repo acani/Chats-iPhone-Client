@@ -33,6 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func updateWindowRootViewController() {
+        if let enterCodeViewController = window!.rootViewController?.presentedViewController {
+            enterCodeViewController.view.viewWithTag(17)?.resignFirstResponder()
+        }
+
         if account.accessToken == nil {
             window!.rootViewController = WelcomeViewController(nibName: nil, bundle: nil)
         } else {

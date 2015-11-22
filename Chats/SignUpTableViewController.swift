@@ -4,7 +4,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     var firstName = ""
     var lastName = ""
     var email = ""
-    var firstResponderTextField: UITextField!
+    var viewIsEditing = false
 
     convenience init() {
         self.init(style: .Grouped)
@@ -88,8 +88,9 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         textField.autocorrectionType = .No
         textField.clearButtonMode = .WhileEditing
 
-        if firstResponderTextField == nil {
+        if !viewIsEditing {
             textField.becomeFirstResponder()
+            viewIsEditing = true
         }
 
         return cell
@@ -108,10 +109,6 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         }
     }
 
-    func textFieldDidBeginEditing(textField: UITextField) {
-        firstResponderTextField = textField
-    }
-
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         switch textField.tag {
         case 0:
@@ -127,7 +124,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - Actions
 
     func cancelAction() {
-        firstResponderTextField.resignFirstResponder()
+        view.endEditing(false)
         dismissViewControllerAnimated(true, completion: nil)
     }
 

@@ -24,13 +24,15 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
         view.backgroundColor = UIColor.whiteColor()
 
         let noticeLabel = UILabel(frame: CGRectZero)
-        noticeLabel.text = "Enter the code we just emailed you."
+        noticeLabel.numberOfLines = 2
+        noticeLabel.text = "Enter the code sent to\n\(email)"
         noticeLabel.textAlignment = .Center
         view.addSubview(noticeLabel)
         noticeLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints([
             NSLayoutConstraint(item: noticeLabel, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: noticeLabel, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1, constant: 20)
+            NSLayoutConstraint(item: noticeLabel, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1, constant: 20),
+            NSLayoutConstraint(item: noticeLabel, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 1, constant: -20)
         ])
 
         let codeInputView = CodeInputView(frame: CGRect(x: (view.frame.width-215)/2, y: 142, width: 215, height: 60))

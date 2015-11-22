@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()
         updateWindowRootViewController()
-//        window!.rootViewController = UINavigationController(rootViewController: EnterCodeViewController(email: "test")) // test
+//        window!.rootViewController = UINavigationController(rootViewController: EnterCodeViewController(email: "test@example.com")) // test
         window!.makeKeyAndVisible()
 
         return true

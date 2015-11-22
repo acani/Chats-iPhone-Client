@@ -11,7 +11,7 @@ class Account: NSObject {
         }
     }
     var chats = [Chat]()
-    var email: String!
+    dynamic var email: String!
     var user: User!
     dynamic var users = [User]()
 
@@ -50,6 +50,28 @@ class Account: NSObject {
         email = "guest@example.com"
         user = User(ID: 24, username: "guest", firstName: "Guest", lastName: "User")
         accessToken = "guest_access_token"
+    }
+
+    func getMe() -> NSURLSessionDataTask {
+        let request = NSMutableURLRequest(URL: api.URLWithPath("/me"))
+        request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
+                let collection = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as! Dictionary<String, AnyObject>
+
+                dispatch_async(dispatch_get_main_queue(), {
+                    if statusCode == 200 {
+                        let name = collection!["name"] as! Dictionary<String, String>
+                        self.user.firstName = name["first"]!
+                        self.user.lastName = name["last"]!
+                        self.email = collection!["email"]! as! String
+                    }
+                })
+            }
+        })
+        dataTask.resume()
+        return dataTask
     }
 
     func logOut(settingsTableViewController: SettingsTableViewController) -> NSURLSessionDataTask {

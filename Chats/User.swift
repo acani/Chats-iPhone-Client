@@ -3,8 +3,8 @@ import Foundation.NSString
 class User : NSObject {
     let ID: UInt
     var username: String
-    var firstName: String
-    var lastName: String
+    dynamic var firstName: String
+    dynamic var lastName: String
     var name: String {
         return firstName + " " + lastName
     }

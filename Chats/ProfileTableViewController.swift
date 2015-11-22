@@ -21,6 +21,13 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        if user.ID == account.user.ID {
+            user.removeObserver(self, forKeyPath: "firstName")
+            user.removeObserver(self, forKeyPath: "lastName")
+        }
+    }
+
     // MARK: - UIViewController
 
     override func viewDidLoad() {
@@ -31,6 +38,15 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         tableView.tableFooterView = UIView(frame: CGRectZero) // hides trailing separators
 
         addPictureAndName()
+
+        if user.ID == account.user.ID {
+            user.addObserver(self, forKeyPath: "firstName", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
+            user.addObserver(self, forKeyPath: "lastName", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
+
+            if account.accessToken != "guest_access_token" {
+                account.getMe()
+            }
+        }
     }
 
     override func setEditing(editing: Bool, animated: Bool) {
@@ -124,8 +140,15 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         let nameLabel = UILabel(frame: CGRect(x: 91, y: 31, width: tableHeaderView.frame.width-91, height: 21))
         nameLabel.autoresizingMask = .FlexibleWidth
         nameLabel.font = UIFont.boldSystemFontOfSize(17)
+        nameLabel.tag = 18
         nameLabel.text = user.name
         tableHeaderView.addSubview(nameLabel)
+    }
+
+    // MARK: - NSKeyValueObserving
+
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        (tableView.viewWithTag(18) as! UILabel?)?.text = user.name
     }
 
     // MARK: - Actions

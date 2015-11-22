@@ -40,19 +40,31 @@ class UsersCollectionViewController: UICollectionViewController {
                 let statusCode = (response as! NSHTTPURLResponse).statusCode
                 let collection: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))
 
+                var accountUserName: (first: String, last: String)?
                 var users = [User]()
                 if statusCode == 200 {
-                    for item in collection as! NSArray {
-                        let ID = item["id"] as! NSNumber
+                    for item in collection as! Array<Dictionary<String, AnyObject>> {
+                        let ID = item["id"] as! UInt
                         let name = item["name"] as! Dictionary<String, String>
-                        let user = User(ID: ID.unsignedLongValue, username: "", firstName: name["first"]!, lastName: name["last"]!)
-                        users.append(user)
+                        let firstName = name["first"]!
+                        let lastName = name["last"]!
+
+                        if ID == account.user.ID {
+                            accountUserName = (firstName, lastName)
+                        } else {
+                            let user = User(ID: ID, username: "", firstName: firstName, lastName: lastName)
+                            users.append(user)
+                        }
                     }
                 }
 
                 dispatch_async(dispatch_get_main_queue(), {
                     loadingView.dismissAnimated(true)
                     if statusCode == 200 {
+                        if let accountUserName = accountUserName {
+                            account.user.firstName = accountUserName.first
+                            account.user.lastName = accountUserName.last
+                        }
                         account.users = users
                     } else {
                         let alert = UIAlertController(dictionary: (collection as! Dictionary), error: error, handler: nil)

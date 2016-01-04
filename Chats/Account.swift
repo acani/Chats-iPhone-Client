@@ -74,6 +74,53 @@ class Account: NSObject {
         return dataTask
     }
 
+    func changeEmail(editEmailTableViewController: EditEmailTableViewController, newEmail: String) -> NSURLSessionDataTask {
+        let loadingViewController = LoadingViewController(title: "Loading")
+        editEmailTableViewController.presentViewController(loadingViewController, animated: true, completion: nil)
+
+        let request = api.formRequest("POST", "/email", ["email": newEmail])
+        request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
+                var enterCodeViewController: EnterCodeViewController!
+                var dictionary: Dictionary<String, String>?
+
+                if statusCode == 200 {
+                    enterCodeViewController = EnterCodeViewController(email: newEmail)
+                    enterCodeViewController.method = .Email
+                } else { // error
+                    dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
+                }
+
+                dispatch_async(dispatch_get_main_queue(), {
+                    editEmailTableViewController.dismissViewControllerAnimated(true, completion: {
+                        if (enterCodeViewController != nil) {
+                            enterCodeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: enterCodeViewController, action: "cancelAction")
+                            let navigationController = UINavigationController(rootViewController: enterCodeViewController)
+                            let rootNavigationController = editEmailTableViewController.navigationController!
+                            rootNavigationController.presentViewController(navigationController, animated: true, completion: {
+                                rootNavigationController.popViewControllerAnimated(false)
+                            })
+                        } else { // error
+                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: nil)
+                            editEmailTableViewController.presentViewController(alert, animated: true, completion: nil)
+                        }
+                    })
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    editEmailTableViewController.dismissViewControllerAnimated(true, completion: {
+                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
+                        editEmailTableViewController.presentViewController(alert, animated: true, completion: nil)
+                    })
+                })
+            }
+        })
+        dataTask.resume()
+        return dataTask
+    }
+
     func logOut(settingsTableViewController: SettingsTableViewController) -> NSURLSessionDataTask {
         let loadingViewController = LoadingViewController(title: "Logging Out")
         settingsTableViewController.presentViewController(loadingViewController, animated: true, completion: nil)

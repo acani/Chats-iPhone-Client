@@ -12,11 +12,16 @@ class SettingsTableViewController: UITableViewController {
         title = "Settings"
     }
 
+    deinit {
+        account.removeObserver(self, forKeyPath: "email")
+    }
+
     // MARK: - UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        account.addObserver(self, forKeyPath: "email", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
     }
 
     // MARK: - UITableView
@@ -89,5 +94,14 @@ class SettingsTableViewController: UITableViewController {
             }))
             presentViewController(actionSheet, animated: true, completion: nil)
         }
+    }
+
+    // MARK: - NSKeyValueObserving
+
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        // Update email cell when account.email changes
+        let emailIndexPath = NSIndexPath(forRow: 0, inSection: Section.Email.rawValue)
+        let emailCell = tableView.cellForRowAtIndexPath(emailIndexPath)
+        emailCell?.detailTextLabel?.text = account.email
     }
 }

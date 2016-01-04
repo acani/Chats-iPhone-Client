@@ -1,14 +1,18 @@
 import UIKit
 
+enum EnterCodeMethod : Int {
+    case SignUp
+    case LogIn
+    case Email
+}
+
 class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
     var email: String
-    var signingUp = false
+    var method = EnterCodeMethod.SignUp
 
     init(email: String) {
         self.email = email
         super.init(nibName: nil, bundle: nil)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelAction")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "doneAction")
         title = "Verify Email"
     }
 
@@ -52,74 +56,75 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
     // MARK: - CodeInputViewDelegate
 
     func codeInputView(codeInputView: CodeInputView, didFinishWithCode code: String) {
-        let loadingViewController = LoadingViewController(title: signingUp ? "Signing Up" : "Loging In")
-        presentViewController(loadingViewController, animated: true, completion: nil)
+        func HTTPMethod() -> String {
+            switch method {
+            case .SignUp, .LogIn: return "POST"
+            case .Email: return "PUT"
+            }
+        }
+
+        func path() -> String {
+            switch method {
+            case .SignUp: return "/users"
+            case .LogIn: return "/sessions"
+            case .Email: return "/email"
+            }
+        }
+
+        func statusCodeSuccess() -> Int {
+            switch method {
+            case .SignUp: return 201
+            case .LogIn, .Email: return 200
+            }
+        }
 
         func clearCodeInputView(_: UIAlertAction) {
             (view.viewWithTag(17) as! CodeInputView).clear()
         }
 
-        let fields = ["code": code, "email": email]
+        let loadingViewController = LoadingViewController(title: method == .SignUp ? "Signing Up" : "Loging In")
+        presentViewController(loadingViewController, animated: true, completion: nil)
 
-        if signingUp {
-            let request = api.formRequest("POST", "/users", fields)
-            let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-                if response != nil {
-                    let statusCode = (response as! NSHTTPURLResponse).statusCode
-                    let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>
+        let request = api.formRequest(HTTPMethod(), path(), ["code": code, "email": email])
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
+            if response != nil {
+                let statusCode = (response as! NSHTTPURLResponse).statusCode
+                let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
 
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.dismissViewControllerAnimated(true, completion: {
-                            if statusCode == 201 {
-                                let accessToken = dictionary["access_token"]!
-                                account.setUserWithAccessToken(accessToken, firstName: "First", lastName: "Last")
-                                account.email = self.email
-                                account.accessToken = accessToken
-                            } else {
-                                let alert = UIAlertController(dictionary: dictionary, error: error, handler: clearCodeInputView)
-                                self.presentViewController(alert, animated: true, completion: nil)
-                            }
-                        })
-                    })
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.dismissViewControllerAnimated(true, completion: {
-                            let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                            self.presentViewController(alert, animated: true, completion: nil)
-                        })
-                    })
-                }
-            })
-            dataTask.resume()
-        } else {
-            let request = api.formRequest("POST", "/sessions", fields)
-            let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-                if response != nil {
-                    let statusCode = (response as! NSHTTPURLResponse).statusCode
-                    let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.dismissViewControllerAnimated(true, completion: {
+                        if statusCode == statusCodeSuccess() {
+                            account.email = self.email
 
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.dismissViewControllerAnimated(true, completion: {
-                            if statusCode == 200 {
-                                let accessToken = dictionary!["access_token"] as String!
+                            switch self.method {
+                            case .SignUp, .LogIn:
+                                let accessToken = dictionary!["access_token"]!
                                 account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
                                 account.accessToken = accessToken
-                            } else {
-                                let alert = UIAlertController(dictionary: dictionary, error: error, handler: clearCodeInputView)
-                                self.presentViewController(alert, animated: true, completion: nil)
+                            case .Email:
+                                self.navigationController!.dismissViewControllerAnimated(true, completion: nil)
                             }
-                        })
-                    })
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.dismissViewControllerAnimated(true, completion: {
-                            let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
+                        } else {
+                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: clearCodeInputView)
                             self.presentViewController(alert, animated: true, completion: nil)
-                        })
+                        }
                     })
-                }
-            })
-            dataTask.resume()
-        }
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.dismissViewControllerAnimated(true, completion: {
+                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    })
+                })
+            }
+        })
+        dataTask.resume()
+    }
+
+    // MARK: - Actions
+
+    func cancelAction() {
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }

@@ -9,7 +9,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     convenience init() {
         self.init(style: .Grouped)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelAction")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "doneAction")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
         title = "Sign Up"
     }
 
@@ -79,8 +79,8 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         default:
             textField.autocapitalizationType = .None
             textField.keyboardType = .EmailAddress
-            textField.returnKeyType = .Done
             textField.placeholder = "Email"
+            textField.returnKeyType = .Done
             textField.tag = 2
             textField.text = email
         }
@@ -133,6 +133,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         lastName.strip()
         email.strip()
 
+        // Validate parameters
         if let errorMessage = ValidationHelper.errorMessageWithFirstName(firstName, lastName: lastName, email: email) {
             let alert = UIAlertController(title: "", message: errorMessage, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
@@ -161,7 +162,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
 
                 if statusCode == 200 {
                     enterCodeViewController = EnterCodeViewController(email: self.email)
-                    enterCodeViewController.signingUp = true
+                    enterCodeViewController.method = .SignUp
                 } else { // error
                     dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
                 }

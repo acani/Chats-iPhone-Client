@@ -4,7 +4,7 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
     convenience init() {
         self.init(style: .Grouped)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelAction")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "doneAction")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
         title = "Log In"
     }
 
@@ -50,11 +50,12 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     func doneAction() {
-        // Validate email
         let email = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        guard ValidationHelper.isValidEmail(email) else {
-            let alert = UIAlertController(title: "", message: "Email must be between 3 & 254 characters and have an at sign.", preferredStyle: .Alert)
+
+        // Validate email
+        if let errorMessage = ValidationHelper.errorMessageWithEmail(email) {
+            let alert = UIAlertController(title: "", message: errorMessage, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presentViewController(alert, animated: true, completion: nil)
             return
@@ -74,7 +75,7 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
                         switch statusCode {
                         case 200:
                             let enterCodeViewController = EnterCodeViewController(email: email)
-                            enterCodeViewController.signingUp = false
+                            enterCodeViewController.method = .LogIn
                             self.navigationController?.pushViewController(enterCodeViewController, animated: true)
                         default:
                             let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?

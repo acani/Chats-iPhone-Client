@@ -50,7 +50,7 @@ class EditEmailTableViewController: UITableViewController, UITextFieldDelegate {
         newEmail.strip()
 
         // Validate newEmail
-        if let errorMessage = ValidationHelper.errorMessageWithEmail(newEmail) {
+        if let errorMessage = Validation.errorMessageWithEmail(newEmail) {
             let alert = UIAlertController(title: "", message: errorMessage, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presentViewController(alert, animated: true, completion: nil)

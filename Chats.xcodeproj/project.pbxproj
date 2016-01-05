@@ -16,7 +16,7 @@
 		D236741C1AF3C4D80073552A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */; };
 		D23EFE56197F053100C575C5 /* MessageSentDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23EFE55197F053100C575C5 /* MessageSentDateTableViewCell.swift */; };
 		D2683FBC1B1BF5D800C16F08 /* NewProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2683FBB1B1BF5D800C16F08 /* NewProfileTableViewController.swift */; };
-		D274D88E1BFE113200EDF9A2 /* ValidationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274D88D1BFE113200EDF9A2 /* ValidationHelper.swift */; };
+		D274D88E1BFE113200EDF9A2 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274D88D1BFE113200EDF9A2 /* Validation.swift */; };
 		D2B11CEB1AF43212004AE42B /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */; };
 		D2B11CF11AF432B9004AE42B /* UIButtonBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CF01AF43281004AE42B /* UIButtonBackgroundColor.swift */; };
 		D2B11CF51AF47197004AE42B /* UsersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B11CF41AF47197004AE42B /* UsersCollectionViewController.swift */; };
@@ -67,7 +67,7 @@
 		D24037201B5879F300208A7C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D25CAB521B5D9D5600D390ED /* Screenshots.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Screenshots.gif; sourceTree = "<group>"; };
 		D2683FBB1B1BF5D800C16F08 /* NewProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewProfileTableViewController.swift; sourceTree = "<group>"; };
-		D274D88D1BFE113200EDF9A2 /* ValidationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidationHelper.swift; sourceTree = "<group>"; };
+		D274D88D1BFE113200EDF9A2 /* Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
 		D2750E8E1AF3AAB40059F678 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		D294BF791B5C1EA7003C89E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D2B11CE81AF43212004AE42B /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
@@ -152,7 +152,7 @@
 		D274D88C1BFE0FD300EDF9A2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				D274D88D1BFE113200EDF9A2 /* ValidationHelper.swift */,
+				D274D88D1BFE113200EDF9A2 /* Validation.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -450,7 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2DEC3A0195B33C20097CB9D /* AppDelegate.swift in Sources */,
-				D274D88E1BFE113200EDF9A2 /* ValidationHelper.swift in Sources */,
+				D274D88E1BFE113200EDF9A2 /* Validation.swift in Sources */,
 				D2E057481BE10BFB003E76F9 /* LogInTableViewController.swift in Sources */,
 				D22106951B07B0B700302D90 /* EnterCodeViewController.swift in Sources */,
 				D2DEC3BD195B34AA0097CB9D /* Chat.swift in Sources */,

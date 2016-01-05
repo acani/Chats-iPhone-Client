@@ -134,7 +134,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         email.strip()
 
         // Validate parameters
-        if let errorMessage = ValidationHelper.errorMessageWithFirstName(firstName, lastName: lastName, email: email) {
+        if let errorMessage = Validation.errorMessageWithFirstName(firstName, lastName: lastName, email: email) {
             let alert = UIAlertController(title: "", message: errorMessage, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presentViewController(alert, animated: true, completion: nil)

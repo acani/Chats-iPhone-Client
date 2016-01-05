@@ -54,7 +54,7 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 
         // Validate email
-        if let errorMessage = ValidationHelper.errorMessageWithEmail(email) {
+        if let errorMessage = Validation.errorMessageWithEmail(email) {
             let alert = UIAlertController(title: "", message: errorMessage, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
             presentViewController(alert, animated: true, completion: nil)

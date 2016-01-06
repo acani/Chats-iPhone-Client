@@ -13,7 +13,9 @@ class SettingsTableViewController: UITableViewController {
     }
 
     deinit {
-        account.removeObserver(self, forKeyPath: "email")
+        if isViewLoaded() {
+            account.removeObserver(self, forKeyPath: "email")
+        }
     }
 
     // MARK: - UIViewController
@@ -62,7 +64,7 @@ class SettingsTableViewController: UITableViewController {
         case .LogOut:
             cell.textLabel?.text = "Log Out"
             cell.textLabel?.textColor = UIColor(red: 0/255, green: 88/255, blue: 249/255, alpha: 1)
-        default:
+        case .DeleteAccount:
             cell.textLabel?.text = "Delete Account"
             cell.textLabel?.textColor = UIColor(red: 252/255, green: 53/255, blue: 56/255, alpha: 1)
         }
@@ -82,7 +84,7 @@ class SettingsTableViewController: UITableViewController {
             } else {
                 account.logOut(self)
             }
-        default:
+        case .DeleteAccount:
             let actionSheet = UIAlertController(title: "Deleting your account will permanently delete your first & last name, email, and chat history.\n\nAre you sure you want to delete your account?", message: nil, preferredStyle: .ActionSheet)
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
             actionSheet.addAction(UIAlertAction(title: "Delete Account", style: .Destructive, handler: { _ in

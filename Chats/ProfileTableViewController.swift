@@ -2,15 +2,17 @@ import MobileCoreServices
 import UIKit
 
 class ProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    let isMyProfile: Bool
     var saveChanges = false
     let user: User
 
     init(user: User) {
+        isMyProfile = (user.ID == account.user.ID)
         self.user = user
         super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
         title = "Profile"
 
-        if user === account.user {
+        if isMyProfile {
             navigationItem.rightBarButtonItem = editButtonItem()
         } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "chatAction")
@@ -22,7 +24,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
     }
 
     deinit {
-        if user.ID == account.user.ID {
+        if isMyProfile && isViewLoaded() {
             user.removeObserver(self, forKeyPath: "firstName")
             user.removeObserver(self, forKeyPath: "lastName")
         }
@@ -39,13 +41,9 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
 
         addPictureAndName()
 
-        if user.ID == account.user.ID {
+        if isMyProfile {
             user.addObserver(self, forKeyPath: "firstName", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
             user.addObserver(self, forKeyPath: "lastName", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
-
-            if account.accessToken != "guest_access_token" {
-                account.getMe()
-            }
         }
     }
 

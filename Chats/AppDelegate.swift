@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 account.accessToken = nil
             } else {
                 account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
+                account.getMe()
             }
         }
         account.addObserver(self, forKeyPath: "accessToken", options: NSKeyValueObservingOptions(rawValue: 0), context: nil) // always

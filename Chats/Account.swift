@@ -48,7 +48,7 @@ class Account: NSObject {
         }
 
         email = "guest@example.com"
-        user = User(ID: 24, username: "guest", firstName: "Guest", lastName: "User")
+        user = User(ID: 0, username: "guest", firstName: "Guest", lastName: "User")
         accessToken = "guest_access_token"
     }
 

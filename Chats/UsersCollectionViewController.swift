@@ -12,7 +12,9 @@ class UsersCollectionViewController: UICollectionViewController {
     }
 
     deinit {
-        account.removeObserver(self, forKeyPath: "users")
+        if isViewLoaded() {
+            account.removeObserver(self, forKeyPath: "users")
+        }
     }
 
     // MARK: - UIViewController

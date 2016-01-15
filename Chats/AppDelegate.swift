@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         account.addObserver(self, forKeyPath: "accessToken", options: NSKeyValueObservingOptions(rawValue: 0), context: nil) // always
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()
-        updateWindowRootViewController()
+        updateRootViewController()
 //        window!.rootViewController = UINavigationController(rootViewController: EnterCodeViewController(email: "test@example.com")) // test
         window!.makeKeyAndVisible()
 
@@ -30,10 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - NSKeyValueObserving
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        updateWindowRootViewController()
+        updateRootViewController()
     }
 
-    func updateWindowRootViewController() {
+    func updateRootViewController() {
         if let enterCodeViewController = window!.rootViewController?.presentedViewController {
             enterCodeViewController.view.viewWithTag(17)?.resignFirstResponder()
         }

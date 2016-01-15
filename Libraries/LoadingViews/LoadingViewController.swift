@@ -55,11 +55,11 @@ class LoadingViewController : UIViewController, UIViewControllerTransitioningDel
 }
 
 class FadeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-    let duration = 0.3
+    static let duration = 0.3
     var presenting = false
 
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-        return duration
+        return FadeAnimator.duration
     }
 
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -71,7 +71,7 @@ class FadeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             containerView.addSubview(fadingView)
             transitionContext.completeTransition(true)
         } else {
-            UIView.animateWithDuration(duration, animations: { fadingView.alpha = 0 }, completion: { _ in
+            UIView.animateWithDuration(FadeAnimator.duration, animations: { fadingView.alpha = 0 }, completion: { _ in
                 transitionContext.completeTransition(true)
             })
         }

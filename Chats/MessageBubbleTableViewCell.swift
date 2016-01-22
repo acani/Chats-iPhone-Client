@@ -81,7 +81,7 @@ class MessageBubbleTableViewCell: UITableViewCell {
             layoutConstraint.constant = -layoutConstraint.constant
 
             let constraints: NSArray = contentView.constraints
-            let indexOfConstraint = constraints.indexOfObjectPassingTest { (constraint, idx, stop) in
+            let indexOfConstraint = constraints.indexOfObjectPassingTest { constraint, idx, stop in
                 return (constraint.firstItem as! UIView).tag == bubbleTag && (constraint.firstAttribute == NSLayoutAttribute.Left || constraint.firstAttribute == NSLayoutAttribute.Right)
             }
             contentView.removeConstraint(constraints[indexOfConstraint] as! NSLayoutConstraint)

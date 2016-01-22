@@ -1,8 +1,8 @@
 import UIKit
 
 let account = Account()
-let api = API(baseURL: NSURL(string: "https://acani-chats.herokuapp.com"))
-//let api = API(baseURL: NSURL(string: "https://localhost:5100"))
+var api = API(baseURL: NSURL(string: "https://acani-chats.herokuapp.com")!)
+//var api = API(baseURL: NSURL(string: "https://localhost:5100")!)
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

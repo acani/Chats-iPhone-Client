@@ -56,69 +56,46 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
     // MARK: - CodeInputViewDelegate
 
     func codeInputView(codeInputView: CodeInputView, didFinishWithCode code: String) {
-        func HTTPMethod() -> String {
-            switch method {
-            case .SignUp, .LogIn: return "POST"
-            case .Email: return "PUT"
-            }
-        }
+        let HTTPMethod: String
+        let path: String
+        let loadingTitle: String
+        let successCode: Int
 
-        func path() -> String {
-            switch method {
-            case .SignUp: return "/users"
-            case .LogIn: return "/sessions"
-            case .Email: return "/email"
-            }
-        }
-
-        func statusCodeSuccess() -> Int {
-            switch method {
-            case .SignUp: return 201
-            case .LogIn, .Email: return 200
-            }
+        switch method {
+        case .SignUp:
+            HTTPMethod = "POST"
+            path = "/users"
+            loadingTitle = "Signing Up"
+            successCode = 201
+        case .LogIn:
+            HTTPMethod = "POST"
+            path = "/sessions"
+            loadingTitle = "Logging In"
+            successCode = 200
+        case .Email:
+            HTTPMethod = "PUT"
+            path = "/email"
+            loadingTitle = "Changing Email"
+            successCode = 200
         }
 
         func clearCodeInputView(_: UIAlertAction) {
             (view.viewWithTag(17) as! CodeInputView).clear()
         }
 
-        let loadingViewController = LoadingViewController(title: method == .SignUp ? "Signing Up" : "Loging In")
-        presentViewController(loadingViewController, animated: true, completion: nil)
+        let request = api.request(HTTPMethod, path, ["code": code, "email": email])
+        let dataTask = Net.dataTaskWithRequest(request, self, loadingTitle: loadingTitle, successCode: successCode, errorHandler: clearCodeInputView) { JSONObject in
+            account.email = self.email
 
-        let request = api.formRequest(HTTPMethod(), path(), ["code": code, "email": email])
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-                let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.dismissViewControllerAnimated(true, completion: {
-                        if statusCode == statusCodeSuccess() {
-                            account.email = self.email
-
-                            switch self.method {
-                            case .SignUp, .LogIn:
-                                let accessToken = dictionary!["access_token"]!
-                                account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
-                                account.accessToken = accessToken
-                            case .Email:
-                                self.navigationController!.dismissViewControllerAnimated(true, completion: nil)
-                            }
-                        } else {
-                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: clearCodeInputView)
-                            self.presentViewController(alert, animated: true, completion: nil)
-                        }
-                    })
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.dismissViewControllerAnimated(true, completion: {
-                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    })
-                })
+            switch self.method {
+            case .SignUp, .LogIn:
+                let accessToken = JSONObject!["access_token"]! as! String
+                account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
+                account.accessToken = accessToken
+            case .Email:
+                self.navigationController!.dismissViewControllerAnimated(true, completion: nil)
             }
-        })
+        }
         dataTask.resume()
     }
 

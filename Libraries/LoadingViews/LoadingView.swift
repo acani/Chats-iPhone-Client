@@ -60,12 +60,8 @@ class LoadingView: UIView {
         ])
     }
 
-    func dismissAnimated(animated: Bool) {
-        UIView.animateWithDuration(animated ? 0.3 : 0, animations: {
-            self.alpha = 0 // fade
-        }, completion: { (finished) -> Void in
-            self.activityIndicatorView.stopAnimating()
-            self.removeFromSuperview()
-        })
+    func dismiss() {
+        self.activityIndicatorView.stopAnimating()
+        self.removeFromSuperview()
     }
 }

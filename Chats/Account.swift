@@ -8,6 +8,7 @@ class Account: NSObject {
         }
         set {
             NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: AccountAccessTokenKey)
+            api.accessToken = accessToken
         }
     }
     var chats = [Chat]()
@@ -53,141 +54,56 @@ class Account: NSObject {
     }
 
     func getMe() -> NSURLSessionDataTask {
-        let request = NSMutableURLRequest(URL: api.URLWithPath("/me"))
-        request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-                let collection = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as! Dictionary<String, AnyObject>
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    if statusCode == 200 {
-                        let name = collection!["name"] as! Dictionary<String, String>
-                        self.user.firstName = name["first"]!
-                        self.user.lastName = name["last"]!
-                        self.email = collection!["email"]! as! String
-                    }
-                })
-            }
-        })
-        dataTask.resume()
-        return dataTask
-    }
-
-    func changeEmail(editEmailTableViewController: EditEmailTableViewController, newEmail: String) -> NSURLSessionDataTask {
-        let loadingViewController = LoadingViewController(title: "Loading")
-        editEmailTableViewController.presentViewController(loadingViewController, animated: true, completion: nil)
-
-        let request = api.formRequest("POST", "/email", ["email": newEmail])
-        request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-                var enterCodeViewController: EnterCodeViewController!
-                var dictionary: Dictionary<String, String>?
-
-                if statusCode == 200 {
-                    enterCodeViewController = EnterCodeViewController(email: newEmail)
-                    enterCodeViewController.method = .Email
-                } else { // error
-                    dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
+        let request = api.request("GET", "/me", auth: true)
+        let dataTask = API.dataTaskWithRequest(request) { JSONObject, statusCode, error in
+            if statusCode == 200 {
+                let dictionary = JSONObject as! Dictionary<String, AnyObject>
+                dispatch_async(dispatch_get_main_queue()) {
+                    let name = dictionary["name"] as! Dictionary<String, String>
+                    self.user.firstName = name["first"]!
+                    self.user.lastName = name["last"]!
+                    self.email = dictionary["email"]! as! String
                 }
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    editEmailTableViewController.dismissViewControllerAnimated(true, completion: {
-                        if (enterCodeViewController != nil) {
-                            enterCodeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: enterCodeViewController, action: "cancelAction")
-                            let navigationController = UINavigationController(rootViewController: enterCodeViewController)
-                            let rootNavigationController = editEmailTableViewController.navigationController!
-                            rootNavigationController.presentViewController(navigationController, animated: true, completion: {
-                                rootNavigationController.popViewControllerAnimated(false)
-                            })
-                        } else { // error
-                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: nil)
-                            editEmailTableViewController.presentViewController(alert, animated: true, completion: nil)
-                        }
-                    })
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    editEmailTableViewController.dismissViewControllerAnimated(true, completion: {
-                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                        editEmailTableViewController.presentViewController(alert, animated: true, completion: nil)
-                    })
-                })
             }
-        })
+        }
         dataTask.resume()
         return dataTask
     }
 
-    func logOut(settingsTableViewController: SettingsTableViewController) -> NSURLSessionDataTask {
-        let loadingViewController = LoadingViewController(title: "Logging Out")
-        settingsTableViewController.presentViewController(loadingViewController, animated: true, completion: nil)
-
-        let request = NSMutableURLRequest(URL: api.URLWithPath("/sessions"))
-        request.HTTPMethod = "DELETE"
-        request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    settingsTableViewController.dismissViewControllerAnimated(true, completion: {
-                        if statusCode == 200 {
-                            self.reset()
-                        } else {
-                            let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
-                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: nil)
-                            settingsTableViewController.presentViewController(alert, animated: true, completion: nil)
-                        }
-                    })
+    func changeEmail(viewController: UIViewController, newEmail: String) -> NSURLSessionDataTask {
+        var enterCodeViewController: EnterCodeViewController!
+        let request = api.request("POST", "/email", ["email": newEmail], auth: true)
+        let dataTask = Net.dataTaskWithRequest(request, viewController,
+            backgroundSuccessHandler: { _ in
+                enterCodeViewController = EnterCodeViewController(email: newEmail)
+                enterCodeViewController.method = .Email
+            }, mainSuccessHandler: { _ in
+                let rootNavigationController = viewController.navigationController!
+                let cancelBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: enterCodeViewController, action: "cancelAction")
+                enterCodeViewController.navigationItem.leftBarButtonItem = cancelBarButtonItem
+                let navigationController = UINavigationController(rootViewController: enterCodeViewController)
+                rootNavigationController.presentViewController(navigationController, animated: true, completion: {
+                    rootNavigationController.popViewControllerAnimated(false)
                 })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    settingsTableViewController.dismissViewControllerAnimated(true, completion: {
-                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                        settingsTableViewController.presentViewController(alert, animated: true, completion: nil)
-                    })
-                })
-            }
-        })
+            })
         dataTask.resume()
         return dataTask
     }
 
-    func deleteAccount(settingsTableViewController: SettingsTableViewController) -> NSURLSessionDataTask {
-        let loadingViewController = LoadingViewController(title: "Deleting")
-        settingsTableViewController.presentViewController(loadingViewController, animated: true, completion: nil)
+    func logOut(viewController: UIViewController) -> NSURLSessionDataTask {
+        let request = api.request("DELETE", "/sessions", auth: true)
+        let dataTask = Net.dataTaskWithRequest(request, viewController, loadingTitle: "Logging Out") { _ in
+            self.reset()
+        }
+        dataTask.resume()
+        return dataTask
+    }
 
-        let request = NSMutableURLRequest(URL: api.URLWithPath("/me"))
-        request.HTTPMethod = "DELETE"
-        request.setValue("Bearer "+accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    settingsTableViewController.dismissViewControllerAnimated(true, completion: {
-                        switch statusCode {
-                        case 200:
-                            self.reset()
-                        default:
-                            let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
-                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: nil)
-                            settingsTableViewController.presentViewController(alert, animated: true, completion: nil)
-                        }
-                    })
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    settingsTableViewController.dismissViewControllerAnimated(true, completion: {
-                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                        settingsTableViewController.presentViewController(alert, animated: true, completion: nil)
-                    })
-                })
-            }
-        })
+    func deleteAccount(viewController: UIViewController) -> NSURLSessionDataTask {
+        let request = api.request("DELETE", "/sessions", auth: true)
+        let dataTask = Net.dataTaskWithRequest(request, viewController, loadingTitle: "Deleting") { _ in
+            self.reset()
+        }
         dataTask.resume()
         return dataTask
     }

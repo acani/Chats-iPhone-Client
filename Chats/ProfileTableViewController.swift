@@ -174,19 +174,19 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
 
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: "Take Photo", style: .Default) { _ in
             actionSheetHandler(.Camera)
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Choose Photo", style: .Default, handler: { _ in
+        })
+        actionSheet.addAction(UIAlertAction(title: "Choose Photo", style: .Default) { _ in
             actionSheetHandler(.PhotoLibrary)
-        }))
+        })
         if user.pictureName() != nil {
-            actionSheet.addAction(UIAlertAction(title: "Delete Photo", style: .Destructive, handler: { _ in
+            actionSheet.addAction(UIAlertAction(title: "Delete Photo", style: .Destructive) { _ in
                 let pictureButton = self.tableView.viewWithTag(4) as! UIButton
                 pictureButton.setBackgroundImage(nil, forState: .Normal)
                 pictureButton.setTitle("add photo", forState: .Normal)
                 self.tableView.viewWithTag(5)?.removeFromSuperview()
-            }))
+            })
         }
         presentViewController(actionSheet, animated: true, completion: nil)
     }

@@ -62,37 +62,12 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
         }
 
         // Create code with email
-        let loadingViewController = LoadingViewController(title: "Connecting")
-        presentViewController(loadingViewController, animated: true, completion: nil)
-
-        let request = api.formRequest("POST", "/login", ["email": email])
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.dismissViewControllerAnimated(true, completion: {
-                        switch statusCode {
-                        case 200:
-                            let enterCodeViewController = EnterCodeViewController(email: email)
-                            enterCodeViewController.method = .LogIn
-                            self.navigationController?.pushViewController(enterCodeViewController, animated: true)
-                        default:
-                            let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
-                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: nil)
-                            self.presentViewController(alert, animated: true, completion: nil)
-                        }
-                    })
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.dismissViewControllerAnimated(true, completion: {
-                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    })
-                })
-            }
-        })
+        let request = api.request("POST", "/login", ["email": email])
+        let dataTask = Net.dataTaskWithRequest(request, self) { _ in
+            let enterCodeViewController = EnterCodeViewController(email: email)
+            enterCodeViewController.method = .LogIn
+            self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+        }
         dataTask.resume()
     }
 }

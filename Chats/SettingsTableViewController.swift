@@ -87,13 +87,13 @@ class SettingsTableViewController: UITableViewController {
         case .DeleteAccount:
             let actionSheet = UIAlertController(title: "Deleting your account will permanently delete your first & last name, email, and chat history.\n\nAre you sure you want to delete your account?", message: nil, preferredStyle: .ActionSheet)
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-            actionSheet.addAction(UIAlertAction(title: "Delete Account", style: .Destructive, handler: { _ in
+            actionSheet.addAction(UIAlertAction(title: "Delete Account", style: .Destructive) { _ in
                 if account.accessToken == "guest_access_token" {
                     account.logOutGuest()
                 } else {
                     account.deleteAccount(self)
                 }
-            }))
+            })
             presentViewController(actionSheet, animated: true, completion: nil)
         }
     }

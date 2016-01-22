@@ -31,7 +31,7 @@ class UserPictureImageView: UIImageView {
             userNameInitialsLabel.hidden = true
         } else {
             let initials = user.initials
-            if initials != nil {
+            if let initials = initials {
                 userNameInitialsLabel.text = initials
                 userNameInitialsLabel.hidden = false
             } else {

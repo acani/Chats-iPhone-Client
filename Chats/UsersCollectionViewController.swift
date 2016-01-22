@@ -32,55 +32,32 @@ class UsersCollectionViewController: UICollectionViewController {
     }
 
     func getUsers() -> NSURLSessionDataTask {
-        let loadingView = LoadingView()
-        loadingView.showInViewController(self)
+        var accountUserName: (first: String, last: String)?
+        var users = [User]()
 
-        let request = NSMutableURLRequest(URL: api.URLWithPath("/users"))
-        request.setValue("Bearer "+account.accessToken, forHTTPHeaderField: "Authorization")
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-                let collection: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))
+        let request = api.request("GET", "/users")
+        let dataTask = Net.dataTaskWithRequest(request, self, useLoadingView: true,
+            backgroundSuccessHandler: { JSONObject in
+                for item in JSONObject as! Array<Dictionary<String, AnyObject>> {
+                    let ID = item["id"] as! UInt
+                    let name = item["name"] as! Dictionary<String, String>
+                    let firstName = name["first"]!
+                    let lastName = name["last"]!
 
-                var accountUserName: (first: String, last: String)?
-                var users = [User]()
-                if statusCode == 200 {
-                    for item in collection as! Array<Dictionary<String, AnyObject>> {
-                        let ID = item["id"] as! UInt
-                        let name = item["name"] as! Dictionary<String, String>
-                        let firstName = name["first"]!
-                        let lastName = name["last"]!
-
-                        if ID == account.user.ID {
-                            accountUserName = (firstName, lastName)
-                        } else {
-                            let user = User(ID: ID, username: "", firstName: firstName, lastName: lastName)
-                            users.append(user)
-                        }
+                    if ID == account.user.ID {
+                        accountUserName = (firstName, lastName)
+                    } else {
+                        let user = User(ID: ID, username: "", firstName: firstName, lastName: lastName)
+                        users.append(user)
                     }
                 }
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    loadingView.dismissAnimated(true)
-                    if statusCode == 200 {
-                        if let accountUserName = accountUserName {
-                            account.user.firstName = accountUserName.first
-                            account.user.lastName = accountUserName.last
-                        }
-                        account.users = users
-                    } else {
-                        let alert = UIAlertController(dictionary: (collection as! Dictionary), error: error, handler: nil)
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    }
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    loadingView.dismissAnimated(true)
-                    let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                    self.presentViewController(alert, animated: true, completion: nil)
-                })
-            }
-        })
+            }, mainSuccessHandler: { _ in
+                if let accountUserName = accountUserName {
+                    account.user.firstName = accountUserName.first
+                    account.user.lastName = accountUserName.last
+                }
+                account.users = users
+            })
         dataTask.resume()
         return dataTask
     }

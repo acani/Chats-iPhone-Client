@@ -57,9 +57,9 @@ class EditEmailTableViewController: UITableViewController, UITextFieldDelegate {
         } else {
             let alert = UIAlertController(title: "Is your new email correct?", message: newEmail, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "No", style: .Cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Yes", style: .Default) { _ in
                 account.changeEmail(self, newEmail: newEmail)
-            }))
+            })
             presentViewController(alert, animated: true, completion: nil)
         }
     }

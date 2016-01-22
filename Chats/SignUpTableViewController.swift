@@ -141,51 +141,24 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         } else {
             let alert = UIAlertController(title: "Is your email correct?", message: email, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "No", style: .Cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Yes", style: .Default) { _ in
                 self.createSignupCode()
-            }))
+            })
             presentViewController(alert, animated: true, completion: nil)
         }
     }
 
     func createSignupCode() {
-        let loadingViewController = LoadingViewController(title: "Connecting")
-        presentViewController(loadingViewController, animated: true, completion: nil)
-
+        var enterCodeViewController: EnterCodeViewController!
         let fields = ["first_name": firstName, "last_name": lastName, "email": email]
-        let request = api.formRequest("POST", "/signup", fields)
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
-            if response != nil {
-                let statusCode = (response as! NSHTTPURLResponse).statusCode
-                var enterCodeViewController: EnterCodeViewController!
-                var dictionary: Dictionary<String, String>?
-
-                if statusCode == 200 {
-                    enterCodeViewController = EnterCodeViewController(email: self.email)
-                    enterCodeViewController.method = .SignUp
-                } else { // error
-                    dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, String>?
-                }
-
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.dismissViewControllerAnimated(true, completion: {
-                        if (enterCodeViewController != nil) {
-                            self.navigationController?.pushViewController(enterCodeViewController, animated: true)
-                        } else { // error
-                            let alert = UIAlertController(dictionary: dictionary, error: error, handler: nil)
-                            self.presentViewController(alert, animated: true, completion: nil)
-                        }
-                    })
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.dismissViewControllerAnimated(true, completion: {
-                        let alert = UIAlertController(dictionary: nil, error: error, handler: nil)
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    })
-                })
-            }
-        })
+        let request = api.request("POST", "/signup", fields)
+        let dataTask = Net.dataTaskWithRequest(request, self,
+            backgroundSuccessHandler: { _ in
+                enterCodeViewController = EnterCodeViewController(email: self.email)
+                enterCodeViewController.method = .SignUp
+            }, mainSuccessHandler: { _ in
+                self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+            })
         dataTask.resume()
     }
 }

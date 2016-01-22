@@ -225,12 +225,12 @@
 //            fields["picture_id"] = NSUUID().UUIDString.stringByReplacingOccurrencesOfString("-", withString: "").lowercaseString
 //        }
 //        let request = api.formRequest("POST", "/users", fields)
-//        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) in
+//        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
 //            if response != nil {
 //                let statusCode = (response as! NSHTTPURLResponse).statusCode
 //                let dictionary = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! Dictionary<String, AnyObject>?
 //
-//                dispatch_async(dispatch_get_main_queue(), {
+//                dispatch_async(dispatch_get_main_queue()) {
 //                    self.dismissViewControllerAnimated(true, completion: nil)
 //
 //                    if statusCode == 201 {
@@ -241,32 +241,32 @@
 //                        account.accessToken = accessToken
 //
 //                        if let fields = dictionary!["fields"] as? Dictionary<String, String> {
-//                            let boundary = Web.multipartBoundary()
-//                            let request = Web.multipartRequest("POST", NSURL(string: "https://acani-chats.s3.amazonaws.com")!, boundary)
-//                            let data = Web.multipartData(boundary, fields, UIImageJPEGRepresentation(self.pictureImage!, 0.9)!)
-//                            let dataTask = NSURLSession.sharedSession().uploadTaskWithRequest(request, fromData: data, completionHandler: { (data, response, error) in
+//                            let boundary = Net.multipartBoundary()
+//                            let request = Net.multipartRequest("POST", NSURL(string: "https://acani-chats.s3.amazonaws.com")!, boundary)
+//                            let data = Net.multipartData(boundary, fields, UIImageJPEGRepresentation(self.pictureImage!, 0.9)!)
+//                            let dataTask = NSURLSession.sharedSession().uploadTaskWithRequest(request, fromData: data) { data, response, error in
 //                                if response != nil {
 //                                    let statusCode = (response as! NSHTTPURLResponse).statusCode
 //                                    let responseBody = NSString(data: data!, encoding: NSUTF8StringEncoding)
 //                                } else {
-//                                    dispatch_async(dispatch_get_main_queue(), {
+//                                    dispatch_async(dispatch_get_main_queue()) {
 //                                        UIAlertView(dictionary: nil, error: error, delegate: nil).show()
-//                                    })
+//                                    }
 //                                }
-//                            })
+//                            }
 //                            dataTask.resume()
 //                        }
 //                    } else {
 //                        UIAlertView(dictionary: dictionary as! Dictionary<String, String>?, error: error, delegate: nil).show()
 //                    }
-//                })
+//                }
 //            } else {
-//                dispatch_async(dispatch_get_main_queue(), {
+//                dispatch_async(dispatch_get_main_queue()) {
 //                    self.dismissViewControllerAnimated(true, completion: nil)
 //                    UIAlertView(dictionary: nil, error: error, delegate: nil).show()
-//                })
+//                }
 //            }
-//        })
+//        }
 //        dataTask.resume()
 //    }
 //

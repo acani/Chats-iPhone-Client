@@ -44,12 +44,12 @@ class UsersCollectionViewController: UICollectionViewController {
                     let firstName = name["first"]!
                     let lastName = name["last"]!
 
-                    if ID == account.user.ID {
-                        accountUserName = (firstName, lastName)
-                    } else {
+                    guard ID == account.user.ID else {
                         let user = User(ID: ID, username: "", firstName: firstName, lastName: lastName)
                         users.append(user)
+                        return
                     }
+                    accountUserName = (firstName, lastName)
                 }
             }, mainSuccessHandler: { _ in
                 if let accountUserName = accountUserName {

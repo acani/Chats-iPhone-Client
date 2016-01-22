@@ -9,21 +9,20 @@ class Validation {
     }
 
     class func errorMessageWithEmail(email: String) -> String? {
-        if !Validation.isValidEmail(email) {
+        guard Validation.isValidEmail(email) else {
             return "Email must be between 3 & 254 characters and have an at sign."
-        } else {
-            return nil
         }
+        return nil
     }
 
     class func errorMessageWithFirstName(firstName: String, lastName: String, email: String) -> String? {
-        if !Validation.isValidName(firstName) {
+        guard Validation.isValidName(firstName) else {
             return "First name must be between 1 & 50 characters."
-        } else if !Validation.isValidName(lastName) {
-            return "Last name must be between 1 & 50 characters."
-        } else {
-            return errorMessageWithEmail(email)
         }
+        guard Validation.isValidName(lastName) else {
+            return "Last name must be between 1 & 50 characters."
+        }
+        return errorMessageWithEmail(email)
     }
 }
 

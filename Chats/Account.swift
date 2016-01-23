@@ -2,13 +2,17 @@ import UIKit
 
 class Account: NSObject {
     private let AccountAccessTokenKey = "AccountAccessTokenKey"
-    dynamic var accessToken: String! {
+    dynamic var accessToken: String? {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(AccountAccessTokenKey)
+            guard let accessToken = api.accessToken else {
+                api.accessToken = NSUserDefaults.standardUserDefaults().stringForKey(AccountAccessTokenKey)
+                return api.accessToken
+            }
+            return accessToken
         }
         set {
             NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: AccountAccessTokenKey)
-            api.accessToken = accessToken
+            api.accessToken = newValue
         }
     }
     var chats = [Chat]()
@@ -100,7 +104,7 @@ class Account: NSObject {
     }
 
     func deleteAccount(viewController: UIViewController) -> NSURLSessionDataTask {
-        let request = api.request("DELETE", "/sessions", auth: true)
+        let request = api.request("DELETE", "/me", auth: true)
         let dataTask = Net.dataTaskWithRequest(request, viewController, loadingTitle: "Deleting") { _ in
             self.reset()
         }

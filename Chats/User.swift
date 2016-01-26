@@ -13,7 +13,7 @@ class User : NSObject {
         for name in [firstName, lastName] {
             let initial = name.substringToIndex(name.startIndex.advancedBy(1))
             if initial.lengthOfBytesUsingEncoding(NSNEXTSTEPStringEncoding) > 0 {
-                initials = (initials == nil ? initial : initials! + initial)
+                initials = initials == nil ? initial : initials! + initial
             }
         }
         return initials

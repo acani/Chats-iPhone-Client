@@ -45,9 +45,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        let alert = UIAlertController(title: "", message: "This page doesn't work yet.", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        presentViewController(alert, animated: true, completion: nil)
+        alert(title: "", message: "This page doesn't work yet.")
     }
 
     // MARK: - UITableView

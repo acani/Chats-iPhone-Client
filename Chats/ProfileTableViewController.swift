@@ -86,18 +86,14 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
 
             if saveChanges {
                 guard firstNameTextField.hasText() else {
-                    let alert = UIAlertController(title: "First Name Required", message: nil, preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-                    presentViewController(alert, animated: true, completion: nil)
+                    alert(title: "First Name Required", message: nil)
                     setEditing(true, animated: false)
                     return
                 }
                 user.firstName = firstNameTextField.text!
 
                 guard lastNameTextField.hasText() else {
-                    let alert = UIAlertController(title: "Last Name Required", message: nil, preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-                    presentViewController(alert, animated: true, completion: nil)
+                    alert(title: "Last Name Required", message: nil)
                     setEditing(true, animated: false)
                     return
                 }
@@ -166,9 +162,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
                 presentViewController(imagePickerController, animated: true, completion: nil)
             } else {
                 let sourceString = sourceType == .Camera ? "Camera" : "Photo Library"
-                let alert = UIAlertController(title: "\(sourceString) Unavailable", message: nil, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-                presentViewController(alert, animated: true, completion: nil)
+                alert(title: "\(sourceString) Unavailable", message: nil)
             }
         }
 

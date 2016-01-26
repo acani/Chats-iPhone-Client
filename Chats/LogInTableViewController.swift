@@ -54,20 +54,17 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 
         // Validate email
-        if let errorMessage = Validation.errorMessageWithEmail(email) {
-            let alert = UIAlertController(title: "", message: errorMessage, preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+        guard let errorMessage = Validation.errorMessageWithEmail(email) else {
+            // Create code with email
+            let request = api.request("POST", "/login", ["email": email])
+            let dataTask = Net.dataTaskWithRequest(request, self) { _ in
+                let enterCodeViewController = EnterCodeViewController(email: email)
+                enterCodeViewController.method = .LogIn
+                self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+            }
+            dataTask.resume()
             return
         }
-
-        // Create code with email
-        let request = api.request("POST", "/login", ["email": email])
-        let dataTask = Net.dataTaskWithRequest(request, self) { _ in
-            let enterCodeViewController = EnterCodeViewController(email: email)
-            enterCodeViewController.method = .LogIn
-            self.navigationController?.pushViewController(enterCodeViewController, animated: true)
-        }
-        dataTask.resume()
+        alert(title: "", message: errorMessage)
     }
 }

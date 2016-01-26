@@ -14,10 +14,8 @@ extension Net {
 
         let dataTask = API.dataTaskWithRequest(request) { JSONObject, statusCode, error in
             guard let error = error else {
-                if let backgroundSuccessHandler = backgroundSuccessHandler {
-                    if statusCode == successCode {
-                        backgroundSuccessHandler(JSONObject)
-                    }
+                if let backgroundSuccessHandler = backgroundSuccessHandler where statusCode == successCode {
+                    backgroundSuccessHandler(JSONObject)
                 }
 
                 dispatch_async(dispatch_get_main_queue()) {

@@ -118,7 +118,7 @@ class Account: NSObject {
         user = User(ID: userID, username: "", firstName: firstName, lastName: lastName)
     }
 
-    private func reset() {
+    func reset() {
         accessToken = nil
         chats = []
         email = nil

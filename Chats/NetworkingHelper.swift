@@ -19,20 +19,25 @@ extension Net {
                 }
 
                 dispatch_async(dispatch_get_main_queue()) {
-                    let block = {
-                        if statusCode == successCode {
+                    func handleResponse() {
+                        switch statusCode! {
+                        case successCode:
                             mainSuccessHandler(JSONObject)
-                        } else {
+                        case 401:
+                            viewController.alert(title: "Session Expired", message: "Please log in again.") { _ in
+                                account.reset()
+                            }
+                        default:
                             viewController.alertError(JSONObject as! Dictionary<String, String>?, error: nil, handler: errorHandler)
                         }
                     }
 
                     if useLoadingView {
                         loadingView!.dismiss()
-                        block()
+                        handleResponse()
                     } else {
                         viewController.dismissViewControllerAnimated(true, completion: {
-                            block()
+                            handleResponse()
                         })
                     }
                 }

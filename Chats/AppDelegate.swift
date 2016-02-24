@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 account.accessToken = nil
             } else {
                 account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
-                account.getMe()
             }
         }
         account.addObserver(self, forKeyPath: "accessToken", options: NSKeyValueObservingOptions(rawValue: 0), context: nil) // always
@@ -42,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window!.rootViewController = WelcomeViewController(nibName: nil, bundle: nil)
         } else {
             window!.rootViewController = createTabBarController()
+            account.getMe()
         }
     }
 

@@ -149,8 +149,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         let request = api.request("POST", "/signup", fields)
         let dataTask = Net.dataTaskWithRequest(request, self,
             backgroundSuccessHandler: { _ in
-                enterCodeViewController = EnterCodeViewController(email: self.email)
-                enterCodeViewController.method = .SignUp
+                enterCodeViewController = EnterCodeViewController(method: .Signup, email: self.email)
             }, mainSuccessHandler: { _ in
                 self.navigationController?.pushViewController(enterCodeViewController, animated: true)
             })

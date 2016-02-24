@@ -1,16 +1,17 @@
 import UIKit
 
 enum EnterCodeMethod : Int {
-    case SignUp
-    case LogIn
+    case Signup
+    case Login
     case Email
 }
 
 class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
+    var method = EnterCodeMethod.Signup
     var email: String
-    var method = EnterCodeMethod.SignUp
 
-    init(email: String) {
+    init(method: EnterCodeMethod, email: String) {
+        self.method = method
         self.email = email
         super.init(nibName: nil, bundle: nil)
         title = "Verify Email"
@@ -62,12 +63,12 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
         let successCode: Int
 
         switch method {
-        case .SignUp:
+        case .Signup:
             HTTPMethod = "POST"
             path = "/users"
             loadingTitle = "Signing Up"
             successCode = 201
-        case .LogIn:
+        case .Login:
             HTTPMethod = "POST"
             path = "/sessions"
             loadingTitle = "Logging In"
@@ -88,7 +89,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
             account.email = self.email
 
             switch self.method {
-            case .SignUp, .LogIn:
+            case .Signup, .Login:
                 let accessToken = JSONObject!["access_token"]! as! String
                 account.setUserWithAccessToken(accessToken, firstName: "", lastName: "")
                 account.accessToken = accessToken

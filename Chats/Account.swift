@@ -86,8 +86,7 @@ class Account: NSObject {
         let request = api.request("POST", "/email", ["email": newEmail], auth: true)
         let dataTask = Net.dataTaskWithRequest(request, viewController,
             backgroundSuccessHandler: { _ in
-                enterCodeViewController = EnterCodeViewController(email: newEmail)
-                enterCodeViewController.method = .Email
+                enterCodeViewController = EnterCodeViewController(method: .Email, email: newEmail)
             }, mainSuccessHandler: { _ in
                 let rootNavigationController = viewController.navigationController!
                 let cancelBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: enterCodeViewController, action: "cancelAction")

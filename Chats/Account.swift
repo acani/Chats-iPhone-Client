@@ -69,9 +69,11 @@ class Account: NSObject {
                     self.email = dictionary["email"]! as! String
                 }
             } else if statusCode == 401 {
-                let viewController = UIApplication.sharedApplication().delegate?.window!!.rootViewController
-                viewController!.alert(title: "Session Expired", message: "Please log in again.") { _ in
-                    account.reset()
+                dispatch_async(dispatch_get_main_queue()) {
+                    let viewController = UIApplication.sharedApplication().delegate?.window!!.rootViewController
+                    viewController!.alert(title: "Session Expired", message: "Please log in again.") { _ in
+                        account.reset()
+                    }
                 }
             }
         }

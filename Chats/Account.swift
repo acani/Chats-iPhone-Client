@@ -57,25 +57,14 @@ class Account: NSObject {
         accessToken = "guest_access_token"
     }
 
-    func getMe() -> NSURLSessionDataTask {
+    func getMe(viewController: UIViewController) -> NSURLSessionDataTask {
         let request = api.request("GET", "/me", auth: true)
-        let dataTask = API.dataTaskWithRequest(request) { JSONObject, statusCode, error in
-            if statusCode == 200 {
-                let dictionary = JSONObject as! Dictionary<String, AnyObject>
-                dispatch_async(dispatch_get_main_queue()) {
-                    let name = dictionary["name"] as! Dictionary<String, String>
-                    self.user.firstName = name["first"]!
-                    self.user.lastName = name["last"]!
-                    self.email = dictionary["email"]! as! String
-                }
-            } else if statusCode == 401 {
-                dispatch_async(dispatch_get_main_queue()) {
-                    let viewController = UIApplication.sharedApplication().delegate?.window!!.rootViewController
-                    viewController!.alert(title: "Session Expired", message: "Please log in again.") { _ in
-                        account.reset()
-                    }
-                }
-            }
+        let dataTask = Net.dataTaskWithRequest(request, viewController, loadingViewType: .None) { JSONObject in
+            let dictionary = JSONObject as! Dictionary<String, AnyObject>
+            let name = dictionary["name"] as! Dictionary<String, String>
+            self.user.firstName = name["first"]!
+            self.user.lastName = name["last"]!
+            self.email = dictionary["email"]! as! String
         }
         dataTask.resume()
         return dataTask

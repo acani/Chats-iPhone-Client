@@ -1,15 +1,23 @@
 import UIKit
 
+enum LoadingViewType : Int {
+    case None
+    case View
+    case Controller
+}
+
 extension Net {
-    static func dataTaskWithRequest(request: NSURLRequest, _ viewController: UIViewController, useLoadingView: Bool = false, loadingTitle: String = "Connecting", successCode: Int = 200, errorHandler: ((UIAlertAction) -> Void)? = nil, backgroundSuccessHandler: ((AnyObject?) -> Void)? = nil, mainSuccessHandler: (AnyObject?) -> Void) -> NSURLSessionDataTask {
+    static func dataTaskWithRequest(request: NSURLRequest, _ viewController: UIViewController, loadingViewType: LoadingViewType = .Controller, loadingTitle: String = "Connecting", successCode: Int = 200, errorHandler: ((UIAlertAction) -> Void)? = nil, backgroundSuccessHandler: ((AnyObject?) -> Void)? = nil, mainSuccessHandler: (AnyObject?) -> Void) -> NSURLSessionDataTask {
 
         var loadingView: LoadingView? = nil
-        if useLoadingView {
+        switch loadingViewType {
+        case .View:
             loadingView = LoadingView()
             loadingView!.showInViewController(viewController)
-        } else {
+        case .Controller:
             let loadingViewController = LoadingViewController(title: loadingTitle)
             viewController.presentViewController(loadingViewController, animated: true, completion: nil)
+        default: break
         }
 
         let dataTask = API.dataTaskWithRequest(request) { JSONObject, statusCode, error in
@@ -32,10 +40,13 @@ extension Net {
                         }
                     }
 
-                    if useLoadingView {
+                    switch loadingViewType {
+                    case .None:
+                        handleResponse()
+                    case .View:
                         loadingView!.dismiss()
                         handleResponse()
-                    } else {
+                    case .Controller:
                         viewController.dismissViewControllerAnimated(true, completion: {
                             handleResponse()
                         })
@@ -45,10 +56,13 @@ extension Net {
             }
 
             dispatch_async(dispatch_get_main_queue()) {
-                if useLoadingView {
+                switch loadingViewType {
+                case .None:
+                    viewController.alertError(nil, error: error, handler: errorHandler)
+                case .View:
                     loadingView!.dismiss()
                     viewController.alertError(nil, error: error, handler: errorHandler)
-                } else {
+                case .Controller:
                     viewController.dismissViewControllerAnimated(true, completion: {
                         viewController.alertError(nil, error: error, handler: errorHandler)
                     })

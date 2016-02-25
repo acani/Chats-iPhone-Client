@@ -40,8 +40,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if account.accessToken == nil {
             window!.rootViewController = WelcomeViewController(nibName: nil, bundle: nil)
         } else {
-            window!.rootViewController = createTabBarController()
-            account.getMe()
+            let tabBarController = createTabBarController()
+            window!.rootViewController = tabBarController
+            account.getMe(tabBarController.selectedViewController!)
         }
     }
 

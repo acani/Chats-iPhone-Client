@@ -36,7 +36,7 @@ class UsersCollectionViewController: UICollectionViewController {
         var users = [User]()
 
         let request = api.request("GET", "/users")
-        let dataTask = Net.dataTaskWithRequest(request, self, useLoadingView: true,
+        let dataTask = Net.dataTaskWithRequest(request, self, loadingViewType: .View,
             backgroundSuccessHandler: { JSONObject in
                 for item in JSONObject as! Array<Dictionary<String, AnyObject>> {
                     let ID = item["id"] as! UInt

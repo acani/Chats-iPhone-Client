@@ -6,6 +6,8 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
     var saveChanges = false
     let user: User
 
+    weak var patchMeDataTask: NSURLSessionDataTask?
+
     init(user: User) {
         isMyProfile = (user.ID == account.user.ID)
         self.user = user
@@ -85,19 +87,22 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
             let lastNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))!
 
             if saveChanges {
-                guard firstNameTextField.hasText() else {
-                    alert(title: "First Name Required", message: nil)
-                    setEditing(true, animated: false)
-                    return
+                func stripTextField(textField: UITextField) -> String {
+                    return textField.hasText() ? textField.text!.strip() : ""
                 }
-                user.firstName = firstNameTextField.text!
 
-                guard lastNameTextField.hasText() else {
-                    alert(title: "Last Name Required", message: nil)
+                let firstName = stripTextField(firstNameTextField)
+                let lastName = stripTextField(lastNameTextField)
+
+                if let errorMessage = Validation.errorMessageWithFirstName(firstName, lastName: lastName) {
+                    alert(title: "", message: errorMessage)
                     setEditing(true, animated: false)
-                    return
+                } else {
+                    if let patchMeDataTask = patchMeDataTask {
+                        patchMeDataTask.cancel()
+                    }
+                    patchMeDataTask = account.patchMe(self, firstName: firstName, lastName: "")
                 }
-                user.lastName = lastNameTextField.text!
             }
 
             navigationItem.leftBarButtonItem = nil

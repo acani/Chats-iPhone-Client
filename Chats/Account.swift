@@ -17,7 +17,7 @@ class Account: NSObject {
     }
     var chats = [Chat]()
     dynamic var email: String!
-    var user: User!
+    var user: ServerUser!
     dynamic var users = [User]()
 
     func continueAsGuest() {
@@ -53,7 +53,7 @@ class Account: NSObject {
         }
 
         email = "guest@example.com"
-        user = User(ID: 0, username: "guest", firstName: "Guest", lastName: "User")
+        user = ServerUser(ID: 0, username: "guest", firstName: "Guest", lastName: "User")
         accessToken = "guest_access_token"
     }
 
@@ -62,9 +62,25 @@ class Account: NSObject {
         let dataTask = Net.dataTaskWithRequest(request, viewController, loadingViewType: .None) { JSONObject in
             let dictionary = JSONObject as! Dictionary<String, AnyObject>
             let name = dictionary["name"] as! Dictionary<String, String>
-            self.user.firstName = name["first"]!
-            self.user.lastName = name["last"]!
+            self.user.serverFirstName = name["first"]!
+            self.user.serverLastName = name["last"]!
             self.email = dictionary["email"]! as! String
+        }
+        dataTask.resume()
+        return dataTask
+    }
+
+    func patchMe(viewController: UIViewController, firstName: String, lastName: String) -> NSURLSessionDataTask {
+        user.firstName = firstName
+        user.lastName = lastName
+        let request = api.request("PATCH", "/me", ["first_name": firstName, "last_name": lastName], auth: true)
+        let dataTask = Net.dataTaskWithRequest(request, viewController, loadingViewType: .None,
+            errorHandler: { _ in
+                self.user.firstName = self.user.serverFirstName
+                self.user.lastName = self.user.serverLastName
+            }) { _ in
+                self.user.serverFirstName = firstName
+                self.user.serverLastName = lastName
         }
         dataTask.resume()
         return dataTask
@@ -110,7 +126,7 @@ class Account: NSObject {
     func setUserWithAccessToken(accessToken: String, firstName: String, lastName: String) {
         let userIDString = accessToken.substringToIndex(accessToken.endIndex.advancedBy(-33))
         let userID = UInt(Int(userIDString)!)
-        user = User(ID: userID, username: "", firstName: firstName, lastName: lastName)
+        user = ServerUser(ID: userID, username: "", firstName: firstName, lastName: lastName)
     }
 
     func reset() {

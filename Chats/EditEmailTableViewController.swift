@@ -46,8 +46,7 @@ class EditEmailTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: Actions
 
     func doneAction() {
-        var newEmail = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
-        newEmail.strip()
+        let newEmail = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!.strip()
 
         // Validate newEmail
         guard let errorMessage = Validation.errorMessageWithEmail(newEmail) else {

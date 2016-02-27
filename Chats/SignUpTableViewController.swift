@@ -129,12 +129,8 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     func doneAction() {
-        firstName.strip()
-        lastName.strip()
-        email.strip()
-
         // Validate parameters
-        guard let errorMessage = Validation.errorMessageWithFirstName(firstName, lastName: lastName, email: email) else {
+        guard let errorMessage = Validation.errorMessageWithFirstName(firstName.strip(), lastName: lastName.strip(), email: email.strip()) else {
             confirm(title: "Is your email correct?", message: email) { _ in
                 self.createSignupCode()
             }
@@ -145,7 +141,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
 
     func createSignupCode() {
         var enterCodeViewController: EnterCodeViewController!
-        let fields = ["first_name": firstName, "last_name": lastName, "email": email]
+        let fields = ["first_name": firstName.strip(), "last_name": lastName.strip(), "email": email.strip()]
         let request = api.request("POST", "/signup", fields)
         let dataTask = Net.dataTaskWithRequest(request, self,
             backgroundSuccessHandler: { _ in

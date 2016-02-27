@@ -15,12 +15,19 @@ struct Validation {
         return nil
     }
 
-    static func errorMessageWithFirstName(firstName: String, lastName: String, email: String) -> String? {
+    static func errorMessageWithFirstName(firstName: String, lastName: String) -> String? {
         guard Validation.isValidName(firstName) else {
             return "First name must be between 1 & 50 characters."
         }
         guard Validation.isValidName(lastName) else {
             return "Last name must be between 1 & 50 characters."
+        }
+        return nil
+    }
+
+    static func errorMessageWithFirstName(firstName: String, lastName: String, email: String) -> String? {
+        if let errorMessage = errorMessageWithFirstName(firstName, lastName: lastName) {
+            return errorMessage
         }
         return errorMessageWithEmail(email)
     }
@@ -29,7 +36,7 @@ struct Validation {
 import Foundation.NSCharacterSet
 
 extension String {
-    mutating func strip() {
-        self = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func strip() -> String {
+        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     }
 }

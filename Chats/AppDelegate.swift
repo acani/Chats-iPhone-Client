@@ -1,8 +1,9 @@
 import UIKit
 
 let account = Account()
-var api = API(baseURL: NSURL(string: "https://acani-chats.herokuapp.com")!)
-//var api = API(baseURL: NSURL(string: "https://localhost:5100")!)
+var api = API(baseURL: NSURL(string: "https://localhost:5100")!)            // development
+//var api = API(baseURL: NSURL(string: "https://localhost:5200")!)            // test
+//var api = API(baseURL: NSURL(string: "https://acani-chats.herokuapp.com")!) // production
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()
         updateRootViewController()
-//        window!.rootViewController = UINavigationController(rootViewController: EnterCodeViewController(method: .Signup, email: "test@example.com")) // test
+        //        window!.rootViewController = UINavigationController(rootViewController: EnterCodeViewController(method: .Signup, email: "test@example.com")) // test
         window!.makeKeyAndVisible()
 
         return true

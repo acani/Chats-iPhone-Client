@@ -29,6 +29,7 @@
 		D2C2F3F31A1BA64100A52FE8 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C2F3F21A1BA64100A52FE8 /* PlaceholderTextView.swift */; };
 		D2C2F3F51A1BA67E00A52FE8 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C2F3F41A1BA67E00A52FE8 /* UserTableViewCell.swift */; };
 		D2C2F3F71A1BA72100A52FE8 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C2F3F61A1BA72100A52FE8 /* ComposeViewController.swift */; };
+		D2D8965D1C86214500174F5C /* NewProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D8965C1C86214500174F5C /* NewProfileTableViewController.swift */; };
 		D2DEC3A0195B33C20097CB9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC39F195B33C20097CB9D /* AppDelegate.swift */; };
 		D2DEC3A2195B33C20097CB9D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3A1195B33C20097CB9D /* Images.xcassets */; };
 		D2DEC3AE195B33C20097CB9D /* ChatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3AD195B33C20097CB9D /* ChatsTests.swift */; };
@@ -94,6 +95,7 @@
 		D2C2F3F21A1BA64100A52FE8 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		D2C2F3F41A1BA67E00A52FE8 /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		D2C2F3F61A1BA72100A52FE8 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
+		D2D8965C1C86214500174F5C /* NewProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewProfileTableViewController.swift; sourceTree = "<group>"; };
 		D2DEC39A195B33C20097CB9D /* Chats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2DEC39E195B33C20097CB9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2DEC39F195B33C20097CB9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 		D2B11CF81AF47D30004AE42B /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				D2D8965C1C86214500174F5C /* NewProfileTableViewController.swift */,
 				D2B11CF91AF47D8A004AE42B /* ProfileTableViewController.swift */,
 			);
 			name = Profile;
@@ -533,6 +536,7 @@
 				D2DEC3BF195B34B10097CB9D /* Message.swift in Sources */,
 				D2DEC3B9195B34700097CB9D /* Account.swift in Sources */,
 				D22106931B067E6600302D90 /* Networking.swift in Sources */,
+				D2D8965D1C86214500174F5C /* NewProfileTableViewController.swift in Sources */,
 				D2C2F3F71A1BA72100A52FE8 /* ComposeViewController.swift in Sources */,
 				D23EFE56197F053100C575C5 /* MessageSentDateTableViewCell.swift in Sources */,
 				D2B11CF11AF432B9004AE42B /* UIButtonBackgroundColor.swift in Sources */,
@@ -764,6 +768,7 @@
 				D2AC1AF61C829AE9000A55B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D2DEC395195B33C20097CB9D /* Build configuration list for PBXProject "Chats" */ = {
 			isa = XCConfigurationList;

@@ -1,5 +1,9 @@
 import XCTest
 
+// 1. Add fake test users
+// 2. Check that they show up
+//     Click on them
+
 class ChatsUITests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -34,35 +38,16 @@ class ChatsUITests: XCTestCase {
         let collectionViewsQuery = app.alerts["Is your email correct?"].collectionViews
         collectionViewsQuery.buttons["No"].tap()
         app.navigationBars["Sign Up"].buttons["Done"].tap()
-        collectionViewsQuery.buttons["Yes"].tap()
-
-        app.typeText("1111")
-        let okButton = app.alerts.collectionViews.buttons["OK"]
-        okButton.tap()
-        guard let code = getCode(username) else {
-            XCTFail("Couldn't get code")
-            return
-        }
-        print(code)
-        app.typeText(code)
-
-        //        app.tabBars.buttons["Profile"].tap()
-        //
-        //        let profileNavigationBar = app.navigationBars["Profile"]
-        //        profileNavigationBar.buttons["Edit"].tap()
-        //        tablesQuery.childrenMatchingType(.Cell).elementBoundByIndex(0).childrenMatchingType(.TextField).element.tap()
-        //        clearTextTextField.tap()
-        //
-        //        let clearTextButton = tablesQuery.buttons["Clear text"]
-        //        clearTextButton.tap()
-        //        clearTextTextField.typeText("Matt")
-        //        tablesQuery.childrenMatchingType(.Cell).elementBoundByIndex(1).childrenMatchingType(.TextField).element.tap()
-        //        clearTextTextField.tap()
-        //        clearTextButton.tap()
-        //        clearTextTextField.typeText("Hello")
-        //        profileNavigationBar.buttons["Done"].tap()
-        //        okButton.tap()
-
+//        collectionViewsQuery.buttons["Yes"].tap()
+//
+//        app.typeText("1111")
+//        let okButton = app.alerts.collectionViews.buttons["OK"]
+//        okButton.tap()
+//        guard let code = getCode(username) else {
+//            XCTFail("Couldn't get code")
+//            return
+//        }
+//        app.typeText(code)
     }
 
     // Generate a random string from "0000" to "9999"

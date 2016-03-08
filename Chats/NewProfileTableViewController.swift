@@ -16,12 +16,12 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     init(email: String, key: String) {
         self.email = email
         self.key = key
-        super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
+        super.init(style: .Plain)
         title = "Profile"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
     }
 
-    required init!(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

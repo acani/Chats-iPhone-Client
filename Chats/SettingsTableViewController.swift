@@ -26,7 +26,7 @@ class SettingsTableViewController: UITableViewController {
         account.addObserver(self, forKeyPath: "email", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
     }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 3
@@ -71,6 +71,8 @@ class SettingsTableViewController: UITableViewController {
 
         return cell
     }
+
+    // MARK: - UITableViewDelegate
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

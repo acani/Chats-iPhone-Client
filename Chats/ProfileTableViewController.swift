@@ -11,7 +11,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
     init(user: User) {
         isMyProfile = (user.ID == account.user.ID)
         self.user = user
-        super.init(nibName: nil, bundle: nil) // iOS bug: should be: super.init(style: .Plain)
+        super.init(style: .Plain)
         title = "Profile"
 
         if isMyProfile {
@@ -21,7 +21,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         }
     }
 
-    required init!(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

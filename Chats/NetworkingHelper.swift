@@ -32,6 +32,7 @@ extension Net {
                         case successCode:
                             mainSuccessHandler(JSONObject)
                         case 401:
+                            guard account.accessToken != "guest_access_token" else { return }
                             viewController.alert(title: "Session Expired", message: "Please log in again.") { _ in
                                 account.reset()
                             }

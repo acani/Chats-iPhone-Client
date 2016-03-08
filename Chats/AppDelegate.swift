@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.backgroundColor = UIColor.whiteColor()
         updateRootViewController()
+//        account.continueAsGuest() // test
+//        window!.rootViewController = UINavigationController(rootViewController: SearchViewController()) // test
 //        window!.rootViewController = UINavigationController(rootViewController: EnterCodeViewController(method: .Signup, email: "test@example.com")) // test
         window!.makeKeyAndVisible()
 
@@ -50,28 +52,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Helpers
 
     func createTabBarController() -> UITabBarController {
-        // Create `usersCollectionViewController`
         let usersCollectionViewController = UsersCollectionViewController()
         usersCollectionViewController.tabBarItem.image = UIImage(named: "Users")
         let usersNavigationController = UINavigationController(rootViewController: usersCollectionViewController)
 
-        // Create `chatsTableViewController`
+        let searchViewController = SearchViewController()
+        searchViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .Search, tag: 1)
+        let searchNavigationController = UINavigationController(rootViewController: searchViewController)
+
         let chatsTableViewController = ChatsTableViewController()
         chatsTableViewController.tabBarItem.image = UIImage(named: "Chats")
         let chatsNavigationController = UINavigationController(rootViewController: chatsTableViewController)
 
-        // Create `profileTableViewController`
         let profileTableViewController = ProfileTableViewController(user: account.user)
         profileTableViewController.tabBarItem.image = UIImage(named: "Profile")
         let profileNavigationController = UINavigationController(rootViewController: profileTableViewController)
 
-        // Create `settingsTableViewController`
         let settingsTableViewController = SettingsTableViewController()
         settingsTableViewController.tabBarItem.image = UIImage(named: "Settings")
         let settingsNavigationController = UINavigationController(rootViewController: settingsTableViewController)
 
         let tabBarController = UITabBarController(nibName: nil, bundle: nil)
-        tabBarController.viewControllers = [usersNavigationController, chatsNavigationController, profileNavigationController, settingsNavigationController]
+        tabBarController.viewControllers = [usersNavigationController, searchNavigationController, chatsNavigationController, profileNavigationController, settingsNavigationController]
         return tabBarController
     }
 }

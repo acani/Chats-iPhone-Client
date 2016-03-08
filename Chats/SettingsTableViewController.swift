@@ -22,7 +22,6 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
         account.addObserver(self, forKeyPath: "email", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
     }
 

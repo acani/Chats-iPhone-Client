@@ -1,6 +1,6 @@
 import UIKit
 
-class ComposeViewController: UIViewController, UITableViewDataSource, UITextViewDelegate {
+class ComposeViewController: UIViewController, UITableViewDataSource {
     var searchResults: [User] = []
     var searchResultsTableView = UITableView(frame: CGRectZero, style: .Plain)
     var toTextView = UITextView(frame: CGRectZero)
@@ -33,7 +33,7 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
         searchResultsTableView.hidden = true
         searchResultsTableView.keyboardDismissMode = .OnDrag
         searchResultsTableView.scrollsToTop = false
-        searchResultsTableView.registerClass(UserTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(UserTableViewCell))
+        searchResultsTableView.registerClass(UserTableViewCell.self, forCellReuseIdentifier: "UserCell")
         view.addSubview(searchResultsTableView)
 
         toTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,14 +48,14 @@ class ComposeViewController: UIViewController, UITableViewDataSource, UITextView
         alert(title: "", message: "This page doesn't work yet.")
     }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UserTableViewCell), forIndexPath: indexPath) as! UserTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("UserCell", forIndexPath: indexPath) as! UserTableViewCell
         let user = searchResults[indexPath.row]
         if let pictureName = user.pictureName() {
             cell.pictureImageView.image = UIImage(named: pictureName)

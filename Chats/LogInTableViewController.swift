@@ -12,22 +12,22 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(TextFieldTableViewCell))
+        tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: "TextFieldCell")
     }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(TextFieldTableViewCell), forIndexPath: indexPath) as! TextFieldTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell", forIndexPath: indexPath) as! TextFieldTableViewCell
         let textField = cell.textField
-        textField.delegate = self
         textField.autocapitalizationType = .None
         textField.autocorrectionType = .No
         textField.clearButtonMode = .WhileEditing
+        textField.delegate = self
         textField.keyboardType = .EmailAddress
         textField.placeholder = "Email"
         textField.returnKeyType = .Done
@@ -50,8 +50,7 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     func doneAction() {
-        let email = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let email = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!.strip()
 
         // Validate email
         guard let errorMessage = Validation.errorMessageWithEmail(email) else {

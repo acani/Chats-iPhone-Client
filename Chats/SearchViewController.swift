@@ -8,6 +8,8 @@ class SearchViewController: UIViewController {
         title = "Search"
     }
 
+    // MARK: - UIViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -30,8 +32,8 @@ class SearchViewController: UIViewController {
         searchController.searchBar.placeholder = "Search"
         searchController.searchBar.searchBarStyle = .Minimal
 
-        searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.titleView = searchController.searchBar
+        searchController.hidesNavigationBarDuringPresentation = false
 
         definesPresentationContext = true
     }
@@ -61,15 +63,13 @@ class SearchResultsTableViewController: UITableViewController, UISearchResultsUp
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        // Dequeue or create cell with style & identifier
-        let identifier = "reuseIdentifier"
-        var cell = tableView.dequeueReusableCellWithIdentifier(identifier) as UITableViewCell!
+        let cellIdentifier = "UserCell"
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as UITableViewCell!
         if cell == nil {
-            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: identifier)
-            cell.textLabel?.font = UIFont.systemFontOfSize(18)
+            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellIdentifier)
+            cell.textLabel!.font = UIFont.systemFontOfSize(18)
         }
 
-        // Customize cell
         let user = visibleResults[indexPath.row]
         let imageView = cell.imageView!
         if let pictureName = user.pictureName() {
@@ -89,7 +89,7 @@ class SearchResultsTableViewController: UITableViewController, UISearchResultsUp
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let user = visibleResults[indexPath.item]
+        let user = visibleResults[indexPath.row]
         presentingViewController!.navigationController!.pushViewController(ProfileTableViewController(user: user), animated: true)
     }
 

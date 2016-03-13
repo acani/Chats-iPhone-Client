@@ -45,7 +45,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         pictureButton.titleLabel?.textAlignment = .Center
         tableView.addSubview(pictureButton)
 
-        tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(TextFieldTableViewCell))
+        tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: "TextFieldCell")
         NewProfileTableViewController.tableViewSeparatorInsetLeftDefault = tableView.separatorInset.left
         tableView.separatorStyle = .None
         tableView.tableFooterView = UIView(frame: CGRectZero) // hides trailing separators
@@ -62,7 +62,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
         tableView.addSubview(editPictureButton)
     }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2
@@ -73,7 +73,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(TextFieldTableViewCell), forIndexPath: indexPath) as! TextFieldTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell", forIndexPath: indexPath) as! TextFieldTableViewCell
         let textField = cell.textField
         textField.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
         textField.autocorrectionType = .No

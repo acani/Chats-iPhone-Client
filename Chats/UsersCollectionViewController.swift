@@ -68,7 +68,7 @@ class UsersCollectionViewController: UICollectionViewController {
         collectionView!.reloadData()
     }
 
-    // MARK: - UICollectionView
+    // MARK: - UICollectionViewDataSource
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return account.users.count
@@ -85,6 +85,8 @@ class UsersCollectionViewController: UICollectionViewController {
         }
         return cell
     }
+
+    // MARK: - UICollectionViewDelegate
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let user = account.users[indexPath.item]

@@ -17,17 +17,17 @@ class ChatsTableViewController: UITableViewController {
         tableView.backgroundColor = UIColor.whiteColor()
         tableView.rowHeight = chatTableViewCellHeight
         tableView.separatorInset.left = chatTableViewCellInsetLeft
-        tableView.registerClass(ChatTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(ChatTableViewCell))
+        tableView.registerClass(ChatTableViewCell.self, forCellReuseIdentifier: "ChatCell")
     }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chats.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(ChatTableViewCell), forIndexPath: indexPath) as! ChatTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("ChatCell", forIndexPath: indexPath) as! ChatTableViewCell
         cell.configureWithChat(account.chats[indexPath.row])
         return cell
     }
@@ -41,6 +41,8 @@ class ChatsTableViewController: UITableViewController {
             }
         }
     }
+
+    // MARK: - UITableViewDelegate
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let chat = chats[indexPath.row]

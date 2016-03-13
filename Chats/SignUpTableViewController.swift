@@ -40,7 +40,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         tableFooterView.addSubview(termsAndPrivacyLabel)
     }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2
@@ -129,14 +129,13 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     func doneAction() {
-        // Validate parameters
-        guard let errorMessage = Validation.errorMessageWithFirstName(firstName.strip(), lastName: lastName.strip(), email: email.strip()) else {
-            confirm(title: "Is your email correct?", message: email) { _ in
-                self.createSignupCode()
-            }
-            return
+        let errorMessage = Validation.errorMessageWithFirstName(firstName.strip(), lastName: lastName.strip())
+        if let errorMessage = errorMessage ?? Validation.errorMessageWithEmail(email.strip()) {
+            return alert(title: "", message: errorMessage)
         }
-        alert(title: "", message: errorMessage)
+        confirm(title: "Is your email correct?", message: email) { _ in
+            self.createSignupCode()
+        }
     }
 
     func createSignupCode() {

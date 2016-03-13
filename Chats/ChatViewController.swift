@@ -111,7 +111,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.keyboardDismissMode = .Interactive
         tableView.estimatedRowHeight = 44
         tableView.separatorStyle = .None
-        tableView.registerClass(MessageSentDateTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(MessageSentDateTableViewCell))
+        tableView.registerClass(MessageSentDateTableViewCell.self, forCellReuseIdentifier: "SentDateCell")
         view.addSubview(tableView)
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
@@ -161,7 +161,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 //    }
 
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return chat.loadedMessages.count
@@ -173,14 +173,14 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(MessageSentDateTableViewCell), forIndexPath: indexPath) as! MessageSentDateTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("SentDateCell", forIndexPath: indexPath) as! MessageSentDateTableViewCell
             let message = chat.loadedMessages[indexPath.section][0]
             dateFormatter.dateStyle = .ShortStyle
             dateFormatter.timeStyle = .ShortStyle
             cell.sentDateLabel.text = dateFormatter.stringFromDate(message.sentDate)
             return cell
         } else {
-            let cellIdentifier = NSStringFromClass(MessageBubbleTableViewCell)
+            let cellIdentifier = "BubbleCell"
             var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as! MessageBubbleTableViewCell!
             if cell == nil {
                 cell = MessageBubbleTableViewCell(style: .Default, reuseIdentifier: cellIdentifier)
@@ -197,6 +197,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             return cell
         }
     }
+
+    // MARK: - UITableViewDelegate
 
     // Reserve row selection #CopyMessage
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
@@ -334,8 +336,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 }
 
-// Only show "Copy" when editing `textView` #CopyMessage
 class InputTextView: UITextView {
+    // Only show "Copy" when selecting a row while `textView` is first responder #CopyMessage
     override func canPerformAction(action: Selector, withSender sender: AnyObject!) -> Bool {
         if (delegate as! ChatViewController).tableView.indexPathForSelectedRow != nil {
             return action == "messageCopyTextAction:"

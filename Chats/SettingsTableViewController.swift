@@ -39,33 +39,33 @@ class SettingsTableViewController: UITableViewController {
         // Set style & identifier based on section
         let section = Section(rawValue: indexPath.section)!
         var style: UITableViewCellStyle = .Default
-        var identifier = "Default"
+        var cellIdentifier = "DefaultCell"
         if section == .Email {
             style = .Value1
-            identifier = "Value1"
+            cellIdentifier = "Value1Cell"
         }
 
         // Dequeue or create cell with style & identifier
-        var cell = tableView.dequeueReusableCellWithIdentifier(identifier) as UITableViewCell!
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as UITableViewCell!
         if cell == nil {
-            cell = UITableViewCell(style: style, reuseIdentifier: identifier)
-            cell.textLabel?.font = UIFont.systemFontOfSize(18)
+            cell = UITableViewCell(style: style, reuseIdentifier: cellIdentifier)
+            cell.textLabel!.font = UIFont.systemFontOfSize(18)
         }
 
         // Customize cell
-        cell.textLabel?.textAlignment = .Center
+        cell.textLabel!.textAlignment = .Center
         switch section {
         case .Email:
             cell.accessoryType = .DisclosureIndicator
-            cell.detailTextLabel?.text = account.email
-            cell.textLabel?.text = "Email"
-            cell.textLabel?.textAlignment = .Left
+            cell.detailTextLabel!.text = account.email
+            cell.textLabel!.text = "Email"
+            cell.textLabel!.textAlignment = .Left
         case .LogOut:
-            cell.textLabel?.text = "Log Out"
-            cell.textLabel?.textColor = UIColor(red: 0/255, green: 88/255, blue: 249/255, alpha: 1)
+            cell.textLabel!.text = "Log Out"
+            cell.textLabel!.textColor = UIColor(red: 0/255, green: 88/255, blue: 249/255, alpha: 1)
         case .DeleteAccount:
-            cell.textLabel?.text = "Delete Account"
-            cell.textLabel?.textColor = UIColor(red: 252/255, green: 53/255, blue: 56/255, alpha: 1)
+            cell.textLabel!.text = "Delete Account"
+            cell.textLabel!.textColor = UIColor(red: 252/255, green: 53/255, blue: 56/255, alpha: 1)
         }
 
         return cell

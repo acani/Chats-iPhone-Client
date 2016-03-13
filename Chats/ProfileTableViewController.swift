@@ -37,7 +37,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(TextFieldTableViewCell))
+        tableView.registerClass(TextFieldTableViewCell.self, forCellReuseIdentifier: "TextFieldCell")
         tableView.separatorInset.left = 12 + 60 + 12 + 22
         tableView.tableFooterView = UIView(frame: CGRectZero) // hides trailing separators
 
@@ -195,14 +195,14 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         setEditing(false, animated: true)
     }
 
-    // MARK: UITableView
+    // MARK: - UITableViewDataSource
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return editing ? 2 : 0
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(TextFieldTableViewCell), forIndexPath: indexPath) as! TextFieldTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell", forIndexPath: indexPath) as! TextFieldTableViewCell
         cell.textFieldLeftLayoutConstraint.constant = tableView.separatorInset.left + 1
         let textField = cell.textField
         textField.clearButtonMode = .WhileEditing

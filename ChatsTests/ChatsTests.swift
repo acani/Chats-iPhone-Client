@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import Chats
 
 class ChatsTests: XCTestCase {
@@ -22,13 +21,13 @@ class ChatsTests: XCTestCase {
         XCTAssertEqual("hey".words(), ["hey"])
         XCTAssertEqual("@hey ".words(), ["hey"])
 
-        XCTAssertEqual("Káty Smith-Shapiro_".words(), ["Káty", "Smith", "Shapiro"])
+        XCTAssertEqual("Káty Smįth-ßhapiro_".words(), ["Káty", "Smįth", "ßhapiro"])
         XCTAssertEqual("?c00l_dud3::3n1ce*".words(), ["c00l", "dud3", "3n1ce"])
     }
 
     func testMatchesFilterString() {
         XCTAssertTrue("Matt Di Pasquale".matchesFilterString("Mat pasqu D"))
         XCTAssertFalse("Matt Di Pasquale".matchesFilterString("L Pasqu"))
-        XCTAssertTrue("Káty Smith-Shapiro_".matchesFilterString("sh smit smit katy"))
+        XCTAssertTrue("Káty Smįth-ßhapiro_".matchesFilterString("ßh smit smit katy"))
     }
 }

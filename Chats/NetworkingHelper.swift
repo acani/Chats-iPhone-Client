@@ -1,4 +1,5 @@
 import UIKit
+import Alerts
 
 enum LoadingViewType : Int {
     case None
@@ -21,51 +22,49 @@ extension Net {
         }
 
         let dataTask = API.dataTaskWithRequest(request) { JSONObject, statusCode, error in
-            guard let error = error else {
-                if let backgroundSuccessHandler = backgroundSuccessHandler where statusCode == successCode {
-                    backgroundSuccessHandler(JSONObject)
-                }
-
-                dispatch_async(dispatch_get_main_queue()) {
-                    func handleResponse() {
-                        switch statusCode! {
-                        case successCode:
-                            mainSuccessHandler(JSONObject)
-                        case 401:
-                            guard account.accessToken != "guest_access_token" else { return }
-                            viewController.alert(title: "Session Expired", message: "Please log in again.") { _ in
-                                account.reset()
-                            }
-                        default:
-                            viewController.alertError(JSONObject as! Dictionary<String, String>?, error: nil, handler: errorHandler)
-                        }
-                    }
-
+            if let error = error {
+                return dispatch_async(dispatch_get_main_queue()) {
+                    let alertError = { viewController.alertError(error, handler: errorHandler) }
                     switch loadingViewType {
                     case .None:
-                        handleResponse()
+                        alertError()
                     case .View:
                         loadingView!.dismiss()
-                        handleResponse()
+                        alertError()
                     case .Controller:
-                        viewController.dismissViewControllerAnimated(true, completion: {
-                            handleResponse()
-                        })
+                        viewController.dismissViewControllerAnimated(true, completion: alertError)
                     }
                 }
-                return
+            }
+
+            if let backgroundSuccessHandler = backgroundSuccessHandler where statusCode == successCode {
+                backgroundSuccessHandler(JSONObject)
             }
 
             dispatch_async(dispatch_get_main_queue()) {
+                func handleResponse() {
+                    switch statusCode! {
+                    case successCode:
+                        mainSuccessHandler(JSONObject)
+                    case 401:
+                        viewController.alert(title: "Session Expired", message: "Please log in again.") { _ in
+                            account.reset()
+                        }
+                    default:
+                        let dictionary = JSONObject as! Dictionary<String, String>
+                        viewController.alert(title: dictionary["title"], message: dictionary["message"], handler: errorHandler)
+                    }
+                }
+
                 switch loadingViewType {
                 case .None:
-                    viewController.alertError(nil, error: error, handler: errorHandler)
+                    handleResponse()
                 case .View:
                     loadingView!.dismiss()
-                    viewController.alertError(nil, error: error, handler: errorHandler)
+                    handleResponse()
                 case .Controller:
                     viewController.dismissViewControllerAnimated(true, completion: {
-                        viewController.alertError(nil, error: error, handler: errorHandler)
+                        handleResponse()
                     })
                 }
             }

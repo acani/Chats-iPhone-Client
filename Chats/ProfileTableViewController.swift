@@ -1,5 +1,8 @@
 import MobileCoreServices
 import UIKit
+import Alerts
+import TextFieldTableViewCell
+import Validator
 
 class ProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let isMyProfile: Bool
@@ -83,34 +86,45 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
                 addEditPictureButton()
             }
         } else {
-            let firstNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!
-            let lastNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))!
+            navigationItem.leftBarButtonItem = nil
+            tableView.viewWithTag(4)!.removeFromSuperview()
+            tableView.viewWithTag(5)?.removeFromSuperview()
+            addPictureAndName()
 
             if saveChanges {
+                let firstNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!
+                let lastNameTextField = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))!
+
                 func stripTextField(textField: UITextField) -> String {
                     return textField.hasText() ? textField.text!.strip() : ""
                 }
-
                 let firstName = stripTextField(firstNameTextField)
                 let lastName = stripTextField(lastNameTextField)
 
-                if let errorMessage = Validation.errorMessageWithFirstName(firstName, lastName: lastName) {
-                    alert(title: "", message: errorMessage)
+                func alertError(message: String) {
+                    alert(title: "", message: message)
                     setEditing(true, animated: false)
-                } else {
-                    if let patchMeDataTask = patchMeDataTask {
-                        patchMeDataTask.cancel()
-                    }
-                    patchMeDataTask = account.patchMe(self, firstName: firstName, lastName: "")
                 }
+                guard firstName.isValidName else {
+                    alertError(Validator.invalidFirstNameMessage)
+                    return tableView.reloadData()
+                }
+                guard lastName.isValidName else {
+                    alertError(Validator.invalidLastNameMessage)
+                    return tableView.reloadData()
+                }
+
+                if account.accessToken == "guest_access_token" {
+                    (user as! ServerUser).serverFirstName = firstName
+                    (user as! ServerUser).serverLastName = lastName
+                    return tableView.reloadData()
+                }
+
+                if let patchMeDataTask = patchMeDataTask {
+                    patchMeDataTask.cancel()
+                }
+                patchMeDataTask = account.patchMe(self, firstName: firstName, lastName: lastName)
             }
-
-            navigationItem.leftBarButtonItem = nil
-
-            tableView.viewWithTag(4)!.removeFromSuperview()
-            tableView.viewWithTag(5)?.removeFromSuperview()
-
-            addPictureAndName()
         }
         tableView.reloadData()
     }

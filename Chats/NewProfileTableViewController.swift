@@ -1,5 +1,6 @@
 import MobileCoreServices
 import UIKit
+import TextFieldTableViewCell
 
 class NewProfileTableViewController: UITableViewController, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     let email: String

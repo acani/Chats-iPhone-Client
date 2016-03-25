@@ -1,4 +1,7 @@
 import UIKit
+import Alerts
+import TextFieldTableViewCell
+import Validator
 
 class EditEmailTableViewController: UITableViewController, UITextFieldDelegate {
     convenience init() {
@@ -42,18 +45,24 @@ class EditEmailTableViewController: UITableViewController, UITextFieldDelegate {
         return true
     }
 
-    // MARK: Actions
+    // MARK: - Actions
 
     func doneAction() {
         let newEmail = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!.strip()
 
-        // Validate newEmail
-        guard let errorMessage = Validation.errorMessageWithEmail(newEmail) else {
-            confirm(title: "Is your new email correct?", message: newEmail) { _ in
-                account.changeEmail(self, newEmail: newEmail)
-            }
-            return
+        // Validate email
+        guard newEmail.isValidEmail else {
+            return alert(title: "", message: Validator.invalidEmailMessage)
         }
-        alert(title: "", message: errorMessage)
+
+        // Change email
+        confirm(title: "Is your new email correct?", message: newEmail) { _ in
+            if account.accessToken == "guest_access_token" {
+                account.email = newEmail
+                self.navigationController!.popViewControllerAnimated(true)
+                return
+            }
+            account.changeEmail(self, newEmail: newEmail)
+        }
     }
 }

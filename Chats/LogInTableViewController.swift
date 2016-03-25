@@ -1,4 +1,7 @@
 import UIKit
+import Alerts
+import TextFieldTableViewCell
+import Validator
 
 class LogInTableViewController: UITableViewController, UITextFieldDelegate {
     convenience init() {
@@ -53,16 +56,16 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
         let email = tableView.textFieldForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))!.text!.strip()
 
         // Validate email
-        guard let errorMessage = Validation.errorMessageWithEmail(email) else {
-            // Create code with email
-            let request = api.request("POST", "/login", ["email": email])
-            let dataTask = Net.dataTaskWithRequest(request, self) { _ in
-                let enterCodeViewController = EnterCodeViewController(method: .Login, email: email)
-                self.navigationController?.pushViewController(enterCodeViewController, animated: true)
-            }
-            dataTask.resume()
-            return
+        guard email.isValidEmail else {
+            return alert(title: "", message: Validator.invalidEmailMessage)
         }
-        alert(title: "", message: errorMessage)
+
+        // Create code with email
+        let request = api.request("POST", "/login", ["email": email])
+        let dataTask = Net.dataTaskWithRequest(request, self) { _ in
+            let enterCodeViewController = EnterCodeViewController(method: .Login, email: email)
+            self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+        }
+        dataTask.resume()
     }
 }

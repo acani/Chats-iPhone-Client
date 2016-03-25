@@ -12,6 +12,7 @@ class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.whiteColor()
 
         let noticeLabel = UILabel(frame: CGRectZero)
         noticeLabel.numberOfLines = 2
@@ -129,10 +130,7 @@ extension String {
                 }
                 return false
             }
-
-            if !wordsHasMatch() {
-                return false
-            }
+            if !wordsHasMatch() { return false }
         }
         return true
     }

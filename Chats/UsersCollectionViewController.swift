@@ -25,10 +25,8 @@ class UsersCollectionViewController: UICollectionViewController {
         collectionView!.backgroundColor = UIColor.whiteColor()
         collectionView!.registerClass(UserCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UserCollectionViewCell))
         account.addObserver(self, forKeyPath: "users", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
-
-        if account.accessToken != "guest_access_token" {
-            getUsers()
-        }
+        if account.accessToken == "guest_access_token" { return }
+        getUsers()
     }
 
     func getUsers() -> NSURLSessionDataTask {
@@ -44,12 +42,12 @@ class UsersCollectionViewController: UICollectionViewController {
                     let firstName = name["first"]!
                     let lastName = name["last"]!
 
-                    guard ID == account.user.ID else {
+                    if ID == account.user.ID {
+                        accountUserName = (firstName, lastName)
+                    } else {
                         let user = User(ID: ID, username: "", firstName: firstName, lastName: lastName)
                         users.append(user)
-                        return
                     }
-                    accountUserName = (firstName, lastName)
                 }
             }, mainSuccessHandler: { _ in
                 if let accountUserName = accountUserName {

@@ -1,4 +1,7 @@
 import UIKit
+import Alerts
+import TextFieldTableViewCell
+import Validator
 
 class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     var firstName = ""
@@ -129,11 +132,17 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
     func doneAction() {
-        let errorMessage = Validation.errorMessageWithFirstName(firstName.strip(), lastName: lastName.strip())
-        if let errorMessage = errorMessage ?? Validation.errorMessageWithEmail(email.strip()) {
-            return alert(title: "", message: errorMessage)
+        guard firstName.strip().isValidName else {
+            return alert(title: "", message: Validator.invalidFirstNameMessage)
         }
-        confirm(title: "Is your email correct?", message: email) { _ in
+        guard lastName.strip().isValidName else {
+            return alert(title: "", message: Validator.invalidLastNameMessage)
+        }
+        let strippedEmail = email.strip()
+        guard strippedEmail.isValidEmail else {
+            return alert(title: "", message: Validator.invalidEmailMessage)
+        }
+        confirm(title: "Is your email correct?", message: strippedEmail) { _ in
             self.createSignupCode()
         }
     }

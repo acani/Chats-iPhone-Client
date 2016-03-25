@@ -1,6 +1,6 @@
 import Foundation.NSDate
 
-var dateFormatter = NSDateFormatter()
+let dateFormatter = NSDateFormatter()
 
 class Chat {
     let user: User

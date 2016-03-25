@@ -1,4 +1,5 @@
 import UIKit
+import Alerts
 
 class ComposeViewController: UIViewController, UITableViewDataSource {
     var searchResults: [User] = []

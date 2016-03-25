@@ -45,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             let tabBarController = createTabBarController()
             window!.rootViewController = tabBarController
+            if account.accessToken == "guest_access_token" { return }
             account.getMe(tabBarController.selectedViewController!)
         }
     }

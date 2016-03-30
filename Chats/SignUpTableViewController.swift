@@ -11,8 +11,8 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
 
     convenience init() {
         self.init(style: .Grouped)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelAction")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(SignUpTableViewController.cancelAction))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(SignUpTableViewController.doneAction))
         title = "Sign Up"
     }
 
@@ -56,7 +56,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(TextFieldTableViewCell), forIndexPath: indexPath) as! TextFieldTableViewCell
         let textField = cell.textField
-        textField.addTarget(self, action: "textFieldDidChange:", forControlEvents: .EditingChanged)
+        textField.addTarget(self, action: #selector(SignUpTableViewController.textFieldDidChange(_:)), forControlEvents: .EditingChanged)
         textField.delegate = self
 
         func configureTextFieldForName() {

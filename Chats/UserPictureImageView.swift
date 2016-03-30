@@ -26,17 +26,18 @@ class UserPictureImageView: UIImageView {
     }
 
     func configureWithUser(user: User) {
-        guard let pictureName = user.pictureName() else {
-            guard let initials = user.initials else {
-                image = UIImage(named: "User0")
-                userNameInitialsLabel.hidden = true
-                return
-            }
-            userNameInitialsLabel.text = initials
-            userNameInitialsLabel.hidden = false
+        if let pictureName = user.pictureName() {
+            image = UIImage(named: pictureName)
+            userNameInitialsLabel.hidden = true
             return
         }
-        image = UIImage(named: pictureName)
+        if let initials = user.initials {
+            image = nil
+            userNameInitialsLabel.hidden = false
+            userNameInitialsLabel.text = initials
+            return
+        }
+        image = UIImage(named: "User0")
         userNameInitialsLabel.hidden = true
     }
 }

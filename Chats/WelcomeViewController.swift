@@ -24,7 +24,7 @@ class WelcomeViewController: UIViewController {
         view.addSubview(taglineLabel)
 
         let continueAsGuestButton = UIButton(type: .Custom)
-        continueAsGuestButton.addTarget(account, action: "continueAsGuest", forControlEvents: .TouchUpInside)
+        continueAsGuestButton.addTarget(account, action: #selector(Account.continueAsGuest), forControlEvents: .TouchUpInside)
         continueAsGuestButton.autoresizingMask = [.FlexibleLeftMargin, .FlexibleRightMargin, .FlexibleTopMargin]
         continueAsGuestButton.frame = CGRect(x: (view.frame.width-184)/2, y: view.frame.height-188, width: 184, height: 44)
         continueAsGuestButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
@@ -39,7 +39,7 @@ class WelcomeViewController: UIViewController {
         signUpButton.frame = CGRect(x: 0, y: view.frame.height-128, width: view.frame.width, height: 64)
         signUpButton.titleLabel?.font = UIFont.boldSystemFontOfSize(32)
         signUpButton.setTitle("Sign Up", forState: .Normal)
-        signUpButton.addTarget(self, action: "signUpLogInAction:", forControlEvents: .TouchUpInside)
+        signUpButton.addTarget(self, action: #selector(WelcomeViewController.signUpLogInAction(_:)), forControlEvents: .TouchUpInside)
         view.addSubview(signUpButton)
 
         let logInButton = UIButton(type: .Custom)
@@ -49,7 +49,7 @@ class WelcomeViewController: UIViewController {
         logInButton.frame = CGRect(x: 0, y: view.frame.height-64, width: view.frame.width, height: 64)
         logInButton.titleLabel?.font = UIFont.boldSystemFontOfSize(32)
         logInButton.setTitle("Log In", forState: .Normal)
-        logInButton.addTarget(self, action: "signUpLogInAction:", forControlEvents: .TouchUpInside)
+        logInButton.addTarget(self, action: #selector(WelcomeViewController.signUpLogInAction(_:)), forControlEvents: .TouchUpInside)
         view.addSubview(logInButton)
     }
 

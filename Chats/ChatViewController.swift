@@ -43,7 +43,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 sendButton.setTitleColor(UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1), forState: .Disabled)
                 sendButton.setTitleColor(UIColor(red: 1/255, green: 122/255, blue: 255/255, alpha: 1), forState: .Normal)
                 sendButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-                sendButton.addTarget(self, action: "sendAction", forControlEvents: UIControlEvents.TouchUpInside)
+                sendButton.addTarget(self, action: #selector(ChatViewController.sendMessageAction), forControlEvents: UIControlEvents.TouchUpInside)
                 toolBar.addSubview(sendButton)
 
                 // Auto Layout allows `sendButton` to change width, e.g., for localization.
@@ -60,6 +60,10 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
     init(chat: Chat) {
         self.chat = chat
         super.init(nibName: nil, bundle: nil)
@@ -69,10 +73,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     // MARK: - UIResponder
@@ -85,19 +85,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        chat.loadedMessages = [
-            [
-                Message(incoming: true, text: "I really enjoyed programming with you! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2-60*60)),
-                Message(incoming: false, text: "Thanks! Me too! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2))
-            ],
-            [
-                Message(incoming: true, text: "Hey, would you like to spend some time together tonight and work on Acani?", sentDate: NSDate(timeIntervalSinceNow: -33)),
-                Message(incoming: false, text: "Sure, I'd love to. How's 6 PM?", sentDate: NSDate(timeIntervalSinceNow: -19)),
-                Message(incoming: true, text: "6 sounds good :-)", sentDate: NSDate())
-            ]
-        ]
-
         let whiteColor = UIColor.whiteColor()
         view.backgroundColor = whiteColor // smooths push animation
 
@@ -115,9 +102,9 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         view.addSubview(tableView)
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        notificationCenter.addObserver(self, selector: "keyboardDidShow:", name: UIKeyboardDidShowNotification, object: nil)
-        notificationCenter.addObserver(self, selector: "menuControllerWillHide:", name: UIMenuControllerWillHideMenuNotification, object: nil) // #CopyMessage
+        notificationCenter.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(ChatViewController.keyboardDidShow(_:)), name: UIKeyboardDidShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(ChatViewController.menuControllerWillHide(_:)), name: UIMenuControllerWillHideMenuNotification, object: nil) // #CopyMessage
 
         // tableViewScrollToBottomAnimated(false) // doesn't work
     }
@@ -186,7 +173,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 cell = MessageBubbleTableViewCell(style: .Default, reuseIdentifier: cellIdentifier)
 
                 // Add gesture recognizers #CopyMessage
-                let action: Selector = "messageShowMenuAction:"
+                let action: Selector = #selector(ChatViewController.messageShowMenuAction(_:))
                 let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: action)
                 doubleTapGestureRecognizer.numberOfTapsRequired = 2
                 cell.bubbleImageView.addGestureRecognizer(doubleTapGestureRecognizer)
@@ -282,12 +269,19 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     // MARK: - Actions
 
-    func sendAction() {
+    func sendMessageAction() {
         // Autocomplete text before sending #hack
         textView.resignFirstResponder()
         textView.becomeFirstResponder()
 
-        chat.loadedMessages.append([Message(incoming: false, text: textView.text, sentDate: NSDate())])
+        
+        let messageText = textView.text.strip()
+        let date = NSDate()
+        chat.loadedMessages.append([Message(incoming: false, text: messageText, sentDate: date)])
+        chat.lastMessageText = messageText
+        chat.lastMessageSentDate = date
+        NSNotificationCenter.defaultCenter().postNotificationName(AccountDidSendMessageNotification, object: chat)
+
         textView.text = nil
         updateTextViewHeight()
         sendButton.enabled = false
@@ -317,7 +311,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let menuController = UIMenuController.sharedMenuController()
             let bubbleImageView = gestureRecognizer.view!
             menuController.setTargetRect(bubbleImageView.frame, inView: bubbleImageView.superview!)
-            menuController.menuItems = [UIMenuItem(title: "Copy", action: "messageCopyTextAction:")]
+            menuController.menuItems = [UIMenuItem(title: "Copy", action: #selector(ChatViewController.messageCopyTextAction(_:)))]
             menuController.setMenuVisible(true, animated: true)
         }
     }
@@ -340,7 +334,7 @@ class InputTextView: UITextView {
     // Only show "Copy" when selecting a row while `textView` is first responder #CopyMessage
     override func canPerformAction(action: Selector, withSender sender: AnyObject!) -> Bool {
         if (delegate as! ChatViewController).tableView.indexPathForSelectedRow != nil {
-            return action == "messageCopyTextAction:"
+            return action == #selector(ChatViewController.messageCopyTextAction(_:))
         } else {
             return super.canPerformAction(action, withSender: sender)
         }

@@ -6,7 +6,7 @@ import Validator
 class EditEmailTableViewController: UITableViewController, UITextFieldDelegate {
     convenience init() {
         self.init(style: .Grouped)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(EditEmailTableViewController.doneAction))
         title = "Email Address"
     }
 

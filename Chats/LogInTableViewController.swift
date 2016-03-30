@@ -6,8 +6,8 @@ import Validator
 class LogInTableViewController: UITableViewController, UITextFieldDelegate {
     convenience init() {
         self.init(style: .Grouped)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelAction")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneAction")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(LogInTableViewController.cancelAction))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(LogInTableViewController.doneAction))
         title = "Log In"
     }
 

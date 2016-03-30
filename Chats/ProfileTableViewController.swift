@@ -20,7 +20,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         if isMyProfile {
             navigationItem.rightBarButtonItem = editButtonItem()
         } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "chatAction")
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: #selector(ProfileTableViewController.chatAction))
         }
     }
 
@@ -58,13 +58,13 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
         if editing {
             saveChanges = true
 
-            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelEditingAction")
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(ProfileTableViewController.cancelEditingAction))
             tableView.setEditing(false, animated: false)
             tableView.tableHeaderView = nil
             tableView.viewWithTag(3)?.removeFromSuperview()
 
             let pictureButton = UIButton(type: .System)
-            pictureButton.addTarget(self, action: "editPictureAction", forControlEvents: .TouchUpInside)
+            pictureButton.addTarget(self, action: #selector(ProfileTableViewController.editPictureAction), forControlEvents: .TouchUpInside)
             pictureButton.adjustsImageWhenHighlighted = false
             pictureButton.clipsToBounds = true
             pictureButton.frame = CGRect(x: 15, y: 12, width: 60, height: 60)
@@ -252,7 +252,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
             // TEST: Save image to documents directory.
 
             var uuid = NSUUID().UUIDString // E621E1F8-C36C-495A-93FC-0C247A3E6E5F
-            let range = Range<String.Index>(start: uuid.startIndex, end: uuid.endIndex.advancedBy(-12))
+            let range = uuid.startIndex..<uuid.endIndex.advancedBy(-12)
             uuid = uuid.stringByReplacingOccurrencesOfString("-", withString: "", options: .LiteralSearch, range: range).lowercaseString
             let documentsURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
             let fileURL = documentsURL.URLByAppendingPathComponent("\(uuid).jpg")

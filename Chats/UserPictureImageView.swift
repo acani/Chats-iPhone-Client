@@ -13,7 +13,7 @@ class UserPictureImageView: UIImageView {
 
         userNameInitialsLabel.font = UIFont.systemFontOfSize(frame.width/2+1)
         userNameInitialsLabel.textAlignment = .Center
-        userNameInitialsLabel.textColor = UIColor.whiteColor()
+        userNameInitialsLabel.textColor = .whiteColor()
         addSubview(userNameInitialsLabel)
 
         userNameInitialsLabel.translatesAutoresizingMaskIntoConstraints = false

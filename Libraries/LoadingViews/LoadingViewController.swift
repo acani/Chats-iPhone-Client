@@ -37,7 +37,7 @@ class LoadingViewController : UIViewController, UIViewControllerTransitioningDel
         titleLabel.tag = 3
         titleLabel.text = title
         titleLabel.textAlignment = .Center
-        titleLabel.textColor = UIColor.whiteColor()
+        titleLabel.textColor = .whiteColor()
         containerView.addSubview(titleLabel)
     }
 

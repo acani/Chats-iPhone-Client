@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         account.addObserver(self, forKeyPath: "accessToken", options: NSKeyValueObservingOptions(rawValue: 0), context: nil) // always
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        window!.backgroundColor = UIColor.whiteColor()
+        window!.backgroundColor = .whiteColor()
         updateRootViewController()
 //        account.continueAsGuest() // test
 //        window!.rootViewController = UINavigationController(rootViewController: SearchViewController()) // test

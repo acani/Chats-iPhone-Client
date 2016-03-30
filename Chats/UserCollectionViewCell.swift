@@ -19,9 +19,9 @@ class UserCollectionViewCell: UICollectionViewCell {
         nameLabel.minimumScaleFactor = 0.7
         nameLabel.font = UIFont.systemFontOfSize(13)
         nameLabel.lineBreakMode = NSLineBreakMode.ByClipping
-        nameLabel.shadowColor = UIColor.blackColor()
+        nameLabel.shadowColor = .blackColor()
         nameLabel.shadowOffset = CGSize(width: 1, height: 1)
-        nameLabel.textColor = UIColor.whiteColor()
+        nameLabel.textColor = .whiteColor()
         contentView.addSubview(nameLabel)
     }
 

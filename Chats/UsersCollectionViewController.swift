@@ -22,7 +22,7 @@ class UsersCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView!.alwaysBounceVertical = true
-        collectionView!.backgroundColor = UIColor.whiteColor()
+        collectionView!.backgroundColor = .whiteColor()
         collectionView!.registerClass(UserCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(UserCollectionViewCell))
         account.addObserver(self, forKeyPath: "users", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
         if account.accessToken == "guest_access_token" { return }

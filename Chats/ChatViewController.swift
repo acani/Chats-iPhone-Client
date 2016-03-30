@@ -85,12 +85,10 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let whiteColor = UIColor.whiteColor()
-        view.backgroundColor = whiteColor // smooths push animation
+        view.backgroundColor = .whiteColor() // smooths push animation
 
         tableView = UITableView(frame: view.bounds, style: .Plain)
         tableView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        tableView.backgroundColor = whiteColor
         let edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: ChatViewController.toolBarMinHeight, right: 0)
         tableView.contentInset = edgeInsets
         tableView.dataSource = self

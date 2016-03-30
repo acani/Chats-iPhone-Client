@@ -16,14 +16,14 @@ class TokenLabel: UILabel, UIKeyInput {
 
     override var highlighted: Bool {
         didSet {
-            backgroundColor = highlighted ? textColor : UIColor.clearColor()
+            backgroundColor = highlighted ? textColor : .clearColor()
         }
     }
 
     convenience init(origin: CGPoint) {
         self.init(frame: CGRect(origin: origin, size: .zero))
         font = UIFont.systemFontOfSize(15)
-        highlightedTextColor = UIColor.whiteColor()
+        highlightedTextColor = .whiteColor()
         layer.cornerRadius = 4
         layer.masksToBounds = true
         textAlignment = .Center

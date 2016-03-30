@@ -65,14 +65,14 @@ class MessageBubbleTableViewCell: UITableViewCell {
                 tag = incomingTag
                 bubbleImageView.image = MessageBubbleTableViewCell.bubbleImage.incoming
                 bubbleImageView.highlightedImage = MessageBubbleTableViewCell.bubbleImage.incomingHighlighed
-                messageLabel.textColor = UIColor.blackColor()
+                messageLabel.textColor = .blackColor()
                 layoutAttribute = .Left
                 layoutConstant = 10
             } else { // outgoing
                 tag = outgoingTag
                 bubbleImageView.image = MessageBubbleTableViewCell.bubbleImage.outgoing
                 bubbleImageView.highlightedImage = MessageBubbleTableViewCell.bubbleImage.outgoingHighlighed
-                messageLabel.textColor = UIColor.whiteColor()
+                messageLabel.textColor = .whiteColor()
                 layoutAttribute = .Right
                 layoutConstant = -10
             }

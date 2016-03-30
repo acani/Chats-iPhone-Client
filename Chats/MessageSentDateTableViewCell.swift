@@ -5,7 +5,7 @@ class MessageSentDateTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         sentDateLabel = UILabel(frame: CGRectZero)
-        sentDateLabel.backgroundColor = UIColor.clearColor()
+        sentDateLabel.backgroundColor = .clearColor()
         sentDateLabel.font = UIFont.systemFontOfSize(11)
         sentDateLabel.textAlignment = .Center
         sentDateLabel.textColor = UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1)

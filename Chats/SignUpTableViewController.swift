@@ -36,7 +36,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
         text.addAttribute(NSLinkAttributeName, value: "https://github.com/site/privacy", range: NSMakeRange(47, 14))
         termsAndPrivacyLabel.attributedText = text
         termsAndPrivacyLabel.autoresizingMask = .FlexibleWidth
-        termsAndPrivacyLabel.backgroundColor = UIColor.clearColor()
+        termsAndPrivacyLabel.backgroundColor = .clearColor()
         termsAndPrivacyLabel.contentInset.top = 3 // shows the top dot of text-selector bar
         termsAndPrivacyLabel.editable = false
         termsAndPrivacyLabel.scrollEnabled = false

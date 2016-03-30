@@ -135,7 +135,7 @@ class NewProfileTableViewController: UITableViewController, UIActionSheetDelegat
             return nil
         } else { // section == 1
             let view = UIView(frame: CGRectZero)
-            view.backgroundColor = UIColor.whiteColor()
+            view.backgroundColor = .whiteColor()
             return view
         }
     }

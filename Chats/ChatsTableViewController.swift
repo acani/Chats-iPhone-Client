@@ -18,7 +18,7 @@ class ChatsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = editButtonItem() // TODO: KVO
-        tableView.backgroundColor = UIColor.whiteColor()
+        tableView.backgroundColor = .whiteColor()
         tableView.rowHeight = chatTableViewCellHeight
         tableView.separatorInset.left = chatTableViewCellInsetLeft
         tableView.registerClass(ChatTableViewCell.self, forCellReuseIdentifier: "ChatCell")

@@ -13,18 +13,18 @@ class ChatTableViewCell: UITableViewCell {
         userPictureImageView = UserPictureImageView(frame: CGRect(x: 8, y: (chatTableViewCellHeight-64)/2, width: 64, height: 64))
 
         userNameLabel = UILabel(frame: CGRectZero)
-        userNameLabel.backgroundColor = UIColor.whiteColor()
+        userNameLabel.backgroundColor = .whiteColor()
         userNameLabel.font = UIFont.systemFontOfSize(17)
 
         lastMessageTextLabel = UILabel(frame: CGRectZero)
-        lastMessageTextLabel.backgroundColor = UIColor.whiteColor()
+        lastMessageTextLabel.backgroundColor = .whiteColor()
         lastMessageTextLabel.font = UIFont.systemFontOfSize(15)
         lastMessageTextLabel.numberOfLines = 2
         lastMessageTextLabel.textColor = UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1)
 
         lastMessageSentDateLabel = UILabel(frame: CGRectZero)
         lastMessageSentDateLabel.autoresizingMask = .FlexibleLeftMargin
-        lastMessageSentDateLabel.backgroundColor = UIColor.whiteColor()
+        lastMessageSentDateLabel.backgroundColor = .whiteColor()
         lastMessageSentDateLabel.font = UIFont.systemFontOfSize(15)
         lastMessageSentDateLabel.textColor = lastMessageTextLabel.textColor
 

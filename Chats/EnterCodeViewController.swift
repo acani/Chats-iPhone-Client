@@ -26,7 +26,7 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = .whiteColor()
 
         let noticeLabel = UILabel(frame: CGRectZero)
         noticeLabel.numberOfLines = 2

@@ -1,4 +1,5 @@
 import UIKit
+import Networking
 
 class UsersCollectionViewController: UICollectionViewController {
     convenience init() {

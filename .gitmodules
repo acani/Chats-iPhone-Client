@@ -7,6 +7,9 @@
 [submodule "Libraries/CodeInputView"]
 	path = Libraries/CodeInputView
 	url = git://github.com/acani/CodeInputView.git
+[submodule "Libraries/LoadingViews"]
+	path = Libraries/LoadingViews
+	url = git://github.com/acani/LoadingViews.git
 [submodule "Libraries/Networking"]
 	path = Libraries/Networking
 	url = git://github.com/acani/Networking.git

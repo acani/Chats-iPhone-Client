@@ -1,4 +1,5 @@
 import UIKit
+import Networking
 
 class Account: NSObject {
     private let AccountAccessTokenKey = "AccountAccessTokenKey"

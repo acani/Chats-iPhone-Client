@@ -9,8 +9,8 @@ enum EnterCodeMethod : Int {
 }
 
 class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
-    var method = EnterCodeMethod.Signup
-    var email: String
+    let method: EnterCodeMethod
+    let email: String
 
     init(method: EnterCodeMethod, email: String) {
         self.method = method
@@ -19,12 +19,12 @@ class EnterCodeViewController: UIViewController, CodeInputViewDelegate {
         title = "Verify Email"
     }
 
+    // MARK: - UIViewController
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    // MARK: - UIViewController
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

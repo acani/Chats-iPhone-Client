@@ -168,7 +168,7 @@ class ProfileTableViewController: UITableViewController, UIImagePickerController
 
     func chatAction() {
         let chat = Chat(user: user, lastMessageText: "", lastMessageSentDate: NSDate()) // TODO: Pass nil for text & date
-        navigationController?.pushViewController(ChatViewController(chat: chat), animated: true)
+        navigationController!.pushViewController(ChatViewController(chat: chat), animated: true)
     }
 
     func editPictureAction() {

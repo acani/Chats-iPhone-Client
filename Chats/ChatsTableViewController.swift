@@ -52,7 +52,7 @@ class ChatsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let chat = chats[indexPath.row]
         let chatViewController = ChatViewController(chat: chat)
-        navigationController?.pushViewController(chatViewController, animated: true)
+        navigationController!.pushViewController(chatViewController, animated: true)
     }
 
     // MARK: - Actions

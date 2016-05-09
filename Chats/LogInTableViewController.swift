@@ -64,7 +64,7 @@ class LogInTableViewController: UITableViewController, UITextFieldDelegate {
         let request = api.request("POST", "/login", ["email": email])
         let dataTask = Net.dataTaskWithRequest(request, self) { _ in
             let enterCodeViewController = EnterCodeViewController(method: .Login, email: email)
-            self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+            self.navigationController!.pushViewController(enterCodeViewController, animated: true)
         }
         dataTask.resume()
     }

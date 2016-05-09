@@ -78,7 +78,7 @@ class SettingsTableViewController: UITableViewController {
 
         switch Section(rawValue: indexPath.section)! {
         case .Email:
-            navigationController?.pushViewController(EditEmailTableViewController(), animated: true)
+            navigationController!.pushViewController(EditEmailTableViewController(), animated: true)
         case .LogOut:
             if account.accessToken == "guest_access_token" {
                 account.logOutGuest()
@@ -104,6 +104,6 @@ class SettingsTableViewController: UITableViewController {
         // Update email cell when account.email changes
         let emailIndexPath = NSIndexPath(forRow: 0, inSection: Section.Email.rawValue)
         let emailCell = tableView.cellForRowAtIndexPath(emailIndexPath)
-        emailCell?.detailTextLabel?.text = account.email
+        emailCell?.detailTextLabel!.text = account.email
     }
 }

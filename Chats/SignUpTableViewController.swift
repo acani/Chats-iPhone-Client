@@ -155,7 +155,7 @@ class SignUpTableViewController: UITableViewController, UITextFieldDelegate {
             backgroundSuccessHandler: { _ in
                 enterCodeViewController = EnterCodeViewController(method: .Signup, email: self.email)
             }, mainSuccessHandler: { _ in
-                self.navigationController?.pushViewController(enterCodeViewController, animated: true)
+                self.navigationController!.pushViewController(enterCodeViewController, animated: true)
             })
         dataTask.resume()
     }
